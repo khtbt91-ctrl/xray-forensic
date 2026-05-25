@@ -3,208 +3,153 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 
 export default function ReportPage() {
-  const params = useParams()
-  const [reportUrl, setReportUrl] = useState<string | null>(null)
+  const { id } = useParams()
+  const [blobUrl, setBlobUrl] = useState<string|null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [bannerVisible, setBannerVisible] = useState(true)
+  const [error, setError] = useState<string|null>(null)
 
   useEffect(() => {
-    let blobUrl: string | null = null
+    let objectUrl: string | null = null
 
-    async function load() {
+    async function loadReport() {
       try {
+        // Fetch analysis metadata from Railway backend
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/analysis/${params.id}`
+          `${process.env.NEXT_PUBLIC_API_URL}/analysis/${id}`
         )
-        if (!res.ok) throw new Error('Report not found')
+        if (!res.ok) throw new Error(`Analysis not found`)
         const data = await res.json()
+        if (!data.report_url) throw new Error('No report URL')
 
+        // Fetch HTML content from Supabase Storage
         const htmlRes = await fetch(data.report_url)
+        if (!htmlRes.ok) throw new Error('Report file not found')
         const htmlText = await htmlRes.text()
 
+        // Validate it's actual HTML
+        const trimmed = htmlText.trim()
+        if (!trimmed.startsWith('<!DOCTYPE') &&
+            !trimmed.startsWith('<html') &&
+            !trimmed.startsWith('<!doctype')) {
+          throw new Error('Invalid report format')
+        }
+
+        // Create blob URL
         const blob = new Blob([htmlText], { type: 'text/html' })
-        blobUrl = URL.createObjectURL(blob)
-        setReportUrl(blobUrl)
-      } catch (e: any) {
-        setError(e.message)
+        objectUrl = URL.createObjectURL(blob)
+        setBlobUrl(objectUrl)
+
+      } catch (err: any) {
+        setError(err.message || 'Failed to load report')
       } finally {
         setLoading(false)
       }
     }
 
-    if (params.id) load()
+    loadReport()
 
-    return () => { if (blobUrl) URL.revokeObjectURL(blobUrl) }
-  }, [params.id])
+    return () => {
+      if (objectUrl) URL.revokeObjectURL(objectUrl)
+    }
+  }, [id])
 
   if (loading) return (
-    <>
+    <div style={{
+      background: '#0D1117',
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '16px',
+      fontFamily: 'monospace'
+    }}>
+      <div style={{ color: '#58A6FF', fontSize: '0.85rem',
+        letterSpacing: '0.1em' }}>
+        LOADING REPORT...
+      </div>
+      <div style={{ width: '200px', height: '2px',
+        background: '#21262D', borderRadius: '2px',
+        overflow: 'hidden' }}>
+        <div style={{
+          width: '40%', height: '100%',
+          background: '#58A6FF',
+          animation: 'slideLoad 1.5s ease-in-out infinite'
+        }} />
+      </div>
       <style>{`
-        @keyframes slide {
-          0%   { transform: translateX(-100%); }
-          100% { transform: translateX(250%); }
+        @keyframes slideLoad {
+          0% { transform: translateX(-100%) }
+          100% { transform: translateX(350%) }
         }
       `}</style>
-      <div style={{
-        background: 'var(--bg-base)',
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '16px',
-      }}>
-        <div style={{
-          fontFamily: 'JetBrains Mono, monospace',
-          color: 'var(--accent-primary)',
-          fontSize: '0.85rem',
-          letterSpacing: '0.1em',
-        }}>
-          LOADING REPORT...
-        </div>
-        <div style={{
-          width: '200px',
-          height: '2px',
-          background: 'var(--bg-elevated)',
-          borderRadius: '2px',
-          overflow: 'hidden',
-        }}>
-          <div style={{
-            width: '40%',
-            height: '100%',
-            background: 'var(--accent-primary)',
-            animation: 'slide 1.5s ease-in-out infinite',
-          }} />
-        </div>
-      </div>
-    </>
+    </div>
   )
 
   if (error) return (
     <div style={{
-      background: 'var(--bg-base)',
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: 'var(--loss)',
-      fontFamily: 'JetBrains Mono, monospace',
+      background: '#0D1117', minHeight: '100vh',
+      display: 'flex', alignItems: 'center',
+      justifyContent: 'center', flexDirection: 'column',
+      gap: '12px', fontFamily: 'monospace'
     }}>
-      {error}
+      <div style={{ color: '#F85149', fontSize: '0.85rem' }}>
+        {error}
+      </div>
+      <a href="/new" style={{ color: '#58A6FF',
+        fontSize: '0.75rem' }}>
+        ← Try again
+      </a>
     </div>
   )
 
   return (
-    <div style={{ background: 'var(--bg-base)', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ background: '#0D1117', minHeight: '100vh' }}>
       <div style={{
-        background: 'var(--bg-card)',
-        borderBottom: '1px solid var(--border-subtle)',
+        background: '#161B22',
+        borderBottom: '1px solid #30363D',
         padding: '10px 24px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         position: 'sticky',
         top: 0,
-        zIndex: 50,
-        flexShrink: 0,
+        zIndex: 50
       }}>
-        <a href="/" style={{
-          color: 'var(--text-secondary)',
-          fontSize: '0.8rem',
-          textDecoration: 'none',
-        }}>
+        <a href="/" style={{ color: '#8B949E',
+          fontSize: '0.8rem', textDecoration: 'none' }}>
           ← Back
         </a>
-        <span style={{
-          color: 'var(--text-muted)',
-          fontSize: '0.7rem',
-          fontFamily: 'JetBrains Mono, monospace',
-          letterSpacing: '0.05em',
-        }}>
-          X-RAY FORENSIC · {String(params.id).slice(0, 8).toUpperCase()}
+        <span style={{ color: '#8B949E', fontSize: '0.7rem',
+          fontFamily: 'monospace', letterSpacing: '0.05em' }}>
+          X-RAY FORENSIC · {String(id).slice(0,8).toUpperCase()}
         </span>
         <button
           onClick={() => {
             const iframe = document.querySelector('iframe')
-            if (iframe?.contentWindow) {
-              iframe.contentWindow.print()
-            }
+            iframe?.contentWindow?.print()
           }}
           style={{
-            background: 'var(--accent-primary)',
-            color: '#0D1117',
-            border: 'none',
-            padding: '6px 16px',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontSize: '0.8rem',
-            fontWeight: 600,
+            background: '#58A6FF', color: '#0D1117',
+            border: 'none', padding: '6px 16px',
+            borderRadius: '6px', cursor: 'pointer',
+            fontSize: '0.8rem', fontWeight: 600
           }}
         >
           Download PDF
         </button>
       </div>
-
-      {bannerVisible && (
-        <div style={{
-          background: 'var(--bg-elevated)',
-          borderLeft: '3px solid var(--accent-primary)',
-          padding: '12px 20px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexShrink: 0,
-        }}>
-          <div>
-            <p style={{
-              fontFamily: 'JetBrains Mono, monospace',
-              color: 'var(--accent-primary)',
-              fontSize: '0.75rem',
-              margin: '0 0 4px',
-              letterSpacing: '0.05em',
-            }}>
-              💡 HOW TO SAVE YOUR REPORT
-            </p>
-            <p style={{
-              fontFamily: 'Inter, sans-serif',
-              color: 'var(--text-secondary)',
-              fontSize: '0.8rem',
-              margin: 0,
-              lineHeight: 1.5,
-            }}>
-              Click 'Download PDF' → your browser opens a print dialog → change destination to 'Save as PDF' → Save. That's it. Your forensic report lives forever.
-            </p>
-          </div>
-          <button
-            onClick={() => setBannerVisible(false)}
-            style={{
-              background: 'transparent',
-              border: '1px solid var(--border-active)',
-              color: 'var(--text-muted)',
-              fontSize: '0.75rem',
-              padding: '4px 12px',
-              cursor: 'pointer',
-              borderRadius: '4px',
-              flexShrink: 0,
-              marginLeft: '16px',
-            }}
-          >
-            Got it ✓
-          </button>
-        </div>
-      )}
-
       <iframe
-        src={reportUrl!}
+        src={blobUrl!}
         style={{
           width: '100%',
-          flex: 1,
+          height: 'calc(100vh - 49px)',
           border: 'none',
           display: 'block',
-          minHeight: 0,
+          background: '#0D1117'
         }}
         title="X-Ray Forensic Report"
+        sandbox="allow-scripts allow-same-origin"
       />
     </div>
   )
