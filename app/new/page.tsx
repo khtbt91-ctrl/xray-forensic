@@ -504,6 +504,14 @@ function Step2({
 
 // ── Step 3: Upload ────────────────────────────────────────────────────────────
 
+const PROCESSING_STEPS = [
+  { title: "Parsing your trades...", sub: "Reading every entry, exit, and timestamp." },
+  { title: "Detecting behavioral patterns...", sub: "Looking for revenge sequences, tilt cascades, and session drift." },
+  { title: "Scoring 7 dimensions...", sub: "HTF Bias, Liquidity, OTE, OB/FVG, Session, Risk, Behavioral Control." },
+  { title: "Generating your verdict...", sub: "The numbers don't lie. Neither will we." },
+  { title: "Report ready.", sub: "Brace yourself." },
+];
+
 function Step3({
   profile,
   selectedTier,
@@ -514,20 +522,37 @@ function Step3({
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [processingStep, setProcessingStep] = useState("");
+  const [processingStepIndex, setProcessingStepIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
+
+  const validateAndSetFile = (f: File | null) => {
+    if (!f) return;
+    const name = f.name.toLowerCase();
+    if (!name.endsWith(".csv") && !name.endsWith(".htm") && !name.endsWith(".html")) {
+      setFileError("⚠️ We need a .csv or .htm file from MT5. Try the export steps above.");
+      setSelectedFile(null);
+    } else {
+      setFileError(null);
+      setSelectedFile(f);
+    }
+  };
 
   const handleAnalyze = useCallback(async () => {
     if (!selectedFile) return;
 
     setProcessing(true);
     setError(null);
+    setProcessingStepIndex(0);
+
+    const stepTimers: ReturnType<typeof setTimeout>[] = [];
+    stepTimers.push(setTimeout(() => setProcessingStepIndex(1), 1500));
+    stepTimers.push(setTimeout(() => setProcessingStepIndex(2), 3500));
+    stepTimers.push(setTimeout(() => setProcessingStepIndex(3), 6000));
 
     try {
-      setProcessingStep("Parsing your trades...");
-
       const formData = new FormData();
       formData.append("file", selectedFile);
       formData.append(
@@ -547,15 +572,12 @@ function Step3({
         })
       );
 
-      setProcessingStep("Running forensic analysis...");
-
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/analyze`,
-        {
-          method: "POST",
-          body: formData,
-        }
+        { method: "POST", body: formData }
       );
+
+      stepTimers.forEach(clearTimeout);
 
       if (!response.ok) {
         const err = await response.json().catch(() => ({}));
@@ -564,25 +586,17 @@ function Step3({
 
       const data = await response.json();
 
-      setProcessingStep("Report ready.");
-
-      await new Promise((r) => setTimeout(r, 800));
-
+      setProcessingStepIndex(4);
+      await new Promise((r) => setTimeout(r, 1200));
       router.push(`/report/${data.analysis_id}`);
     } catch (err: any) {
+      stepTimers.forEach(clearTimeout);
       setError(err.message || "Analysis failed. Please try again.");
       setProcessing(false);
     }
   }, [selectedFile, profile, selectedTier, router]);
 
   if (processing) {
-    const pct =
-      processingStep === "Report ready."
-        ? 100
-        : processingStep === "Running forensic analysis..."
-        ? 60
-        : 20;
-
     return (
       <div>
         <h2 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.02em" }}>Analyzing…</h2>
@@ -590,15 +604,47 @@ function Step3({
           Do not close this tab.
         </p>
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", borderRadius: 10, padding: "40px 36px" }}>
-          <p style={{ fontFamily: MONO, fontSize: 14, color: "var(--text-secondary)", margin: "0 0 20px" }}>
-            {processingStep}
-          </p>
-          <div className="progress-bar">
-            <div
-              className="progress-fill"
-              style={{ width: `${pct}%`, transition: "width 0.4s ease" }}
-            />
-          </div>
+          {PROCESSING_STEPS.map((s, i) => {
+            const done = i < processingStepIndex;
+            const active = i === processingStepIndex;
+            return (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  gap: 16,
+                  alignItems: "flex-start",
+                  marginBottom: i < PROCESSING_STEPS.length - 1 ? 20 : 0,
+                }}
+              >
+                <span style={{
+                  fontFamily: MONO,
+                  fontSize: 14,
+                  lineHeight: "1.4",
+                  flexShrink: 0,
+                  color: done ? "var(--profit)" : active ? "var(--accent-primary)" : "var(--text-muted)",
+                }}>
+                  {done ? "✓" : active ? "›" : "·"}
+                </span>
+                <div>
+                  <p style={{
+                    fontFamily: MONO,
+                    fontSize: 13,
+                    fontWeight: active ? 700 : 400,
+                    color: done ? "var(--profit)" : active ? "var(--text-primary)" : "var(--text-muted)",
+                    margin: active ? "0 0 4px" : 0,
+                  }}>
+                    {s.title}
+                  </p>
+                  {active && (
+                    <p style={{ fontSize: 11, color: "var(--text-secondary)", margin: 0, lineHeight: 1.5 }}>
+                      {s.sub}
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     );
@@ -610,9 +656,69 @@ function Step3({
         <Disclaimer />
       </div>
       <h2 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.02em" }}>Upload Trade History</h2>
-      <p style={{ fontSize: 14, color: "var(--text-secondary)", margin: "0 0 36px" }}>
-        Export your MT5 history as CSV or HTML and drop it here.
+      <p style={{ fontSize: 14, color: "var(--text-secondary)", margin: "0 0 24px" }}>
+        Export your MT5 history and drop it below.
       </p>
+
+      {/* MT5 export guide */}
+      <div style={{
+        background: "var(--bg-elevated)",
+        border: "1px solid var(--border-subtle)",
+        borderRadius: 8,
+        padding: 20,
+        marginBottom: 20,
+      }}>
+        <p style={{
+          fontFamily: MONO,
+          fontSize: "0.85rem",
+          textTransform: "uppercase" as const,
+          color: "var(--text-primary)",
+          letterSpacing: "0.05em",
+          margin: "0 0 20px",
+        }}>
+          📂 How to export from MetaTrader 5
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
+          {[
+            {
+              n: "01",
+              title: "Open MT5",
+              body: "Launch MetaTrader 5 on your computer. Make sure you're logged into the account you want to diagnose.",
+            },
+            {
+              n: "02",
+              title: "Find your history",
+              body: "Click 'View' in the top menu → 'Terminal' → click the 'Account History' tab at the bottom of the screen.",
+            },
+            {
+              n: "03",
+              title: "Export it",
+              body: "Right-click anywhere in the history → 'Save as Report' → choose the date range (all history recommended) → save as .htm or use 'Save as Detailed Report' for CSV.",
+            },
+          ].map((step) => (
+            <div key={step.n}>
+              <p style={{ fontFamily: MONO, fontSize: "1.6rem", color: "var(--text-muted)", margin: "0 0 8px", lineHeight: 1 }}>
+                {step.n}
+              </p>
+              <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", margin: "0 0 6px" }}>
+                {step.title}
+              </p>
+              <p style={{ fontSize: 12, color: "var(--text-secondary)", margin: 0, lineHeight: 1.5 }}>
+                {step.body}
+              </p>
+            </div>
+          ))}
+        </div>
+        <p style={{
+          fontSize: "0.75rem",
+          color: "var(--text-muted)",
+          fontStyle: "italic",
+          margin: "16px 0 0",
+          lineHeight: 1.5,
+        }}>
+          💬 No MT5? You can also export from cTrader, DXtrade, or any platform that gives you a trade history CSV. Same process, different menu.
+        </p>
+      </div>
 
       {/* Drop zone */}
       <div
@@ -623,17 +729,17 @@ function Step3({
           e.preventDefault();
           setDragOver(false);
           const f = e.dataTransfer.files[0];
-          if (f) setSelectedFile(f);
+          if (f) validateAndSetFile(f);
         }}
         style={{
-          border: `1.5px dashed ${dragOver ? "var(--accent-primary)" : selectedFile ? "var(--profit)" : "var(--border-subtle)"}`,
+          border: `1.5px dashed ${dragOver ? "var(--accent-primary)" : selectedFile ? "var(--profit)" : fileError ? "var(--warning)" : "var(--border-subtle)"}`,
           borderRadius: 10,
           padding: "56px 40px",
           textAlign: "center",
           cursor: "pointer",
           background: dragOver ? "rgba(88,166,255,0.04)" : selectedFile ? "rgba(63,185,80,0.04)" : "transparent",
           transition: "border-color 0.15s, background 0.15s",
-          marginBottom: 24,
+          marginBottom: 12,
         }}
       >
         <input
@@ -641,24 +747,27 @@ function Step3({
           type="file"
           accept=".csv,.htm,.html"
           style={{ display: "none" }}
-          onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+          onChange={(e) => validateAndSetFile(e.target.files?.[0] || null)}
         />
         {selectedFile ? (
           <>
-            <p style={{ fontFamily: MONO, fontSize: 20, margin: "0 0 4px" }}>↑</p>
+            <p style={{ fontSize: 20, margin: "0 0 8px", color: "var(--profit)" }}>✓</p>
             <p style={{ fontSize: 14, color: "var(--profit)", margin: "0 0 4px", fontWeight: 500 }}>{selectedFile.name}</p>
-            <p style={{ fontSize: 12, color: "var(--text-muted)", margin: 0 }}>
+            <p style={{ fontSize: 12, color: "var(--text-secondary)", margin: "0 0 10px" }}>
               {(selectedFile.size / 1024).toFixed(0)} KB — click to change
+            </p>
+            <p style={{ fontSize: 13, color: "var(--profit)", margin: 0 }}>
+              Looks good. Hit 'Analyze' when you're ready ↓
             </p>
           </>
         ) : (
           <>
             <p style={{ fontFamily: MONO, fontSize: 28, color: "var(--text-muted)", margin: "0 0 12px", lineHeight: 1 }}>↑</p>
             <p style={{ fontSize: 15, color: "var(--text-secondary)", margin: "0 0 8px", fontWeight: 500 }}>
-              Drop your MT5 trade history here
+              Drop your trade history here
             </p>
             <p style={{ fontSize: 13, color: "var(--text-muted)", margin: "0 0 16px" }}>
-              CSV or HTM export from MetaTrader 5
+              MT5 .htm report or .csv export · Any size · Fully encrypted
             </p>
             <span style={{ fontSize: 13, color: "var(--accent-primary)", textDecoration: "underline", cursor: "pointer" }}>
               Browse files
@@ -666,6 +775,16 @@ function Step3({
           </>
         )}
       </div>
+
+      {fileError && (
+        <p style={{ fontSize: 13, color: "var(--warning)", margin: "0 0 12px", fontFamily: MONO }}>
+          {fileError}
+        </p>
+      )}
+
+      <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", textAlign: "center", margin: "0 0 20px" }}>
+        🔒 Your file is analyzed and immediately discarded. We never store your raw trade data.
+      </p>
 
       {error && (
         <p style={{ fontSize: 13, color: "var(--loss)", margin: "0 0 16px", fontFamily: MONO }}>

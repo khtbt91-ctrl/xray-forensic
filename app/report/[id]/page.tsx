@@ -7,6 +7,7 @@ export default function ReportPage() {
   const [reportUrl, setReportUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [bannerVisible, setBannerVisible] = useState(true)
 
   useEffect(() => {
     let blobUrl: string | null = null
@@ -95,7 +96,7 @@ export default function ReportPage() {
   )
 
   return (
-    <div style={{ background: 'var(--bg-base)', minHeight: '100vh' }}>
+    <div style={{ background: 'var(--bg-base)', height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <div style={{
         background: 'var(--bg-card)',
         borderBottom: '1px solid var(--border-subtle)',
@@ -106,6 +107,7 @@ export default function ReportPage() {
         position: 'sticky',
         top: 0,
         zIndex: 50,
+        flexShrink: 0,
       }}>
         <a href="/" style={{
           color: 'var(--text-secondary)',
@@ -144,13 +146,63 @@ export default function ReportPage() {
         </button>
       </div>
 
+      {bannerVisible && (
+        <div style={{
+          background: 'var(--bg-elevated)',
+          borderLeft: '3px solid var(--accent-primary)',
+          padding: '12px 20px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexShrink: 0,
+        }}>
+          <div>
+            <p style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              color: 'var(--accent-primary)',
+              fontSize: '0.75rem',
+              margin: '0 0 4px',
+              letterSpacing: '0.05em',
+            }}>
+              💡 HOW TO SAVE YOUR REPORT
+            </p>
+            <p style={{
+              fontFamily: 'Inter, sans-serif',
+              color: 'var(--text-secondary)',
+              fontSize: '0.8rem',
+              margin: 0,
+              lineHeight: 1.5,
+            }}>
+              Click 'Download PDF' → your browser opens a print dialog → change destination to 'Save as PDF' → Save. That's it. Your forensic report lives forever.
+            </p>
+          </div>
+          <button
+            onClick={() => setBannerVisible(false)}
+            style={{
+              background: 'transparent',
+              border: '1px solid var(--border-active)',
+              color: 'var(--text-muted)',
+              fontSize: '0.75rem',
+              padding: '4px 12px',
+              cursor: 'pointer',
+              borderRadius: '4px',
+              flexShrink: 0,
+              marginLeft: '16px',
+            }}
+          >
+            Got it ✓
+          </button>
+        </div>
+      )}
+
       <iframe
         src={reportUrl!}
         style={{
           width: '100%',
-          height: 'calc(100vh - 49px)',
+          flex: 1,
           border: 'none',
           display: 'block',
+          minHeight: 0,
         }}
         title="X-Ray Forensic Report"
       />
