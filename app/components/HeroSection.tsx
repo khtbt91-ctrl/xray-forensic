@@ -44,7 +44,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section style={{ maxWidth: 860, margin: "0 auto", padding: "calc(64px + 72px) 40px 100px", textAlign: "center" }}>
+    <section className="hero-section" style={{ maxWidth: 860, margin: "0 auto", padding: "calc(64px + 72px) 40px 100px", textAlign: "center" }}>
       <p
         style={{
           fontFamily: MONO,
@@ -59,6 +59,7 @@ export default function HeroSection() {
       </p>
 
       <h1
+        className="hero-headline"
         style={{
           fontSize: "clamp(3rem, 7vw, 5rem)",
           fontWeight: 800,
@@ -72,6 +73,7 @@ export default function HeroSection() {
       </h1>
 
       <p
+        className="hero-subheadline"
         style={{
           fontSize: 18,
           color: "var(--text-secondary)",
@@ -84,7 +86,7 @@ export default function HeroSection() {
         a verdict you cannot negotiate. And a prescription with a target.
       </p>
 
-      <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap", marginBottom: 56 }}>
+      <div className="hero-ctas" style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap", marginBottom: 56 }}>
         <Link href="/new" className="btn btn-primary" style={{ fontSize: 15, padding: "14px 32px" }}>
           Get Diagnosed
         </Link>
