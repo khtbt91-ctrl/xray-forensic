@@ -429,6 +429,17 @@ body {
   }
 }
 
+/* ─── Scroll fade-in ─────────────────────────────────────────────────────── */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 600ms ease, transform 600ms ease;
+}
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ─── About page ─────────────────────────────────────────────────────────── */
 
 .about-fade {
