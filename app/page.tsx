@@ -8,6 +8,7 @@ import FrameworkSection from "./components/FrameworkSection";
 import MetricBar from "./components/MetricBar";
 import HonestyGradient from "./components/HonestyGradient";
 import AudienceSection from "./components/AudienceSection";
+import ProtocolsSection from "./components/ProtocolsSection";
 import TierCards from "./components/TierCards";
 import OneTimeProducts from "./components/OneTimeProducts";
 import LeakCalculator from "./components/LeakCalculator";
@@ -29,6 +30,7 @@ export default function LandingPage() {
       <MetricBar />
       <HonestyGradient />
       <AudienceSection />
+      <ProtocolsSection />
       <TierCards />
       <OneTimeProducts />
       <LeakCalculator />
@@ -46,6 +48,10 @@ export default function LandingPage() {
           Built on 15 years of institutional trading. Not financial advice. Diagnostic analysis only.
         </p>
         <p style={{ margin: "0 0 8px" }}>
+          <Link href="/about" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
+            About
+          </Link>
+          <span style={{ color: "var(--border-subtle)", margin: "0 10px" }}>·</span>
           <Link href="/privacy" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
             Privacy Policy
           </Link>

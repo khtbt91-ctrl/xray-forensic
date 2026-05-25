@@ -76,6 +76,7 @@ export default function NavBar() {
           <Link href="/#how-it-works" className="nav-link">How It Works</Link>
           <Link href="/#pricing" className="nav-link">Pricing</Link>
           <Link href="/#faq" className="nav-link">FAQ</Link>
+          <Link href="/about" className="nav-link">About</Link>
           <a href="mailto:hello@xrayforensic.com" className="nav-link">Contact</a>
         </div>
 
@@ -103,6 +104,7 @@ export default function NavBar() {
           <Link href="/#how-it-works" className="mobile-nav-link" onClick={close}>How It Works</Link>
           <Link href="/#pricing" className="mobile-nav-link" onClick={close}>Pricing</Link>
           <Link href="/#faq" className="mobile-nav-link" onClick={close}>FAQ</Link>
+          <Link href="/about" className="mobile-nav-link" onClick={close}>About</Link>
           <a href="mailto:hello@xrayforensic.com" className="mobile-nav-link" onClick={close}>Contact</a>
           <Link href="/sample" className="mobile-nav-link" onClick={close}>Sample Report</Link>
           <div className="mobile-menu-divider" />

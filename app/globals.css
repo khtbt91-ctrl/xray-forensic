@@ -266,6 +266,19 @@ body {
   }
 }
 
+/* ─── Protocols grid ─────────────────────────────────────────────────────── */
+.protocols-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+@media (max-width: 900px) {
+  .protocols-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ─── One-time products ─────────────────────────────────────────────────── */
 .one-time-products {
   display: grid;
@@ -414,4 +427,114 @@ body {
     width: 100% !important;
     box-sizing: border-box !important;
   }
+}
+
+/* ─── About page ─────────────────────────────────────────────────────────── */
+
+.about-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.about-fade.about-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.about-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 80px 40px;
+}
+@media (max-width: 768px) {
+  .about-inner {
+    padding: 60px 20px;
+  }
+}
+
+.about-hero-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: calc(64px + 80px) 40px 80px;
+}
+@media (max-width: 768px) {
+  .about-hero-inner {
+    padding: calc(56px + 60px) 20px 60px;
+  }
+}
+
+/* Beliefs 2-col grid */
+.beliefs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+@media (max-width: 640px) {
+  .beliefs-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Intelligence 2-col grid */
+.intelligence-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+@media (max-width: 768px) {
+  .intelligence-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+/* Teaser 3-col grid */
+.teaser-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+@media (max-width: 900px) {
+  .teaser-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Timeline active dot pulse */
+@keyframes pulsePrimary {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0.5); }
+  50%       { box-shadow: 0 0 0 8px rgba(88, 166, 255, 0); }
+}
+.timeline-dot-active {
+  animation: pulsePrimary 2s ease-in-out infinite;
+}
+
+/* Teaser card status dot pulse */
+@keyframes pulseWarning {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(210, 153, 34, 0.5); }
+  50%       { box-shadow: 0 0 0 8px rgba(210, 153, 34, 0); }
+}
+.teaser-dot {
+  animation: pulseWarning 2s ease-in-out infinite;
+}
+
+/* Waitlist form input */
+.waitlist-input {
+  flex: 1;
+  min-width: 220px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-family: Inter, sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.waitlist-input:focus {
+  border-color: var(--accent-primary);
+}
+.waitlist-input::placeholder {
+  color: var(--text-muted);
 }
