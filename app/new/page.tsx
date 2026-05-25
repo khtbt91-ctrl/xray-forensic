@@ -536,7 +536,7 @@ function Step3({
           client_name: profile.clientName || "Trader",
           email: profile.email || "",
           account_type: profile.accountType || "personal",
-          tier_id: selectedTier || "signal",
+          tier_id: (selectedTier || "signal").toLowerCase(),
           firm: profile.firm || null,
           challenge_balance: parseFloat(profile.challengeBalance) || null,
           daily_dd: parseFloat(profile.dailyDdLimit) || null,
@@ -558,7 +558,7 @@ function Step3({
       );
 
       if (!response.ok) {
-        const err = await response.json();
+        const err = await response.json().catch(() => ({}));
         throw new Error(err.detail || "Analysis failed");
       }
 
