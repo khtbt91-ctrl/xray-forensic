@@ -15,42 +15,65 @@ export default function NavBar() {
   return (
     <nav
       style={{
-        position: "sticky",
+        position: "fixed",
         top: 0,
-        zIndex: 100,
-        padding: "0 40px",
-        height: 60,
+        left: 0,
+        right: 0,
+        zIndex: 50,
+        height: 64,
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+        padding: "0 40px",
         transition: "background 0.2s, border-color 0.2s",
         background: scrolled ? "rgba(13,17,23,0.88)" : "transparent",
         backdropFilter: scrolled ? "blur(12px)" : "none",
         WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
-        borderBottom: scrolled
-          ? "1px solid var(--border-subtle)"
-          : "1px solid transparent",
+        borderBottom: scrolled ? "1px solid var(--border-subtle)" : "1px solid transparent",
       }}
     >
-      <span
-        style={{
-          fontFamily: MONO,
-          fontSize: 15,
-          letterSpacing: "0.12em",
-          color: "var(--text-primary)",
-          fontWeight: 500,
-        }}
-      >
-        X-RAY
-      </span>
-      <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-        <Link
-          href="/sample"
-          style={{ fontSize: 13, color: "var(--text-secondary)", textDecoration: "none" }}
+      {/* LEFT — Stacked logo */}
+      <Link href="/" style={{ textDecoration: "none", display: "flex", flexDirection: "column", gap: 3, lineHeight: 1 }}>
+        <span
+          style={{
+            fontFamily: MONO,
+            fontSize: "1.5rem",
+            fontWeight: 800,
+            color: "var(--text-primary)",
+            letterSpacing: "0.06em",
+          }}
         >
-          Sample Report
-        </Link>
-        <Link href="/new" className="btn btn-primary" style={{ fontSize: 13, padding: "8px 18px" }}>
+          X-RAY
+        </span>
+        <span
+          style={{
+            fontFamily: MONO,
+            fontSize: "0.6rem",
+            color: "var(--text-muted)",
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+          }}
+        >
+          FORENSIC TRADE DIAGNOSTIC
+        </span>
+      </Link>
+
+      {/* CENTER — Nav links */}
+      <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
+        <Link href="/#how-it-works" className="nav-link">How It Works</Link>
+        <Link href="/#pricing" className="nav-link">Pricing</Link>
+        <Link href="/#faq" className="nav-link">FAQ</Link>
+        <a href="mailto:hello@xrayforensic.com" className="nav-link">Contact</a>
+      </div>
+
+      {/* RIGHT — Actions */}
+      <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+        <Link href="/sample" className="nav-link">Sample Report</Link>
+        <Link
+          href="/new"
+          className="btn btn-primary"
+          style={{ fontSize: "0.85rem", padding: "8px 20px", borderRadius: 6 }}
+        >
           Get Diagnosed
         </Link>
       </div>

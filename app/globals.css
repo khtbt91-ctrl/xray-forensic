@@ -93,6 +93,17 @@ body {
   color: var(--text-primary);
 }
 
+/* ─── Nav links ───────────────────────────────────────────────────────────── */
+.nav-link {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.nav-link:hover {
+  color: var(--text-primary);
+}
+
 /* ─── Terminal cursor ─────────────────────────────────────────────────────── */
 @keyframes blink {
   0%, 100% { opacity: 1; }

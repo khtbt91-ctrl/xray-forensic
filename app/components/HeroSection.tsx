@@ -44,7 +44,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section style={{ maxWidth: 860, margin: "0 auto", padding: "72px 40px 100px", textAlign: "center" }}>
+    <section style={{ maxWidth: 860, margin: "0 auto", padding: "calc(64px + 72px) 40px 100px", textAlign: "center" }}>
       <p
         style={{
           fontFamily: MONO,
@@ -60,8 +60,8 @@ export default function HeroSection() {
 
       <h1
         style={{
-          fontSize: "clamp(36px, 5vw, 64px)",
-          fontWeight: 700,
+          fontSize: "clamp(3rem, 7vw, 5rem)",
+          fontWeight: 800,
           letterSpacing: "-0.02em",
           margin: "0 0 20px",
           lineHeight: 1.1,
