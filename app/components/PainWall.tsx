@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
 import { MONO, useCountUp, FadeInUp } from "./shared";
 
 function StatCard({
@@ -18,16 +17,33 @@ function StatCard({
   delay: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true });
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add("visible");
+          setIsInView(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   const displayVal = useCountUp(value, 1500, isInView);
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay }}
+      className="fade-in-up"
       style={{
+        transitionDelay: `${delay}s`,
         background: "var(--bg-card)",
         border: "1px solid var(--border-subtle)",
         borderLeft: `3px solid ${accent}`,
@@ -53,7 +69,7 @@ function StatCard({
       <div style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.55 }}>
         {label}
       </div>
-    </motion.div>
+    </div>
   );
 }
 

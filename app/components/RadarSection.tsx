@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { MONO, FadeInUp } from "./shared";
 
@@ -34,15 +33,28 @@ const RADAR_INSIGHTS: Record<string, string> = {
 
 export default function RadarSection() {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
   const [animated, setAnimated] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [activeInsight, setActiveInsight] = useState<string | null>(null);
 
   useEffect(() => { setMounted(true); }, []);
+
   useEffect(() => {
-    if (isInView && !animated) setTimeout(() => setAnimated(true), 200);
-  }, [isInView, animated]);
+    if (animated) return;
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => setAnimated(true), 200);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0, rootMargin: "-80px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [animated]);
 
   const data = RADAR_ACTUAL.map((d) => ({
     dim: d.dim,
@@ -129,10 +141,8 @@ export default function RadarSection() {
         </div>
 
         {activeInsight && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22 }}
+          <div
+            className="insight-popup"
             style={{
               background: "var(--bg-card)",
               border: "1px solid var(--accent-primary)",
@@ -156,7 +166,7 @@ export default function RadarSection() {
             <p style={{ margin: "8px 0 0", fontSize: 14, color: "var(--text-primary)", lineHeight: 1.65 }}>
               {RADAR_INSIGHTS[activeInsight]}
             </p>
-          </motion.div>
+          </div>
         )}
       </div>
     </section>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import AnimationInit from "./components/AnimationInit";
 
 export const metadata: Metadata = {
   title: "Institutional X-Ray",
@@ -14,7 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AnimationInit />
+        {children}
+      </body>
     </html>
   );
 }

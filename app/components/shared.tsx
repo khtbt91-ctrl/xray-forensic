@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import React, { useState, useEffect } from "react";
 
 export const MONO = "JetBrains Mono, monospace";
 export const SERIF_ITALIC = "'IBM Plex Serif', serif";
@@ -25,23 +24,20 @@ export function useCountUp(target: number, duration = 1500, active = false) {
 export function FadeInUp({
   children,
   delay = 0,
+  className = "",
   style,
 }: {
   children: React.ReactNode;
   delay?: number;
+  className?: string;
   style?: React.CSSProperties;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-60px" });
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay, ease: "easeOut" }}
-      style={style}
+    <div
+      className={`fade-in-up ${className}`.trim()}
+      style={delay ? { transitionDelay: `${delay}s`, ...style } : style}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
