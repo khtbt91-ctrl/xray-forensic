@@ -9,6 +9,8 @@ export default function ReportPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    let blobUrl: string | null = null
+
     async function load() {
       try {
         const res = await fetch(
@@ -16,14 +18,23 @@ export default function ReportPage() {
         )
         if (!res.ok) throw new Error('Report not found')
         const data = await res.json()
-        setReportUrl(data.report_url)
+
+        const htmlRes = await fetch(data.report_url)
+        const htmlText = await htmlRes.text()
+
+        const blob = new Blob([htmlText], { type: 'text/html' })
+        blobUrl = URL.createObjectURL(blob)
+        setReportUrl(blobUrl)
       } catch (e: any) {
         setError(e.message)
       } finally {
         setLoading(false)
       }
     }
+
     if (params.id) load()
+
+    return () => { if (blobUrl) URL.revokeObjectURL(blobUrl) }
   }, [params.id])
 
   if (loading) return (
