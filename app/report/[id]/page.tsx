@@ -1,76 +1,115 @@
-"use client";
-
-// TODO: fetch analysis from Supabase by id, then load report_url in an iframe below.
-// Replace this placeholder once the FastAPI backend is connected.
-
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import Disclaimer from "../../../components/Disclaimer";
-
-const MONO = "JetBrains Mono, monospace";
+'use client'
+import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
 
 export default function ReportPage() {
-  const { id } = useParams<{ id: string }>();
+  const params = useParams()
+  const [reportUrl, setReportUrl] = useState<string|null>(null)
+  const [error, setError] = useState<string|null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchReport() {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/analysis/${params.id}`
+        )
+        if (!res.ok) throw new Error('Report not found')
+        const data = await res.json()
+        setReportUrl(data.report_url)
+      } catch (e: any) {
+        setError(e.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchReport()
+  }, [params.id])
+
+  if (loading) return (
+    <div style={{
+      background: 'var(--bg-base)',
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: 'var(--text-secondary)',
+      fontFamily: 'var(--font-mono)'
+    }}>
+      Loading report...
+    </div>
+  )
+
+  if (error) return (
+    <div style={{
+      background: 'var(--bg-base)',
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: 'var(--loss)',
+      fontFamily: 'var(--font-mono)'
+    }}>
+      {error}
+    </div>
+  )
 
   return (
-    <main style={{ minHeight: "100vh", background: "var(--bg-base)", color: "var(--text-primary)" }}>
-      {/* Top bar */}
-      <div
-        style={{
-          background: "var(--bg-card)",
-          borderBottom: "1px solid var(--border-subtle)",
-          padding: "12px 24px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 16,
-          flexWrap: "wrap",
-        }}
-      >
-        <Link href="/" style={{ fontFamily: MONO, fontSize: 12, color: "var(--text-muted)", textDecoration: "none" }}>
-          ← Back to Dashboard
-        </Link>
-        <span style={{ fontFamily: MONO, fontSize: 13, color: "var(--text-secondary)" }}>
-          Analysis #{id}
+    <div style={{
+      background: 'var(--bg-base)',
+      minHeight: '100vh'
+    }}>
+      <div style={{
+        background: 'var(--bg-card)',
+        borderBottom: '1px solid var(--border-subtle)',
+        padding: '12px 24px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        position: 'sticky',
+        top: 0,
+        zIndex: 50
+      }}>
+        <a
+          href="/"
+          style={{ color: 'var(--text-secondary)',
+            fontSize: '0.85rem' }}
+        >
+          ← Back
+        </a>
+        <span style={{
+          color: 'var(--text-muted)',
+          fontSize: '0.75rem',
+          fontFamily: 'var(--font-mono)'
+        }}>
+          Analysis #{params.id}
         </span>
-        <div style={{ display: "flex", gap: 12 }}>
-          <button className="btn btn-ghost" style={{ fontSize: 13 }} disabled>
-            Download PDF
-          </button>
-          <Link href="/new" className="btn btn-primary" style={{ fontSize: 13 }}>
-            New Analysis
-          </Link>
-        </div>
+        <button
+          onClick={() => window.print()}
+          style={{
+            background: 'var(--accent-primary)',
+            color: 'white',
+            border: 'none',
+            padding: '6px 16px',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '0.8rem'
+          }}
+        >
+          Download PDF
+        </button>
       </div>
 
-      {/* Placeholder content */}
-      <div
+      <iframe
+        src={reportUrl!}
         style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "100px 40px",
-          gap: 32,
+          width: '100%',
+          height: 'calc(100vh - 57px)',
+          border: 'none',
+          display: 'block'
         }}
-      >
-        <p style={{ fontFamily: MONO, fontSize: 13, color: "var(--text-secondary)", textAlign: "center", lineHeight: 1.7 }}>
-          Report will load here when the backend is connected.
-        </p>
-
-        {/* Skeleton bars */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 14, width: "100%", maxWidth: 560 }}>
-          <div className="skeleton" style={{ height: 16, background: "var(--bg-elevated)", borderRadius: 4, width: "80%" }} />
-          <div className="skeleton" style={{ height: 16, background: "var(--bg-elevated)", borderRadius: 4, width: "60%", animationDelay: "0.2s" }} />
-          <div className="skeleton" style={{ height: 16, background: "var(--bg-elevated)", borderRadius: 4, width: "40%", animationDelay: "0.4s" }} />
-        </div>
-
-        <Link href="/sample" className="btn btn-ghost" style={{ fontSize: 13 }}>
-          View sample report instead
-        </Link>
-      </div>
-
-      <Disclaimer />
-    </main>
-  );
+        title="X-Ray Forensic Report"
+      />
+    </div>
+  )
 }

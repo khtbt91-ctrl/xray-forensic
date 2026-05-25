@@ -83,12 +83,6 @@ const TIERS: {
   },
 ];
 
-const PROCESSING_STAGES = [
-  { label: "Parsing trades...", ms: 2000 },
-  { label: "Detecting behavioral patterns...", ms: 2000 },
-  { label: "Scoring 7 dimensions...", ms: 1500 },
-  { label: "Generating forensic report...", ms: 1500 },
-];
 
 // ── Step Indicator ────────────────────────────────────────────────────────────
 
@@ -510,43 +504,85 @@ function Step2({
 
 // ── Step 3: Upload ────────────────────────────────────────────────────────────
 
-function Step3() {
-  // TODO: replace mock processing with actual POST to FastAPI /analyze endpoint,
-  // then redirect to /report/:id instead of /sample.
-
+function Step3({
+  profile,
+  selectedTier,
+}: {
+  profile: ContextProfile;
+  selectedTier: TierName | null;
+}) {
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
-  const [file, setFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [stageIdx, setStageIdx] = useState(-1);
-  const [progress, setProgress] = useState(0);
+  const [processingStep, setProcessingStep] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
-  const startProcessing = useCallback(() => {
-    if (!file) return;
+  const handleAnalyze = useCallback(async () => {
+    if (!selectedFile) return;
+
     setProcessing(true);
-    setProgress(0);
-    setStageIdx(0);
+    setError(null);
 
-    const total = PROCESSING_STAGES.reduce((s, p) => s + p.ms, 0);
-    let accumulated = 0;
+    try {
+      setProcessingStep("Parsing your trades...");
 
-    PROCESSING_STAGES.forEach((stage, i) => {
-      const at = accumulated;
-      setTimeout(() => {
-        setStageIdx(i);
-        setProgress(Math.round(((at + stage.ms) / total) * 100));
-      }, at);
-      accumulated += stage.ms;
-    });
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append(
+        "context",
+        JSON.stringify({
+          client_name: profile.clientName || "Trader",
+          email: profile.email || "",
+          account_type: profile.accountType || "personal",
+          tier_id: selectedTier || "signal",
+          firm: profile.firm || null,
+          challenge_balance: parseFloat(profile.challengeBalance) || null,
+          daily_dd: parseFloat(profile.dailyDdLimit) || null,
+          max_dd: parseFloat(profile.maxDdLimit) || null,
+          profit_target: parseFloat(profile.profitTarget) || null,
+          min_days: parseInt(profile.minTradingDays) || null,
+          days_remaining: parseInt(profile.daysRemaining) || null,
+        })
+      );
 
-    setTimeout(() => {
-      setProgress(100);
-      setTimeout(() => router.push("/sample"), 500);
-    }, total);
-  }, [file, router]);
+      setProcessingStep("Running forensic analysis...");
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/analyze`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.detail || "Analysis failed");
+      }
+
+      const data = await response.json();
+
+      setProcessingStep("Report ready.");
+
+      await new Promise((r) => setTimeout(r, 800));
+
+      router.push(`/report/${data.analysis_id}`);
+    } catch (err: any) {
+      setError(err.message || "Analysis failed. Please try again.");
+      setProcessing(false);
+    }
+  }, [selectedFile, profile, selectedTier, router]);
 
   if (processing) {
+    const pct =
+      processingStep === "Report ready."
+        ? 100
+        : processingStep === "Running forensic analysis..."
+        ? 60
+        : 20;
+
     return (
       <div>
         <h2 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.02em" }}>Analyzing…</h2>
@@ -554,28 +590,14 @@ function Step3() {
           Do not close this tab.
         </p>
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", borderRadius: 10, padding: "40px 36px" }}>
-          <div style={{ marginBottom: 28 }}>
-            <div className="progress-bar" style={{ marginBottom: 10 }}>
-              <div className="progress-fill" style={{ width: `${progress}%` }} />
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontFamily: MONO, fontSize: 12, color: "var(--text-secondary)" }}>
-                {stageIdx >= 0 && stageIdx < PROCESSING_STAGES.length ? PROCESSING_STAGES[stageIdx].label : "Complete"}
-              </span>
-              <span style={{ fontFamily: MONO, fontSize: 12, color: "var(--text-muted)" }}>{progress}%</span>
-            </div>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {PROCESSING_STAGES.map((stage, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <span style={{ fontFamily: MONO, fontSize: 12, color: i <= stageIdx ? "var(--profit)" : "var(--text-muted)" }}>
-                  {i < stageIdx ? "✓" : i === stageIdx ? "›" : "·"}
-                </span>
-                <span style={{ fontSize: 13, color: i <= stageIdx ? "var(--text-primary)" : "var(--text-muted)" }}>
-                  {stage.label}
-                </span>
-              </div>
-            ))}
+          <p style={{ fontFamily: MONO, fontSize: 14, color: "var(--text-secondary)", margin: "0 0 20px" }}>
+            {processingStep}
+          </p>
+          <div className="progress-bar">
+            <div
+              className="progress-fill"
+              style={{ width: `${pct}%`, transition: "width 0.4s ease" }}
+            />
           </div>
         </div>
       </div>
@@ -601,15 +623,15 @@ function Step3() {
           e.preventDefault();
           setDragOver(false);
           const f = e.dataTransfer.files[0];
-          if (f) setFile(f);
+          if (f) setSelectedFile(f);
         }}
         style={{
-          border: `1.5px dashed ${dragOver ? "var(--accent-primary)" : file ? "var(--profit)" : "var(--border-subtle)"}`,
+          border: `1.5px dashed ${dragOver ? "var(--accent-primary)" : selectedFile ? "var(--profit)" : "var(--border-subtle)"}`,
           borderRadius: 10,
           padding: "56px 40px",
           textAlign: "center",
           cursor: "pointer",
-          background: dragOver ? "rgba(88,166,255,0.04)" : file ? "rgba(63,185,80,0.04)" : "transparent",
+          background: dragOver ? "rgba(88,166,255,0.04)" : selectedFile ? "rgba(63,185,80,0.04)" : "transparent",
           transition: "border-color 0.15s, background 0.15s",
           marginBottom: 24,
         }}
@@ -619,14 +641,14 @@ function Step3() {
           type="file"
           accept=".csv,.htm,.html"
           style={{ display: "none" }}
-          onChange={(e) => setFile(e.target.files?.[0] || null)}
+          onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
         />
-        {file ? (
+        {selectedFile ? (
           <>
             <p style={{ fontFamily: MONO, fontSize: 20, margin: "0 0 4px" }}>↑</p>
-            <p style={{ fontSize: 14, color: "var(--profit)", margin: "0 0 4px", fontWeight: 500 }}>{file.name}</p>
+            <p style={{ fontSize: 14, color: "var(--profit)", margin: "0 0 4px", fontWeight: 500 }}>{selectedFile.name}</p>
             <p style={{ fontSize: 12, color: "var(--text-muted)", margin: 0 }}>
-              {(file.size / 1024).toFixed(0)} KB — click to change
+              {(selectedFile.size / 1024).toFixed(0)} KB — click to change
             </p>
           </>
         ) : (
@@ -645,11 +667,17 @@ function Step3() {
         )}
       </div>
 
+      {error && (
+        <p style={{ fontSize: 13, color: "var(--loss)", margin: "0 0 16px", fontFamily: MONO }}>
+          ⚠ {error}
+        </p>
+      )}
+
       <button
-        onClick={startProcessing}
-        disabled={!file}
+        onClick={handleAnalyze}
+        disabled={!selectedFile}
         className="btn btn-primary"
-        style={{ width: "100%", padding: "14px", fontSize: 15, opacity: file ? 1 : 0.4, cursor: file ? "pointer" : "not-allowed" }}
+        style={{ width: "100%", padding: "14px", fontSize: 15, opacity: selectedFile ? 1 : 0.4, cursor: selectedFile ? "pointer" : "not-allowed" }}
       >
         Analyze
       </button>
@@ -699,7 +727,7 @@ export default function NewPage() {
             onNext={() => setStep(2)}
           />
         )}
-        {step === 2 && <Step3 />}
+        {step === 2 && <Step3 profile={profile} selectedTier={selectedTier} />}
       </div>
     </main>
   );
