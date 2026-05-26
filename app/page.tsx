@@ -43,41 +43,147 @@ export default function LandingPage() {
       <ComparisonSection />
       <FaqSection />
       <FinalCta />
-      <footer
-        style={{
-          borderTop: "1px solid var(--border-subtle)",
-          padding: "24px 40px",
-          textAlign: "center",
-        }}
-      >
-        <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "var(--text-muted)", margin: "0 0 8px" }}>
-          Built on 15 years of institutional trading. Not financial advice. Diagnostic analysis only.
-        </p>
-        <p style={{ margin: "0 0 8px" }}>
-          <Link href="/about" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
-            About
-          </Link>
-          <span style={{ color: "var(--border-subtle)", margin: "0 10px" }}>·</span>
-          <Link href="/privacy" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
-            Privacy Policy
-          </Link>
-          <span style={{ color: "var(--border-subtle)", margin: "0 10px" }}>·</span>
-          <Link href="/terms" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
-            Terms of Service
-          </Link>
-        </p>
-        <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "var(--text-muted)", textAlign: "center", marginBottom: "8px" }}>
-          For prop firms and institutional desks:{' '}
-          <a
-            href="mailto:hello@xrayforensic.com"
-            style={{ color: "var(--accent-primary)", textDecoration: "none" }}
+      <footer style={{ borderTop: "1px solid var(--border-subtle)" }}>
+        <div
+          style={{
+            width: "100%",
+            maxWidth: 1400,
+            margin: "0 auto",
+            padding: "0 32px",
+          }}
+        >
+          {/* Three-column grid */}
+          <div className="footer-grid">
+            {/* Brand */}
+            <div>
+              <p
+                style={{
+                  fontFamily: MONO,
+                  fontSize: "1rem",
+                  fontWeight: 800,
+                  color: "var(--text-primary)",
+                  letterSpacing: "0.06em",
+                  margin: "0 0 6px",
+                }}
+              >
+                X-RAY
+              </p>
+              <p
+                style={{
+                  fontFamily: MONO,
+                  fontSize: "0.6rem",
+                  color: "var(--text-muted)",
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  margin: "0 0 14px",
+                }}
+              >
+                FORENSIC TRADE DIAGNOSTIC
+              </p>
+              <p
+                style={{
+                  fontFamily: "Inter, sans-serif",
+                  fontSize: "0.75rem",
+                  color: "var(--text-muted)",
+                  lineHeight: 1.6,
+                  margin: 0,
+                }}
+              >
+                Built on 15 years of institutional trading.
+                <br />
+                Not financial advice. Diagnostic analysis only.
+              </p>
+            </div>
+
+            {/* Platform */}
+            <div>
+              <p
+                style={{
+                  fontFamily: MONO,
+                  fontSize: "0.6rem",
+                  color: "var(--text-muted)",
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  margin: "0 0 16px",
+                }}
+              >
+                PLATFORM
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <Link href="/#how-it-works" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
+                  How It Works
+                </Link>
+                <Link href="/#pricing" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
+                  Pricing
+                </Link>
+                <Link href="/#faq" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
+                  FAQ
+                </Link>
+                <Link href="/sample" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
+                  Sample Report
+                </Link>
+              </div>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <p
+                style={{
+                  fontFamily: MONO,
+                  fontSize: "0.6rem",
+                  color: "var(--text-muted)",
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  margin: "0 0 16px",
+                }}
+              >
+                LEGAL
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <Link href="/about" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
+                  About
+                </Link>
+                <Link href="/privacy" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
+                  Privacy Policy
+                </Link>
+                <Link href="/terms" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
+                  Terms of Service
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div
+            style={{
+              borderTop: "1px solid var(--border-subtle)",
+              paddingTop: 24,
+              paddingBottom: 24,
+              textAlign: "center",
+              marginTop: 0,
+            }}
           >
-            hello@xrayforensic.com
-          </a>
-        </p>
-        <p style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", margin: 0 }}>
-          &copy; 2026 X-Ray &middot; Forensic trade diagnostic &middot; Not financial advice &middot; All trading involves risk
-        </p>
+            <p
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontSize: "0.7rem",
+                color: "var(--text-muted)",
+                margin: "0 0 8px",
+              }}
+            >
+              For prop firms and institutional desks:{" "}
+              <a
+                href="mailto:hello@xrayforensic.com"
+                style={{ color: "var(--accent-primary)", textDecoration: "none" }}
+              >
+                hello@xrayforensic.com
+              </a>
+            </p>
+            <p style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", margin: 0 }}>
+              &copy; 2026 X-Ray &middot; Forensic trade diagnostic &middot; Not financial advice &middot; All trading involves risk
+            </p>
+          </div>
+        </div>
       </footer>
     </main>
   );

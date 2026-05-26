@@ -28,7 +28,7 @@ const FAQ = [
 
 export default function FaqSection() {
   return (
-    <section style={{ maxWidth: 720, margin: "0 auto", padding: "0 40px 100px" }}>
+    <section id="faq" style={{ maxWidth: 720, margin: "0 auto", padding: "0 40px 100px" }}>
       <FadeInUp>
         <h2
           style={{

@@ -69,7 +69,7 @@ const TIERS = [
 
 export default function TierCards() {
   return (
-    <section style={{ padding: "0 0 100px" }}>
+    <section id="pricing" style={{ padding: "0 0 100px" }}>
       <FadeInUp>
         <p
           style={{
