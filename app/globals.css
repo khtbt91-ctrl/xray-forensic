@@ -176,6 +176,14 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+.pre-challenge-grid {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  gap: 48px;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+}
 @media (max-width: 768px) {
   .ba-grid {
     grid-template-columns: 1fr;
@@ -183,6 +191,10 @@ body {
   }
   .calc-grid {
     grid-template-columns: 1fr;
+  }
+  .pre-challenge-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
   }
 }
 

@@ -7,6 +7,8 @@ import RadarSection from "./components/RadarSection";
 import FrameworkSection from "./components/FrameworkSection";
 import MetricBar from "./components/MetricBar";
 import HonestyGradient from "./components/HonestyGradient";
+import CaseStudies from "./components/CaseStudies";
+import PreChallengeSection from "./components/PreChallengeSection";
 import AudienceSection from "./components/AudienceSection";
 import ProtocolsSection from "./components/ProtocolsSection";
 import TierCards from "./components/TierCards";
@@ -30,14 +32,16 @@ export default function LandingPage() {
       <FrameworkSection />
       <MetricBar />
       <HonestyGradient />
+      <CaseStudies />
+      <PreChallengeSection />
       <AudienceSection />
       <ProtocolsSection />
       <TierCards />
       <OneTimeProducts />
       <LeakCalculator />
       <SamplePreview />
-      <FaqSection />
       <ComparisonSection />
+      <FaqSection />
       <FinalCta />
       <footer
         style={{
