@@ -58,7 +58,7 @@ const TIERS: {
     name: "FORENSIC",
     price: "$79/mo",
     tagline: "Institutional-grade behavioral intelligence.",
-    features: ["10 audits/month", "AI diagnosis", "Prop firm mode", "DNA profile", "Pre-mortem"],
+    features: ["10 audits/month", "Forensic AI narrative — full behavioral read", "Prop firm mode", "DNA profile", "Pre-mortem"],
     popular: true,
     disabled: false,
     accent: "var(--accent-primary)",
@@ -527,6 +527,7 @@ function Step3({
   const [processing, setProcessing] = useState(false);
   const [processingStepIndex, setProcessingStepIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [timedOut, setTimedOut] = useState(false);
 
   const validateAndSetFile = (f: File | null) => {
     if (!f) return;
@@ -545,12 +546,21 @@ function Step3({
 
     setProcessing(true);
     setError(null);
+    setTimedOut(false);
     setProcessingStepIndex(0);
 
+    const controller = new AbortController();
     const stepTimers: ReturnType<typeof setTimeout>[] = [];
     stepTimers.push(setTimeout(() => setProcessingStepIndex(1), 1500));
     stepTimers.push(setTimeout(() => setProcessingStepIndex(2), 3500));
     stepTimers.push(setTimeout(() => setProcessingStepIndex(3), 6000));
+
+    const timeoutTimer = setTimeout(() => {
+      controller.abort();
+      setTimedOut(true);
+      setProcessing(false);
+      stepTimers.forEach(clearTimeout);
+    }, 120000);
 
     try {
       const formData = new FormData();
@@ -574,9 +584,10 @@ function Step3({
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/analyze`,
-        { method: "POST", body: formData }
+        { method: "POST", body: formData, signal: controller.signal }
       );
 
+      clearTimeout(timeoutTimer);
       stepTimers.forEach(clearTimeout);
 
       if (!response.ok) {
@@ -590,9 +601,12 @@ function Step3({
       await new Promise((r) => setTimeout(r, 1200));
       router.push(`/report/${data.analysis_id}`);
     } catch (err: any) {
+      clearTimeout(timeoutTimer);
       stepTimers.forEach(clearTimeout);
-      setError(err.message || "Analysis failed. Please try again.");
-      setProcessing(false);
+      if (err.name !== "AbortError") {
+        setError(err.message || "Analysis failed. Please try again.");
+        setProcessing(false);
+      }
     }
   }, [selectedFile, profile, selectedTier, router]);
 
@@ -786,10 +800,35 @@ function Step3({
         🔒 Your file is analyzed and immediately discarded. We never store your raw trade data.
       </p>
 
+      {timedOut && (
+        <div style={{ background: "rgba(88,166,255,0.06)", border: "1px solid var(--border-subtle)", borderRadius: 8, padding: "16px 20px", marginBottom: 16 }}>
+          <p style={{ color: "var(--text-secondary)", fontFamily: MONO, fontSize: "0.85rem", margin: "0 0 4px" }}>
+            Analysis is taking longer than expected.
+          </p>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", margin: 0 }}>
+            Your report will be emailed when ready. You can close this tab.
+          </p>
+        </div>
+      )}
+
       {error && (
-        <p style={{ fontSize: 13, color: "var(--loss)", margin: "0 0 16px", fontFamily: MONO }}>
-          ⚠ {error}
-        </p>
+        <div style={{ background: "rgba(248,81,73,0.1)", border: "1px solid var(--loss)", borderRadius: 8, padding: "16px 20px", marginBottom: 16 }}>
+          <p style={{ color: "var(--loss)", fontFamily: "monospace", fontSize: "0.85rem", margin: 0 }}>
+            Diagnosis failed. Evidence corrupted.
+          </p>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", marginTop: 8, marginBottom: 0 }}>
+            This can happen with unsupported file formats or network issues. Try again or contact{" "}
+            <a href="mailto:hello@xrayforensic.com" style={{ color: "var(--accent-primary)" }}>
+              hello@xrayforensic.com
+            </a>
+          </p>
+          <button
+            onClick={() => setError(null)}
+            style={{ marginTop: 12, background: "transparent", border: "1px solid var(--border-active)", color: "var(--text-secondary)", padding: "6px 16px", borderRadius: 6, cursor: "pointer", fontSize: "0.8rem" }}
+          >
+            Try Again
+          </button>
+        </div>
       )}
 
       <button

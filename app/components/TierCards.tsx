@@ -36,7 +36,7 @@ const TIERS = [
     name: "FORENSIC",
     price: "$79/mo",
     tagline: "Institutional-grade behavioral intelligence.",
-    features: ["10 audits/month", "AI diagnosis", "Prop firm mode", "Pre-mortem analysis", "DNA profile", "Compliance tracking", "Pre-session briefing", "What-if engine"],
+    features: ["10 audits/month", "Forensic AI narrative — full behavioral read", "Prop firm mode", "Pre-mortem analysis", "DNA profile", "Compliance tracking", "Pre-session briefing", "What-if engine"],
     cta: "Get FORENSIC",
     href: "/new",
     highlight: true,

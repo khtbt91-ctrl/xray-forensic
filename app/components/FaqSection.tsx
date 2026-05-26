@@ -22,7 +22,7 @@ const FAQ = [
   },
   {
     q: "How fast do I get my report?",
-    a: "SIGNAL and AUDIT reports process in under 30 seconds. FORENSIC AI diagnosis completes in under 2 minutes.",
+    a: "SIGNAL and AUDIT reports process in under 30 seconds. FORENSIC-tier forensic diagnosis (AI-assisted) completes in under 2 minutes.",
   },
 ];
 

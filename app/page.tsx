@@ -171,6 +171,8 @@ export default function LandingPage() {
                 fontSize: "0.7rem",
                 color: "var(--text-muted)",
                 margin: "0 0 8px",
+                textAlign: "center",
+                width: "100%",
               }}
             >
               For prop firms and institutional desks:{" "}
