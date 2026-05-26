@@ -36,6 +36,7 @@ export default function RadarSection() {
   const [animated, setAnimated] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [activeInsight, setActiveInsight] = useState<string | null>(null);
+  const [hoveredDim, setHoveredDim] = useState<string | null>(null);
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -108,6 +109,8 @@ export default function RadarSection() {
                     return (
                       <g
                         onClick={() => setActiveInsight(activeInsight === payload.value ? null : payload.value)}
+                        onMouseEnter={() => setHoveredDim(payload.value)}
+                        onMouseLeave={() => setHoveredDim(null)}
                         cursor="pointer"
                       >
                         <text
@@ -115,9 +118,20 @@ export default function RadarSection() {
                           y={y}
                           textAnchor="middle"
                           dominantBaseline="central"
-                          fill={isActive ? "var(--accent-primary)" : "var(--text-secondary)"}
+                          fill={
+                            isActive
+                              ? "var(--accent-primary)"
+                              : hoveredDim === payload.value
+                              ? "var(--text-primary)"
+                              : "var(--text-secondary)"
+                          }
                           fontSize={11}
                           fontFamily={MONO}
+                          style={{
+                            cursor: "pointer",
+                            textDecoration: hoveredDim === payload.value ? "underline" : "none",
+                            transition: "fill 150ms ease",
+                          }}
                         >
                           {payload.value}
                         </text>

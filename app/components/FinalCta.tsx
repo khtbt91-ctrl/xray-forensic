@@ -1,9 +1,14 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FadeInUp } from "./shared";
 
 export default function FinalCta() {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
   return (
     <section style={{ background: "var(--bg-card)", borderTop: "1px solid var(--border-subtle)" }}>
       <FadeInUp>
@@ -23,9 +28,14 @@ export default function FinalCta() {
             X-Ray finds it before the market does.
           </p>
           <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/new" className="btn btn-primary" style={{ fontSize: 15, padding: "14px 32px" }}>
-              Get Diagnosed
-            </Link>
+            <button
+              onClick={() => { setLoading(true); router.push('/new'); }}
+              disabled={loading}
+              className="btn btn-primary"
+              style={{ fontSize: 15, padding: "14px 32px" }}
+            >
+              {loading ? 'Processing...' : 'Get Diagnosed'}
+            </button>
             <Link href="/sample" className="btn btn-ghost" style={{ fontSize: 15, padding: "14px 32px" }}>
               See Sample Verdict
             </Link>

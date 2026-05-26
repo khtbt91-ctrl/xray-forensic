@@ -794,11 +794,11 @@ function Step3({
 
       <button
         onClick={handleAnalyze}
-        disabled={!selectedFile}
+        disabled={!selectedFile || processing}
         className="btn btn-primary"
-        style={{ width: "100%", padding: "14px", fontSize: 15, opacity: selectedFile ? 1 : 0.4, cursor: selectedFile ? "pointer" : "not-allowed" }}
+        style={{ width: "100%", padding: "14px", fontSize: 15, opacity: (selectedFile && !processing) ? 1 : 0.4, cursor: (selectedFile && !processing) ? "pointer" : "not-allowed" }}
       >
-        Analyze
+        {processing ? 'Processing...' : 'Analyze'}
       </button>
     </div>
   );

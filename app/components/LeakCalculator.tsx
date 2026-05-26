@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import * as Slider from "@radix-ui/react-slider";
 import { MONO, FadeInUp } from "./shared";
 
@@ -59,12 +59,25 @@ function SliderRow({
 }
 
 export default function LeakCalculator() {
-  const [balance, setBalance] = useState(10000);
-  const [trades, setTrades] = useState(50);
-  const [winRate, setWinRate] = useState(42);
-  const [avgRR, setAvgRR] = useState(1.5);
-  const [revengePct, setRevengePct] = useState(20);
-  const [noSlPct, setNoSlPct] = useState(10);
+  const [values, setValues] = useState({
+    balance: 10000,
+    trades: 50,
+    winRate: 42,
+    avgRR: 1.5,
+    revengePct: 20,
+    noSlPct: 10,
+  });
+
+  const debounceRef = useRef<NodeJS.Timeout>();
+
+  const handleSliderChange = (key: string, value: number) => {
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setValues(prev => ({ ...prev, [key]: value }));
+    }, 300);
+  };
+
+  const { balance, trades, winRate, avgRR, revengePct, noSlPct } = values;
 
   const avgRisk = balance * 0.01;
   const wr = winRate / 100;
@@ -100,12 +113,12 @@ export default function LeakCalculator() {
       <div className="calc-grid" style={{ gap: 28, alignItems: "start" }}>
         <FadeInUp delay={0.1}>
           <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", borderRadius: 10, padding: "32px 36px" }}>
-            <SliderRow label="Account balance" value={balance} min={1000} max={500000} step={1000} onChange={setBalance} format={(v) => "$" + v.toLocaleString()} />
-            <SliderRow label="Trades / month" value={trades} min={10} max={500} onChange={setTrades} format={(v) => `${v}`} />
-            <SliderRow label="Win rate" value={winRate} min={20} max={80} onChange={setWinRate} format={(v) => `${v}%`} />
-            <SliderRow label="Average R:R" value={avgRR} min={0.5} max={5} step={0.1} onChange={setAvgRR} format={(v) => `${v.toFixed(1)}R`} />
-            <SliderRow label="Revenge trade %" value={revengePct} min={0} max={60} onChange={setRevengePct} format={(v) => `${v}%`} />
-            <SliderRow label="No-SL trade %" value={noSlPct} min={0} max={50} onChange={setNoSlPct} format={(v) => `${v}%`} />
+            <SliderRow label="Account balance" value={balance} min={1000} max={500000} step={1000} onChange={(v) => handleSliderChange('balance', v)} format={(v) => "$" + v.toLocaleString()} />
+            <SliderRow label="Trades / month" value={trades} min={10} max={500} onChange={(v) => handleSliderChange('trades', v)} format={(v) => `${v}`} />
+            <SliderRow label="Win rate" value={winRate} min={20} max={80} onChange={(v) => handleSliderChange('winRate', v)} format={(v) => `${v}%`} />
+            <SliderRow label="Average R:R" value={avgRR} min={0.5} max={5} step={0.1} onChange={(v) => handleSliderChange('avgRR', v)} format={(v) => `${v.toFixed(1)}R`} />
+            <SliderRow label="Revenge trade %" value={revengePct} min={0} max={60} onChange={(v) => handleSliderChange('revengePct', v)} format={(v) => `${v}%`} />
+            <SliderRow label="No-SL trade %" value={noSlPct} min={0} max={50} onChange={(v) => handleSliderChange('noSlPct', v)} format={(v) => `${v}%`} />
           </div>
         </FadeInUp>
 

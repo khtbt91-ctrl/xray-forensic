@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { MONO } from "./shared";
 
@@ -34,6 +35,8 @@ function renderTLine(line: TLine) {
 
 export default function HeroSection() {
   const [visibleLines, setVisibleLines] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = [];
@@ -87,9 +90,14 @@ export default function HeroSection() {
       </p>
 
       <div className="hero-ctas" style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap", marginBottom: 56 }}>
-        <Link href="/new" className="btn btn-primary" style={{ fontSize: 15, padding: "14px 32px" }}>
-          Get Diagnosed
-        </Link>
+        <button
+          onClick={() => { setLoading(true); router.push('/new'); }}
+          disabled={loading}
+          className="btn btn-primary"
+          style={{ fontSize: 15, padding: "14px 32px" }}
+        >
+          {loading ? 'Processing...' : 'Get Diagnosed'}
+        </button>
         <Link href="/sample" className="btn btn-ghost" style={{ fontSize: 15, padding: "14px 32px" }}>
           See Sample Verdict
         </Link>

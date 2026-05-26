@@ -17,16 +17,18 @@ export default function TrustBar() {
         background: "var(--bg-card)",
         borderTop: "1px solid var(--border-subtle)",
         borderBottom: "1px solid var(--border-subtle)",
-        padding: "14px 40px",
+        padding: "12px 24px",
+        marginTop: 32,
+        marginBottom: 32,
       }}
     >
-      <div className="trust-bar-row" style={{ maxWidth: 900, margin: "0 auto" }}>
+      <div className="trust-bar-row" style={{ maxWidth: 900, margin: "0 auto", gap: 20 }}>
         {items.map((item, i) => (
           <Fragment key={i}>
             {i > 0 && (
               <span
                 className="trust-bar-dot"
-                style={{ color: "var(--text-muted)", margin: "0 16px", fontSize: "0.75rem" }}
+                style={{ color: "var(--text-muted)", margin: "0 10px", fontSize: "0.75rem" }}
               >
                 ·
               </span>

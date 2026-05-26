@@ -110,11 +110,13 @@ export default function TierCards() {
               style={{
                 flexShrink: 0,
                 width: 244,
+                minHeight: 500,
                 background: tier.highlight ? "var(--bg-elevated)" : "var(--bg-card)",
                 border: tier.highlight ? "1px solid var(--accent-primary)" : "1px solid var(--border-subtle)",
                 borderRadius: 10,
                 padding: "28px 24px",
                 position: "relative",
+                overflow: "visible",
                 boxShadow: tier.highlight ? "0 0 36px rgba(88,166,255,0.14)" : "none",
               }}
             >
@@ -122,7 +124,7 @@ export default function TierCards() {
                 <div
                   style={{
                     position: "absolute",
-                    top: -1,
+                    top: -14,
                     left: "50%",
                     transform: "translateX(-50%)",
                     background: "var(--accent-primary)",
@@ -131,7 +133,7 @@ export default function TierCards() {
                     fontFamily: MONO,
                     letterSpacing: "0.12em",
                     padding: "3px 12px",
-                    borderRadius: "0 0 6px 6px",
+                    borderRadius: "4px 4px 0 0",
                     fontWeight: 600,
                     whiteSpace: "nowrap",
                   }}

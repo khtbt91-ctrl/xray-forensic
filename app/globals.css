@@ -65,7 +65,8 @@ body {
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s,
+              transform 100ms ease, opacity 100ms ease;
   outline: none;
   border: 1px solid transparent;
   padding: 10px 20px;
@@ -557,4 +558,48 @@ body {
 }
 .waitlist-input::placeholder {
   color: var(--text-muted);
+}
+
+/* ─── T1: Line height ─────────────────────────────────────────────────────── */
+p, li, td, th, label, span, div {
+  line-height: 1.65;
+}
+
+/* ─── T1: Prose max-width (exceptions: nav, .card, tables) ───────────────── */
+.prose, p, li {
+  max-width: 65ch;
+}
+nav p, nav li,
+.card p, .card li,
+table p, table li,
+td, th {
+  max-width: none;
+}
+
+/* ─── T1: Font weight triad ──────────────────────────────────────────────── */
+h2 { font-weight: 600; }
+h3 { font-weight: 500; }
+h4, h5 { font-weight: 500; }
+body, p { font-weight: 400; }
+
+/* ─── T1: Tabular nums on currency elements ──────────────────────────────── */
+.currency, [data-currency],
+.stat-number, .leak-number,
+.price, .pnl {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* ─── T2: Button states ──────────────────────────────────────────────────── */
+button, [role="button"] {
+  transition: transform 100ms ease, opacity 100ms ease;
+}
+button:active, .btn:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
