@@ -87,6 +87,8 @@ export default function LandingPage() {
                   color: "var(--text-muted)",
                   lineHeight: 1.6,
                   margin: 0,
+                  textAlign: "center",
+                  width: "100%",
                 }}
               >
                 Built on 15 years of institutional trading.

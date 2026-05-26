@@ -47,7 +47,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="hero-section" style={{ maxWidth: 860, margin: "0 auto", padding: "calc(64px + 72px) 40px 100px", textAlign: "center" }}>
+    <section className="hero-section" style={{ maxWidth: 860, margin: "0 auto", padding: "calc(64px + 72px) 40px 100px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
       <p
         style={{
           fontFamily: MONO,
@@ -56,6 +56,9 @@ export default function HeroSection() {
           textTransform: "uppercase",
           color: "var(--text-muted)",
           marginBottom: 20,
+          textAlign: "center",
+          width: "100%",
+          display: "block",
         }}
       >
         FORENSIC TRADE DIAGNOSTIC
