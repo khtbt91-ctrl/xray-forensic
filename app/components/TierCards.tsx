@@ -7,8 +7,14 @@ const TIERS = [
   {
     name: "SIGNAL",
     price: "Free",
-    tagline: "Know that you're losing. Not why.",
-    features: ["1 audit/month", "7 scores (no narrative)", "Session breakdown", "3 behavioral flags", "Watermarked report"],
+    tagline: "One diagnosis. Real evidence. Enough to know if you need the full picture.",
+    features: [
+      "1 full audit per month",
+      "7 dimension scores with one-line finding each",
+      "Session P&L breakdown",
+      "Top 3 behavioral flags with dollar cost",
+      "Watermarked report (no prescription)",
+    ],
     cta: "Get Diagnosed",
     href: "/new",
     highlight: false,
@@ -158,6 +164,18 @@ export default function TierCards() {
                   </li>
                 ))}
               </ul>
+              {tier.name === "SIGNAL" && (
+                <p style={{
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '0.75rem',
+                  fontStyle: 'italic',
+                  color: 'var(--text-muted)',
+                  marginTop: '16px',
+                  lineHeight: '1.5',
+                }}>
+                  The prescription and protocol library unlock from AUDIT tier.
+                </p>
+              )}
               <Link
                 href={tier.href}
                 className={tier.highlight ? "btn btn-primary" : "btn btn-ghost"}

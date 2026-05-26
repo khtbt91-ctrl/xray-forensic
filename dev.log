@@ -1,0 +1,855 @@
+
+> xray-web@0.1.0 dev
+> next dev --turbo --port 3099
+
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3099
+- Network:       http://26.69.203.215:3099
+- Environments: .env.local
+✓ Ready in 1271ms
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\USER\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\USER\xray-web\package-lock.json
+
+
+○ Compiling / ...
+
+<--- Last few GCs --->
+
+[111872:0000025E38D81000]    19865 ms: Scavenge 32.9 (50.8) -> 21.0 (51.0) MB, pooled: 0 MB, 1.97 / 0.01 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: NewSpace::EnsureCurrentCapacity Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 00007FF74FEF20AD node::SetCppgcReference+17245
+ 2: 00007FF74FE5A4D8 v8::base::CPU::num_virtual_address_bits+92376
+ 3: 00007FF7509DA1B1 v8::Isolate::ReportExternalAllocationLimitReached+65
+ 4: 00007FF7509C7096 v8::Function::Experimental_IsNopFunction+2790
+ 5: 00007FF750816920 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+31392
+ 6: 00007FF7507F442F v8::CpuProfileNode::GetScriptResourceNameStr+91615
+ 7: 00007FF75081D4B8 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+58936
+ 8: 00007FF75081FA88 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+68616
+ 9: 00007FF7508102E9 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+5225
+10: 00007FF75080BCF5 v8::CpuProfileNode::GetScriptResourceNameStr+188069
+11: 00007FF7501913BD BIO_ssl_shutdown+189
+12: 7FF8000000000000 
+✓ Finished writing to filesystem cache in 21.6s
+
+thread 'tokio-runtime-worker' (131732) panicked at C:\Users\runneradmin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tokio-1.43.0\src\io\blocking.rs:76:46:
+OS can't spawn worker thread: Insufficient system resources exist to complete the requested service. (os error 1450)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+#
+# Fatal error in , line 0
+# Out of memory: HashMap::Initialize
+#
+#
+#
+#FailureMessage Object: 000000DB261FA4C0
+----- Native stack trace -----
+
+ 1: 00007FF74FEF20AD node::SetCppgcReference+17245
+ 2: 00007FF74FDD62CF node::TriggerNodeReport+75631
+ 3: 00007FF750FA1B05 V8_Fatal+197
+ 4: 00007FF7509B8743 v8::SharedValueConveyor::SharedValueConveyor+509843
+ 5: 00007FF7509B81B6 v8::SharedValueConveyor::SharedValueConveyor+508422
+ 6: 00007FF7509B847D v8::SharedValueConveyor::SharedValueConveyor+509133
+ 7: 00007FF7509B82F8 v8::SharedValueConveyor::SharedValueConveyor+508744
+ 8: 00007FF750570521 v8::base::Thread::StartSynchronously+10449
+ 9: 00007FF7505A9A5F v8::base::Thread::StartSynchronously+245263
+10: 00007FF7505A7229 v8::base::Thread::StartSynchronously+234969
+11: 00007FF75059B5B7 v8::base::Thread::StartSynchronously+186727
+12: 00007FF7505A90AB v8::base::Thread::StartSynchronously+242779
+13: 00007FF75059AAE6 v8::base::Thread::StartSynchronously+183958
+14: 00007FF7505A9C2C v8::base::Thread::StartSynchronously+245724
+15: 00007FF7505A7229 v8::base::Thread::StartSynchronously+234969
+16: 00007FF75059B5B7 v8::base::Thread::StartSynchronously+186727
+17: 00007FF7505A90AB v8::base::Thread::StartSynchronously+242779
+18: 00007FF75059AAE6 v8::base::Thread::StartSynchronously+183958
+19: 00007FF7505A9C2C v8::base::Thread::StartSynchronously+245724
+20: 00007FF7505A7229 v8::base::Thread::StartSynchronously+234969
+21: 00007FF75059B5B7 v8::base::Thread::StartSynchronously+186727
+22: 00007FF7505A90AB v8::base::Thread::StartSynchronously+242779
+23: 00007FF7505A86CD v8::base::Thread::StartSynchronously+240253
+24: 00007FF7505A8233 v8::base::Thread::StartSynchronously+239075
+25: 00007FF7505A9C39 v8::base::Thread::StartSynchronously+245737
+26: 00007FF7505A7229 v8::base::Thread::StartSynchronously+234969
+27: 00007FF75059B5B7 v8::base::Thread::StartSynchronously+186727
+28: 00007FF7505A90AB v8::base::Thread::StartSynchronously+242779
+29: 00007FF7505A86CD v8::base::Thread::StartSynchronously+240253
+30: 00007FF7505A8233 v8::base::Thread::StartSynchronously+239075
+31: 00007FF7505A9C39 v8::base::Thread::StartSynchronously+245737
+32: 00007FF7505A7229 v8::base::Thread::StartSynchronously+234969
+33: 00007FF75059B5B7 v8::base::Thread::StartSynchronously+186727
+34: 00007FF7505AF049 v8::base::Thread::StartSynchronously+267257
+35: 00007FF7505AF4D5 v8::base::Thread::StartSynchronously+268421
+36: 00007FF7505A4630 v8::base::Thread::StartSynchronously+223712
+37: 00007FF7505A38E5 v8::base::Thread::StartSynchronously+220309
+38: 00007FF7505A50A8 v8::base::Thread::StartSynchronously+226392
+39: 00007FF750596026 v8::base::Thread::StartSynchronously+164822
+40: 00007FF7505AA28B v8::base::Thread::StartSynchronously+247355
+41: 00007FF75058F29C v8::base::Thread::StartSynchronously+136780
+42: 00007FF750941B69 v8::SharedValueConveyor::SharedValueConveyor+23481
+43: 00007FF75094721A v8::SharedValueConveyor::SharedValueConveyor+45674
+44: 00007FF7509C1DE9 v8::ScriptCompiler::CompileFunctionInternal+697
+45: 00007FF7509C1B24 v8::ScriptCompiler::CompileFunction+84
+46: 00007FF74FE67FB8 node::OnFatalError+55976
+47: 00007FF74FE68514 node::OnFatalError+57348
+48: 00007FF6F09CFA64 
+
+<--- Last few GCs --->
+
+[152688:00000221F42C1000]       72 ms: Scavenge 6.4 (8.0) -> 6.3 (10.7) MB, pooled: 0 MB, 0.95 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[152688:00000221F42C1000]      153 ms: Scavenge 8.5 (11.0) -> 7.6 (11.2) MB, pooled: 0 MB, 0.85 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[152688:00000221F42C1000]      232 ms: Scavenge 9.2 (11.5) -> 8.4 (16.5) MB, pooled: 0 MB, 1.05 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Zone Allocation failed - process out of memory
+----- Native stack trace -----
+
+ 1: 00007FF74FEF20AD 
+
+
+ 2: 00007FF74FE5A4D8 
+#
+ 3: 00007FF7509DA1B1 
+# Fatal process out of memory: Zone
+ 4: 00007FF7509C7096 
+ 5: 00007FF750498ECB 
+#
+ 6: 00007FF7509ABBF3 
+----- Native stack trace -----
+ 7: 00007FF7509A8AEC 
+
+ 8: 00007FF75059CD7B 
+ 9: 00007FF7505AC12A 
+10: 00007FF7505A58DE 
+ 1: 00007FF74FEF20AD node::SetCppgcReference+17245
+11: 00007FF7505AC14B 
+ 2: 00007FF74FDD62CF node::TriggerNodeReport+75631
+12: 00007FF75059CE98 
+ 3: 00007FF750FA16E6 v8::base::FatalOOM+54
+13: 00007FF7505AC12A 
+ 4: 00007FF7509C6EA1 v8::Function::Experimental_IsNopFunction+2289
+14: 00007FF7505A58DE 
+ 5: 00007FF750498ECB v8::SnapshotCreator::GetIsolate+52139
+15: 00007FF7505AC14B 
+ 6: 00007FF7510FB397 v8::internal::compiler::CompilationDependencies::TransitionDependencyOffTheRecord+127399
+16: 00007FF75059CE98 
+ 7: 00007FF75110A4B0 v8::internal::compiler::CompilationDependencies::TransitionDependencyOffTheRecord+189120
+17: 00007FF7505AC12A 
+ 8: 00007FF751102370 v8::internal::compiler::CompilationDependencies::TransitionDependencyOffTheRecord+156032
+18: 00007FF7505A222F 
+ 9: 00007FF751100745 v8::internal::compiler::CompilationDependencies::TransitionDependencyOffTheRecord+148821
+19: 00007FF7505A2982 
+10: 00007FF751100A2B v8::internal::compiler::CompilationDependencies::TransitionDependencyOffTheRecord+149563
+20: 00007FF7505AC1B3 
+
+11: 00007FF7513E1492 v8::internal::compiler::CompilationDependencies::TransitionDependencyOffTheRecord+3166882
+21: 00007FF7505A4630 
+<--- Last few GCs --->
+12: 00007FF7510C52F2 v8::internal::compiler::CompilationDependencies::~CompilationDependencies+816050
+22: 00007FF7505A38E5 
+
+13: 00007FF7510BFB1C v8::internal::compiler::CompilationDependencies::~CompilationDependencies+793564
+23: 00007FF7505A50A8 
+14: 00007FF7510B934A v8::internal::compiler::CompilationDependencies::~CompilationDependencies+766986
+[153048:0000021686161000]    10622 ms: Scavenge 22.3 (31.6) -> 15.7 (32.1) MB, pooled: 0 MB, 0.57 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+24: 00007FF7505957B4 
+[153048:0000021686161000]    10657 ms: Scavenge 22.9 (32.1) -> 16.8 (32.9) MB, pooled: 0 MB, 0.86 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+15: 00007FF7509437E4 v8::SharedValueConveyor::SharedValueConveyor+30772
+25: 00007FF7505A3E3E 
+
+16: 00007FF7508FCFFF v8::BigIntObject::ValueOf+41519
+26: 00007FF75058EFFE 
+17: 00007FF750BCB995 v8::PropertyDescriptor::writable+1996821
+27: 00007FF75094012A 
+
+18: 00007FF74FDD8B59 EVP_CIPHER_CTX_get_cipher_data+713
+28: 00007FF75093FB5A 
+<--- JS stacktrace --->
+19: 00007FF74FF52323 uv_poll_stop+291
+29: 00007FF75050C3E7 
+
+20: 00007FF7516B066E inflateValidate+153502
+30: 00007FF6F0A6D4BA 
+FATAL ERROR: NewSpace::EnsureCurrentCapacity Allocation failed - JavaScript heap out of memory
+21: 00007FFE145FE957 BaseThreadInitThunk+23
+----- Native stack trace -----
+22: 00007FFE1474427C RtlUserThreadStart+44
+
+ 1: 00007FF74FEF20AD 
+ 2: 00007FF74FE5A4D8 
+ 3: 00007FF7509DA1B1 
+ 4: 00007FF7509C7096 
+ 5: 00007FF750816920 
+ 6: 00007FF7507F442F 
+ 7: 00007FF75081D4B8 
+ 8: 00007FF75081FA88 
+ 9: 00007FF7508102E9 
+10: 00007FF75080BCF5 
+11: 00007FF7501913BD 
+
+thread 'tokio-runtime-worker' (150820) panicked at C:\Users\runneradmin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tokio-1.43.0\src\io\blocking.rs:76:46:
+OS can't spawn worker thread: Insufficient system resources exist to complete the requested service. (os error 1450)
+
+<--- Last few GCs --->
+
+[137064:000002FC6E433000]     8388 ms: Scavenge 13.6 (18.4) -> 11.3 (19.9) MB, pooled: 0 MB, 1009.74 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[137064:000002FC6E433000]    16521 ms: Scavenge 15.6 (20.1) -> 13.9 (21.6) MB, pooled: 0 MB, 4042.40 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: NewSpace::EnsureCurrentCapacity Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 00007FF74FEF20AD 
+ 2: 00007FF74FE5A4D8 
+ 3: 00007FF7509DA1B1 
+ 4: 00007FF7509C7096 
+ 5: 00007FF750816920 
+ 6: 00007FF7507F442F 
+ 7: 00007FF75081D4B8 
+ 8: 00007FF75081FA88 
+ 9: 00007FF7508102E9 
+10: 00007FF75080BCF5 
+11: 00007FF7501913BD 
+12: 7FF8000000000000 
+✓ Finished writing to filesystem cache in 16.9s
+
+
+#
+# Fatal process out of memory: Zone
+#
+----- Native stack trace -----
+
+
+<--- Last few GCs --->
+
+[43656:000001CF71975000]    15136 ms: Mark-Compact (reduce) 5.1 (7.9) -> 4.8 (6.7) MB, pooled: 0 MB, 2.10 / 0.00 ms  (average mu = 1.000, current mu = 1.000) last resort; GC in old space requested
+[43656:000001CF71975000]    16146 ms: Mark-Compact (reduce) 4.8 (6.7) -> 4.8 (6.4) MB, pooled: 0 MB, 1009.98 / 0.00 ms  (average mu = 0.937, current mu = 0.000) last resort; GC in old space requested
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Committing semi space failed. Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 00007FF74FEF20AD 
+ 1: 00007FF74FEF20AD 
+ 2: 00007FF74FDD62CF 
+ 3: 00007FF750FA16E6 
+ 2: 00007FF74FE5A4D8 
+ 4: 00007FF7509C6EA1 
+ 3: 00007FF7509DA1B1 
+ 5: 00007FF750498ECB 
+ 4: 00007FF7509C7096 
+ 6: 00007FF750259274 
+ 5: 00007FF750816920 
+ 7: 00007FF75153A81D 
+ 6: 00007FF7507CF6C3 
+ 8: 00007FF751541002 
+ 7: 00007FF75081FA1C 
+ 9: 00007FF7515412A6 
+ 8: 00007FF7508102E9 
+10: 00007FF751531BDE 
+ 9: 00007FF75080BCF5 
+11: 00007FF7515318AD 
+10: 00007FF7501913BD 
+12: 00007FF751530EEE 
+13: 00007FF75154A97B 
+14: 00007FF7510BF784 
+15: 00007FF7510B934A 
+16: 00007FF7509437E4 
+17: 00007FF7508FCFFF 
+18: 00007FF750BCB995 
+19: 00007FF74FDD8B59 
+20: 00007FF74FF52323 
+21: 00007FF7516B066E 
+22: 00007FFE145FE957 BaseThreadInitThunk+23
+23: 00007FFE1474427C RtlUserThreadStart+44
+
+thread 'tokio-runtime-worker' (14396) panicked at C:\Users\runneradmin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tokio-1.43.0\src\io\blocking.rs:76:46:
+OS can't spawn worker thread: Insufficient system resources exist to complete the requested service. (os error 1450)
+
+<--- Last few GCs --->
+
+[144176:000001FD646E1000]     5039 ms: Scavenge 12.8 (17.8) -> 10.5 (18.8) MB, pooled: 0 MB, 0.58 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[144176:000001FD646E1000]     5091 ms: Scavenge 14.8 (19.3) -> 13.1 (28.5) MB, pooled: 0 MB, 0.97 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Zone Allocation failed - process out of memory
+----- Native stack trace -----
+
+ 1: 00007FF74FEF20AD 
+ 2: 00007FF74FE5A4D8 
+ 3: 00007FF7509DA1B1 
+ 4: 00007FF7509C7096 
+ 5: 00007FF750498ECB 
+ 6: 00007FF7509B8413 
+ 7: 00007FF7509B82F8 
+ 8: 00007FF750570521 
+ 9: 00007FF7505A9A5F 
+10: 00007FF7505A7229 
+11: 00007FF75059B5B7 
+12: 00007FF75059A52F 
+13: 00007FF7505A6CF5 
+14: 00007FF7505A7267 
+15: 00007FF75059B5B7 
+16: 00007FF7505AF049 
+17: 00007FF7505AF4D5 
+18: 00007FF7505A4630 
+19: 00007FF7505A38E5 
+20: 00007FF7505A50A8 
+21: 00007FF750596026 
+22: 00007FF7505AA28B 
+23: 00007FF75058F29C 
+24: 00007FF750941B69 
+25: 00007FF75094721A 
+26: 00007FF7509C1DE9 
+27: 00007FF7509C1B24 
+28: 00007FF74FE67FB8 
+29: 00007FF74FE68514 
+30: 00007FF6F09CFA64 
+✓ Finished writing to filesystem cache in 20.6s
+
+
+#
+# Fatal process out of memory: Zone
+#
+----- Native stack trace -----
+
+
+<--- Last few GCs --->
+
+[137156:000001F976E7A000]     2092 ms: Scavenge 8.5 (11.0) -> 7.6 (11.2) MB, pooled: 0 MB, 0.64 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[137156:000001F976E7A000]     2125 ms: Scavenge 9.2 (11.5) -> 8.4 (16.7) MB, pooled: 0 MB, 0.78 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[137156:000001F976E7A000]     5229 ms: Scavenge 12.6 (17.4) -> 10.0 (18.4) MB, pooled: 0 MB, 0.68 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: NewSpace::EnsureCurrentCapacity Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 00007FF74FEF20AD node::SetCppgcReference+17245
+ 2: 00007FF74FE5A4D8 v8::base::CPU::num_virtual_address_bits+92376
+ 3: 00007FF7509DA1B1 v8::Isolate::ReportExternalAllocationLimitReached+65
+ 4: 00007FF7509C7096 v8::Function::Experimental_IsNopFunction+2790
+ 5: 00007FF750816920 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+31392
+ 6: 00007FF7507F442F v8::CpuProfileNode::GetScriptResourceNameStr+91615
+ 7: 00007FF75081D4B8 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+58936
+ 8: 00007FF75081FA88 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+68616
+ 9: 00007FF7508102E9 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+5225
+10: 00007FF75080BCF5 v8::CpuProfileNode::GetScriptResourceNameStr+188069
+11: 00007FF7501913BD BIO_ssl_shutdown+189
+12: 7FF8000000000000 
+
+<--- Last few GCs --->
+
+[64524:0000020761F71000]    10268 ms: Scavenge 11.0 (13.9) -> 9.8 (14.4) MB, pooled: 0 MB, 1011.08 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[64524:0000020761F71000]    11325 ms: Scavenge 11.5 (14.4) -> 10.3 (18.9) MB, pooled: 0 MB, 1015.39 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Zone Allocation failed - process out of memory
+----- Native stack trace -----
+
+
+<--- Last few GCs --->
+
+[21440:0000017960443000]       49 ms: Scavenge 6.4 (8.0) -> 6.3 (11.0) MB, pooled: 0 MB, 0.80 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[21440:0000017960443000]     1100 ms: Scavenge 8.5 (11.0) -> 7.6 (11.2) MB, pooled: 0 MB, 0.73 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[21440:0000017960443000]     5176 ms: Scavenge 9.2 (11.5) -> 8.4 (12.5) MB, pooled: 0 MB, 3038.55 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: NewSpace::EnsureCurrentCapacity Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+
+<--- Last few GCs --->
+
+[138804:000001E8C67AF000]    11286 ms: Scavenge 11.0 (13.9) -> 9.8 (14.4) MB, pooled: 0 MB, 0.48 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[138804:000001E8C67AF000]    12339 ms: Scavenge 11.5 (14.4) -> 10.3 (19.1) MB, pooled: 0 MB, 1013.69 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Zone Allocation failed - process out of memory
+----- Native stack trace -----
+
+ 1: 00007FF74FEF20AD node::SetCppgcReference+17245
+ 1: 00007FF74FEF20AD 
+ 2: 00007FF74FE5A4D8 
+ 3: 00007FF7509DA1B1 
+ 1: 00007FF74FEF20AD 
+ 2: 00007FF74FE5A4D8 v8::base::CPU::num_virtual_address_bits+92376
+ 4: 00007FF7509C7096 
+ 3: 00007FF7509DA1B1 v8::Isolate::ReportExternalAllocationLimitReached+65
+ 2: 00007FF74FE5A4D8 
+ 5: 00007FF750498ECB 
+ 3: 00007FF7509DA1B1 
+ 6: 00007FF750259016 
+ 4: 00007FF7509C7096 
+ 4: 00007FF7509C7096 v8::Function::Experimental_IsNopFunction+2790
+ 5: 00007FF750498ECB v8::SnapshotCreator::GetIsolate+52139
+ 7: 00007FF75090225F 
+ 5: 00007FF750816920 
+ 6: 00007FF750598306 v8::base::Thread::StartSynchronously+173750
+ 8: 00007FF750902023 
+ 6: 00007FF7507F442F 
+ 7: 00007FF7505A4FA6 v8::base::Thread::StartSynchronously+226134
+ 9: 00007FF750764E5C 
+ 7: 00007FF75081D4B8 
+ 8: 00007FF7505A4D3C v8::base::Thread::StartSynchronously+225516
+10: 00007FF750770559 
+ 8: 00007FF75081FA88 
+ 9: 00007FF7505A9C05 v8::base::Thread::StartSynchronously+245685
+11: 00007FF7507493FC 
+10: 00007FF7505A7229 v8::base::Thread::StartSynchronously+234969
+ 9: 00007FF7508102E9 
+12: 00007FF750769F54 
+10: 00007FF75080BCF5 
+11: 00007FF75059B5B7 v8::base::Thread::StartSynchronously+186727
+13: 00007FF750774C53 
+11: 00007FF7501913BD 
+12: 00007FF7505AF049 v8::base::Thread::StartSynchronously+267257
+14: 00007FF75074E34B 
+12: 7FF8000000000000 
+15: 00007FF75075D6D5 
+13: 00007FF7505AF4D5 v8::base::Thread::StartSynchronously+268421
+14: 00007FF7505A4630 v8::base::Thread::StartSynchronously+223712
+16: 00007FF75075667A 
+15: 00007FF7505A38E5 v8::base::Thread::StartSynchronously+220309
+17: 00007FF750759BC6 
+16: 00007FF7505A50A8 v8::base::Thread::StartSynchronously+226392
+18: 00007FF750755D6B 
+17: 00007FF7505A4D3C v8::base::Thread::StartSynchronously+225516
+19: 00007FF75075D685 
+18: 00007FF7505A9C05 v8::base::Thread::StartSynchronously+245685
+20: 00007FF75075667A 
+19: 00007FF7505A7229 v8::base::Thread::StartSynchronously+234969
+21: 00007FF750759C7D 
+20: 00007FF75059B5B7 v8::base::Thread::StartSynchronously+186727
+22: 00007FF75075CF9B 
+21: 00007FF7505A0DEE v8::base::Thread::StartSynchronously+209310
+23: 00007FF75075667A 
+22: 00007FF7505A9D56 v8::base::Thread::StartSynchronously+246022
+24: 00007FF750760065 
+23: 00007FF7505A7229 v8::base::Thread::StartSynchronously+234969
+25: 00007FF750754912 
+24: 00007FF75059B5B7 v8::base::Thread::StartSynchronously+186727
+26: 00007FF750754568 
+25: 00007FF75059A52F v8::base::Thread::StartSynchronously+182495
+27: 00007FF750743E38 
+26: 00007FF7505A6CF5 v8::base::Thread::StartSynchronously+233637
+28: 00007FF750943878 
+27: 00007FF7505A7267 v8::base::Thread::StartSynchronously+235031
+29: 00007FF75093CAC8 
+28: 00007FF75059B5B7 v8::base::Thread::StartSynchronously+186727
+30: 00007FF750941E72 
+29: 00007FF7505A0DEE v8::base::Thread::StartSynchronously+209310
+31: 00007FF75094721A 
+30: 00007FF7505A12BE v8::base::Thread::StartSynchronously+210542
+32: 00007FF7509C1DE9 
+31: 00007FF7505AD2E7 v8::base::Thread::StartSynchronously+259735
+33: 00007FF7509C1B24 
+32: 00007FF7505A4630 v8::base::Thread::StartSynchronously+223712
+34: 00007FF74FE67FB8 
+33: 00007FF7505A38E5 v8::base::Thread::StartSynchronously+220309
+35: 00007FF74FE68514 
+34: 00007FF7505A50A8 v8::base::Thread::StartSynchronously+226392
+36: 00007FF6F09CFA64 
+35: 00007FF750596026 v8::base::Thread::StartSynchronously+164822
+36: 00007FF7505AA28B v8::base::Thread::StartSynchronously+247355
+37: 00007FF75058F29C v8::base::Thread::StartSynchronously+136780
+38: 00007FF750941B69 v8::SharedValueConveyor::SharedValueConveyor+23481
+39: 00007FF75094721A v8::SharedValueConveyor::SharedValueConveyor+45674
+40: 00007FF7509C1DE9 v8::ScriptCompiler::CompileFunctionInternal+697
+41: 00007FF7509C1B24 v8::ScriptCompiler::CompileFunction+84
+42: 00007FF74FE67FB8 node::OnFatalError+55976
+43: 00007FF74FE68514 node::OnFatalError+57348
+44: 00007FF6F09CFA64 
+
+thread 'tokio-runtime-worker' (131732) panicked at C:\Users\runneradmin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tokio-1.43.0\src\io\blocking.rs:76:46:
+OS can't spawn worker thread: Insufficient system resources exist to complete the requested service. (os error 1450)
+
+thread 'tokio-runtime-worker' (94320) panicked at C:\Users\runneradmin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tokio-1.43.0\src\io\blocking.rs:76:46:
+OS can't spawn worker thread: Insufficient system resources exist to complete the requested service. (os error 1450)
+
+thread 'tokio-runtime-worker' (119056) panicked at C:\Users\runneradmin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tokio-1.43.0\src\io\blocking.rs:76:46:
+OS can't spawn worker thread: Insufficient system resources exist to complete the requested service. (os error 1450)
+
+
+
+
+<--- Last few GCs --->
+<--- Last few GCs --->
+#
+
+
+# Fatal error in , line 0
+[153576:000001E54E546000]     4471 ms: Scavenge 9.2 (11.5) -> 8.5 (16.7) MB, pooled: 0 MB, 1037.87 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[80572:000001F78F061000]     4528 ms: Scavenge 13.5 (18.6) -> 11.2 (19.6) MB, pooled: 0 MB, 0.58 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+# Out of memory: HashMap::Initialize
+[153576:000001E54E546000]     6608 ms: Mark-Compact 9.5 (17.0) -> 7.5 (16.7) MB, pooled: 0 MB, 3.23 / 0.00 ms  (average mu = 1.000, current mu = 1.000) background allocation failure; GC in old space requested
+[80572:000001F78F061000]     7686 ms: Scavenge 15.6 (20.1) -> 13.8 (29.3) MB, pooled: 0 MB, 1.32 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+#
+
+
+#
+
+#
+<--- JS stacktrace --->
+#FailureMessage Object: 000000EF4A1F9CE0
+
+
+----- Native stack trace -----
+FATAL ERROR: NewSpace::EnsureCurrentCapacity Allocation failed - JavaScript heap out of memory
+
+<--- JS stacktrace --->
+----- Native stack trace -----
+ 1: 00007FF74FEF20AD 
+
+
+ 2: 00007FF74FDD62CF 
+FATAL ERROR: Zone Allocation failed - process out of memory
+ 1: 00007FF74FEF20AD node::SetCppgcReference+17245
+ 3: 00007FF750FA1B05 
+----- Native stack trace -----
+ 2: 00007FF74FE5A4D8 v8::base::CPU::num_virtual_address_bits+92376
+ 4: 00007FF7509B8743 
+
+ 3: 00007FF7509DA1B1 v8::Isolate::ReportExternalAllocationLimitReached+65
+ 5: 00007FF7509B81B6 
+ 1: 00007FF74FEF20AD node::SetCppgcReference+17245
+ 4: 00007FF7509C7096 v8::Function::Experimental_IsNopFunction+2790
+ 6: 00007FF7509B847D 
+ 2: 00007FF74FE5A4D8 v8::base::CPU::num_virtual_address_bits+92376
+ 5: 00007FF750816920 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+31392
+ 7: 00007FF7509B82F8 
+ 3: 00007FF7509DA1B1 v8::Isolate::ReportExternalAllocationLimitReached+65
+ 6: 00007FF7507F442F v8::CpuProfileNode::GetScriptResourceNameStr+91615
+ 8: 00007FF750570521 
+ 4: 00007FF7509C7096 v8::Function::Experimental_IsNopFunction+2790
+ 7: 00007FF75081D4B8 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+58936
+ 9: 00007FF75057CF20 
+ 5: 00007FF750498ECB v8::SnapshotCreator::GetIsolate+52139
+ 8: 00007FF75081FA88 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+68616
+10: 00007FF7505872C6 
+ 9: 00007FF7508102E9 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+5225
+ 6: 00007FF750238F28 CrashForExceptionInNonABICompliantCodeRange+373192
+11: 00007FF750585A25 
+ 7: 00007FF75074697F v8::Object::GetIsolate+396447
+10: 00007FF75080BCF5 v8::CpuProfileNode::GetScriptResourceNameStr+188069
+12: 00007FF75057E123 
+ 8: 00007FF7507474CE v8::Object::GetIsolate+399342
+11: 00007FF7501913BD BIO_ssl_shutdown+189
+13: 00007FF75057D72F 
+ 9: 00007FF75075A638 v8::Object::GetIsolate+477528
+12: 7FF8000000000000 
+14: 00007FF750585F39 
+10: 00007FF75075D9F5 v8::Object::GetIsolate+490773
+15: 00007FF75058748F 
+11: 00007FF75075667A v8::Object::GetIsolate+461210
+16: 00007FF750585A25 
+12: 00007FF750759BC6 v8::Object::GetIsolate+474854
+17: 00007FF75057E123 
+13: 00007FF75075D691 v8::Object::GetIsolate+489905
+18: 00007FF75058AEB9 
+14: 00007FF75075667A v8::Object::GetIsolate+461210
+19: 00007FF75058B11E 
+15: 00007FF750759C7D v8::Object::GetIsolate+475037
+20: 00007FF750589CEA 
+16: 00007FF75075CF9B v8::Object::GetIsolate+488123
+21: 00007FF75057F18D 
+17: 00007FF75075667A v8::Object::GetIsolate+461210
+22: 00007FF750589028 
+18: 00007FF750760065 v8::Object::GetIsolate+500613
+23: 00007FF750589C72 
+19: 00007FF750754912 v8::Object::GetIsolate+453682
+24: 00007FF750589AFD 
+20: 00007FF750754520 v8::Object::GetIsolate+452672
+25: 00007FF75058B9C1 
+21: 00007FF750743E38 v8::Object::GetIsolate+385368
+26: 00007FF7505B152E 
+22: 00007FF750943878 v8::SharedValueConveyor::SharedValueConveyor+30920
+27: 00007FF7505A5033 
+23: 00007FF75093CAC8 v8::SharedValueConveyor::SharedValueConveyor+2840
+28: 00007FF7505A5546 
+24: 00007FF750941E72 v8::SharedValueConveyor::SharedValueConveyor+24258
+29: 00007FF7505A5701 
+25: 00007FF75094721A v8::SharedValueConveyor::SharedValueConveyor+45674
+30: 00007FF7505A4630 
+26: 00007FF7509C1DE9 v8::ScriptCompiler::CompileFunctionInternal+697
+31: 00007FF7505A38E5 
+27: 00007FF7509C1B24 v8::ScriptCompiler::CompileFunction+84
+32: 00007FF7505A50A8 
+28: 00007FF74FE67FB8 node::OnFatalError+55976
+33: 00007FF750596026 
+29: 00007FF74FE68514 node::OnFatalError+57348
+34: 00007FF7505AA28B 
+30: 00007FF6F09CFA64 
+35: 00007FF75058F29C 
+36: 00007FF750941B69 
+37: 00007FF75094721A 
+38: 00007FF7509C1DE9 
+39: 00007FF7509C1B24 
+40: 00007FF74FE67FB8 
+41: 00007FF74FE68514 
+42: 00007FF6F09CFA64 
+
+
+#
+# Fatal process out of memory: Zone
+#
+----- Native stack trace -----
+
+
+
+
+#
+<--- Last few GCs --->
+# Fatal process out of memory: Zone
+
+#
+
+
+[112200:0000023BF8A91000]      190 ms: Scavenge 8.5 (10.9) -> 7.7 (15.9) MB, pooled: 0 MB, 0.55 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+----- Native stack trace -----
+<--- Last few GCs --->
+<--- Last few GCs --->
+[112200:0000023BF8A91000]     1169 ms: Scavenge 11.8 (16.6) -> 9.2 (17.6) MB, pooled: 0 MB, 2.06 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+
+
+[112200:0000023BF8A91000]     1282 ms: Scavenge 12.9 (17.6) -> 10.6 (19.1) MB, pooled: 0 MB, 0.63 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[116608:0000019A2A061000]       46 ms: Scavenge 6.4 (8.0) -> 6.3 (10.7) MB, pooled: 0 MB, 0.53 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[27192:000001A2A0F5D000]      932 ms: Scavenge 6.4 (8.0) -> 6.3 (10.7) MB, pooled: 0 MB, 0.76 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+[116608:0000019A2A061000]     1151 ms: Scavenge 8.5 (11.0) -> 7.6 (11.2) MB, pooled: 0 MB, 0.62 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[27192:000001A2A0F5D000]     1056 ms: Scavenge 8.5 (11.0) -> 7.6 (11.2) MB, pooled: 0 MB, 0.65 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+
+<--- JS stacktrace --->
+[27192:000001A2A0F5D000]     5139 ms: Scavenge 9.2 (11.5) -> 8.4 (12.5) MB, pooled: 0 MB, 3023.63 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+
+
+FATAL ERROR: Zone Allocation failed - process out of memory
+<--- JS stacktrace --->
+
+----- Native stack trace -----
+
+<--- JS stacktrace --->
+
+FATAL ERROR: NewSpace::EnsureCurrentCapacity Allocation failed - JavaScript heap out of memory
+ 1: 00007FF74FEF20AD 
+
+ 1: 00007FF74FEF20AD 
+
+----- Native stack trace -----
+FATAL ERROR: NewSpace::EnsureCurrentCapacity Allocation failed - JavaScript heap out of memory
+ 2: 00007FF74FE5A4D8 
+
+
+ 2: 00007FF74FDD62CF 
+----- Native stack trace -----
+ 3: 00007FF7509DA1B1 
+
+ 3: 00007FF750FA16E6 
+#
+ 4: 00007FF7509C7096 
+ 1: 00007FF74FEF20AD node::SetCppgcReference+17245
+# Fatal error in , line 0
+ 4: 00007FF7509C6EA1 
+ 5: 00007FF750498ECB 
+ 1: 00007FF74FEF20AD 
+ 2: 00007FF74FE5A4D8 v8::base::CPU::num_virtual_address_bits+92376
+# Out of memory: HashMap::Initialize
+ 5: 00007FF750498ECB 
+ 6: 00007FF750597952 
+ 2: 00007FF74FE5A4D8 
+ 3: 00007FF7509DA1B1 v8::Isolate::ReportExternalAllocationLimitReached+65
+ 6: 00007FF7502258B0 
+ 7: 00007FF75059AB70 
+#
+ 3: 00007FF7509DA1B1 
+ 4: 00007FF7509C7096 v8::Function::Experimental_IsNopFunction+2790
+ 7: 00007FF7511E69F0 
+#
+ 8: 00007FF7505A9C2C 
+#
+ 8: 00007FF7511E4DFB 
+ 4: 00007FF7509C7096 
+ 9: 00007FF7505A7229 
+ 5: 00007FF750816920 
+ 5: 00007FF750816920 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+31392
+ 6: 00007FF7507F442F v8::CpuProfileNode::GetScriptResourceNameStr+91615
+#FailureMessage Object: 00000050FA3F9F20
+ 9: 00007FF7511E3A81 
+
+10: 00007FF7510EE227 
+10: 00007FF75059B5B7 
+ 7: 00007FF75081D4B8 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+58936
+ 6: 00007FF7507F442F 
+----- Native stack trace -----
+11: 00007FF7505A90AB 
+ 7: 00007FF75081D4B8 
+ 8: 00007FF75081FA88 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+68616
+
+12: 00007FF75059AAE6 
+ 8: 00007FF75081FA88 
+ 9: 00007FF7508102E9 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+5225
+11: 00007FF7510C0D61 
+#
+
+ 1: 00007FF74FEF20AD 
+12: 00007FF7510EDE0E 
+13: 00007FF7505A9C2C 
+# Fatal process out of memory: Zone
+ 9: 00007FF7508102E9 
+13: 00007FF7510EE5BE 
+10: 00007FF75080BCF5 v8::CpuProfileNode::GetScriptResourceNameStr+188069
+14: 00007FF7505A7229 
+ 2: 00007FF74FDD62CF 
+10: 00007FF75080BCF5 
+11: 00007FF7501913BD BIO_ssl_shutdown+189
+ 3: 00007FF750FA1B05 
+#
+12: 7FF8000000000000 
+ 4: 00007FF7509B8743 
+15: 00007FF75059B5B7 
+11: 00007FF7501913BD 
+14: 00007FF7510EE2B2 
+----- Native stack trace -----
+16: 00007FF7505A90AB 
+12: 7FF8000000000000 
+ 5: 00007FF7509B81B6 
+15: 00007FF7510C29BD 
+
+16: 00007FF7510BE76B 
+17: 00007FF7505A86CD 
+ 6: 00007FF7509B847D 
+17: 00007FF7510B934A 
+18: 00007FF7505A8233 
+ 7: 00007FF7509B82F8 
+18: 00007FF7509437E4 
+19: 00007FF7505A9C39 
+ 8: 00007FF750570521 
+19: 00007FF7508FCFFF 
+20: 00007FF7505A7229 
+ 9: 00007FF7505A9A5F 
+20: 00007FF750BCB995 
+21: 00007FF75059B5B7 
+10: 00007FF7505A7229 
+21: 00007FF74FDD8B59 
+22: 00007FF7505A90AB 
+11: 00007FF75059B5B7 
+22: 00007FF74FF52323 
+23: 00007FF7505A86CD 
+12: 00007FF7505A90AB 
+23: 00007FF7516B066E 
+24: 00007FF7505A8233 
+13: 00007FF75059AAE6 
+24: 00007FFE145FE957 BaseThreadInitThunk+23
+25: 00007FF7505A9C39 
+14: 00007FF7505A9C2C 
+25: 00007FFE1474427C RtlUserThreadStart+44
+26: 00007FF7505A7229 
+15: 00007FF7505A7229 
+27: 00007FF75059B5B7 
+16: 00007FF75059B5B7 
+28: 00007FF7505AF049 
+17: 00007FF7505A90AB 
+29: 00007FF7505AF4D5 
+18: 00007FF75059AAE6 
+30: 00007FF7505A4630 
+19: 00007FF7505A9C2C 
+31: 00007FF7505A38E5 
+20: 00007FF7505A7229 
+32: 00007FF7505A50A8 
+21: 00007FF75059B5B7 
+33: 00007FF750596026 
+22: 00007FF7505A90AB 
+34: 00007FF7505AA28B 
+23: 00007FF7505A86CD 
+35: 00007FF75058F29C 
+24: 00007FF7505A8233 
+36: 00007FF750941B69 
+25: 00007FF7505A9C39 
+37: 00007FF75094721A 
+26: 00007FF7505A7229 
+38: 00007FF7509C1DE9 
+27: 00007FF75059B5B7 
+39: 00007FF7509C1B24 
+28: 00007FF7505A90AB 
+40: 00007FF74FE67FB8 
+29: 00007FF7505A86CD 
+41: 00007FF74FE68514 
+30: 00007FF7505A8233 
+42: 00007FF6F09CFA64 
+31: 00007FF7505A9C39 
+32: 00007FF7505A7229 
+33: 00007FF75059B5B7 
+34: 00007FF7505AF049 
+35: 00007FF7505AF4D5 
+36: 00007FF7505A4630 
+37: 00007FF7505A38E5 
+38: 00007FF7505A50A8 
+39: 00007FF750596026 
+40: 00007FF7505AA28B 
+41: 00007FF75058F29C 
+42: 00007FF750941B69 
+43: 00007FF75094721A 
+44: 00007FF7509C1DE9 
+45: 00007FF7509C1B24 
+46: 00007FF74FE67FB8 
+47: 00007FF74FE68514 
+48: 00007FF6F09CFA64 
+
+
+#
+# Fatal process out of memory: Zone
+#
+----- Native stack trace -----
+
+ 1: 00007FF74FEF20AD node::SetCppgcReference+17245
+ 2: 00007FF74FDD62CF node::TriggerNodeReport+75631
+ 3: 00007FF750FA16E6 v8::base::FatalOOM+54
+ 4: 00007FF7509C6EA1 v8::Function::Experimental_IsNopFunction+2289
+ 5: 00007FF750498ECB v8::SnapshotCreator::GetIsolate+52139
+ 6: 00007FF7510A7ABC v8::internal::compiler::CompilationDependencies::~CompilationDependencies+695164
+ 7: 00007FF751113525 v8::internal::compiler::CompilationDependencies::TransitionDependencyOffTheRecord+226101
+ 8: 00007FF7510B72C3 v8::internal::compiler::CompilationDependencies::~CompilationDependencies+758659
+ 9: 00007FF7510B7A6B v8::internal::compiler::CompilationDependencies::~CompilationDependencies+760619
+10: 00007FF7510BFB55 v8::internal::compiler::CompilationDependencies::~CompilationDependencies+793621
+11: 00007FF7510B934A v8::internal::compiler::CompilationDependencies::~CompilationDependencies+766986
+12: 00007FF7509437E4 v8::SharedValueConveyor::SharedValueConveyor+30772
+13: 00007FF7508FCFFF v8::BigIntObject::ValueOf+41519
+14: 00007FF750BCB995 v8::PropertyDescriptor::writable+1996821
+15: 00007FF74FDD8B59 EVP_CIPHER_CTX_get_cipher_data+713
+16: 00007FF74FF52323 uv_poll_stop+291
+17: 00007FF7516B066E inflateValidate+153502
+18: 00007FFE145FE957 BaseThreadInitThunk+23
+19: 00007FFE1474427C RtlUserThreadStart+44
+✓ Finished writing to filesystem cache in 15.6s
+
+thread 'tokio-runtime-worker' (119056) panicked at C:\Users\runneradmin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tokio-1.43.0\src\io\blocking.rs:76:46:
+OS can't spawn worker thread: The paging file is too small for this operation to complete. (os error 1455)
+[?25h

@@ -14,6 +14,7 @@ import OneTimeProducts from "./components/OneTimeProducts";
 import LeakCalculator from "./components/LeakCalculator";
 import SamplePreview from "./components/SamplePreview";
 import FaqSection from "./components/FaqSection";
+import ComparisonSection from "./components/ComparisonSection";
 import FinalCta from "./components/FinalCta";
 
 const MONO = "JetBrains Mono, monospace";
@@ -36,6 +37,7 @@ export default function LandingPage() {
       <LeakCalculator />
       <SamplePreview />
       <FaqSection />
+      <ComparisonSection />
       <FinalCta />
       <footer
         style={{
@@ -59,6 +61,15 @@ export default function LandingPage() {
           <Link href="/terms" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
             Terms of Service
           </Link>
+        </p>
+        <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "var(--text-muted)", textAlign: "center", marginBottom: "8px" }}>
+          For prop firms and institutional desks:{' '}
+          <a
+            href="mailto:hello@xrayforensic.com"
+            style={{ color: "var(--accent-primary)", textDecoration: "none" }}
+          >
+            hello@xrayforensic.com
+          </a>
         </p>
         <p style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", margin: 0 }}>
           &copy; 2026 X-Ray &middot; Forensic trade diagnostic &middot; Not financial advice &middot; All trading involves risk
