@@ -123,6 +123,11 @@ export default function ComparisonSection() {
         }
         .comparison-left .comparison-list li {
           color: var(--text-muted);
+          font-weight: 300;
+          transition: text-decoration 150ms;
+        }
+        .comparison-left .comparison-list li:hover {
+          text-decoration: line-through;
         }
         .comparison-right .comparison-list li {
           color: var(--text-primary);

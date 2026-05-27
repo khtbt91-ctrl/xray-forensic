@@ -5,7 +5,7 @@ import { MONO, FadeInUp } from "./shared";
 const cards = [
   {
     accent: "var(--loss)",
-    title: "THE TRADER WHO CAN'T STOP LOSING",
+    title: "THE LOSING TRADER",
     body: "You've tried journals. You've tried mentors. None showed you the $4,753 sitting in your no-stop trades. X-Ray doesn't coach you. It exposes the pattern — then gives you the prescription to break it.",
   },
   {

@@ -10,21 +10,21 @@ const PREVIEW_PROTOCOLS = [
     title: "THE DEMO DISCIPLINE",
     preview:
       "The method loses money. No behavioral fix repairs a negative-expectancy system. Return to demo until the evidence shows a statistical edge.",
-    trigger: "profit factor below 0.8 or more than 15% of trades without a stop",
+    triggerLines: ["Profit factor < 0.8", "> 15% trades without stop"],
   },
   {
     id: "05",
     title: "THE STOP LOSS MANDATE",
     preview:
       "Every position without a stop loss is an unbounded liability. There is no setup, no conviction, and no market condition that justifies unprotected exposure.",
-    trigger: "any trade closed without a protective stop",
+    triggerLines: ["Any trade closed without a protective stop"],
   },
   {
     id: "06",
     title: "THE REVENGE PROTOCOL",
     preview:
       "Re-entering the market within minutes of a loss is not a trade. It is an emotional transaction with a negative expected value.",
-    trigger: "any re-entry within 15 minutes of a losing close",
+    triggerLines: ["Any re-entry within 15 minutes of a losing close"],
   },
 ];
 
@@ -109,7 +109,18 @@ function ProtocolCard({
           lineHeight: 1.5,
         }}
       >
-        TRIGGERED BY: {proto.trigger}
+        TRIGGERED BY:{" "}
+        {proto.triggerLines.length > 1 ? (
+          <>
+            {proto.triggerLines[0]}
+            <br />
+            <span style={{ textTransform: "none", color: "var(--text-muted)" }}>— or —</span>
+            <br />
+            {proto.triggerLines[1]}
+          </>
+        ) : (
+          proto.triggerLines[0]
+        )}
       </div>
     </div>
   );

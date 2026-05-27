@@ -8,6 +8,7 @@ const products = [
     name: "Spot Audit",
     price: "$49",
     tagline: "Single full forensic diagnosis. No subscription.",
+    reportLevel: "AUDIT-level report depth.",
     cta: "Get Spot Audit",
     href: "/new?tier=spot-audit",
   },
@@ -15,6 +16,7 @@ const products = [
     name: "Pre-Challenge Clearance",
     price: "$79",
     tagline: "Monte Carlo simulation before you fund. Know your pass probability.",
+    reportLevel: "FORENSIC-level report + Monte Carlo simulation.",
     cta: "Get Clearance",
     href: "/new?tier=pre-challenge",
   },
@@ -22,6 +24,7 @@ const products = [
     name: "Failure Autopsy",
     price: "$99",
     tagline: "Complete forensic reconstruction of a blown account or failed challenge. Pinpoints the exact trade where recovery became impossible.",
+    reportLevel: "FORENSIC-level report + liquidation trace.",
     cta: "Get Autopsy",
     href: "/new?tier=failure-autopsy",
   },
@@ -51,8 +54,11 @@ export default function OneTimeProducts() {
                   <span style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 400 }}>one-time</span>
                 </p>
               </div>
-              <p style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.55, margin: "0 0 16px" }}>
+              <p style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.55, margin: "0 0 4px" }}>
                 {product.tagline}
+              </p>
+              <p style={{ fontFamily: MONO, fontSize: "0.7rem", color: "var(--accent-primary)", margin: "0 0 16px" }}>
+                {product.reportLevel}
               </p>
               <Link href={product.href} className="btn btn-ghost" style={{ fontSize: 12, padding: "7px 14px" }}>
                 {product.cta}

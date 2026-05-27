@@ -50,7 +50,7 @@ export default function HonestyGradient() {
   };
 
   return (
-    <section style={{ maxWidth: 1100, margin: "0 auto", padding: "80px 40px 100px" }}>
+    <section style={{ maxWidth: 1100, margin: "0 auto", padding: "56px 40px 100px" }}>
       <FadeInUp>
         <p
           style={{
@@ -60,6 +60,7 @@ export default function HonestyGradient() {
             textTransform: "uppercase",
             color: "var(--text-muted)",
             textAlign: "center",
+            width: "100%",
             marginBottom: 16,
           }}
         >
@@ -137,8 +138,9 @@ export default function HonestyGradient() {
                   fontSize: "0.9rem",
                   color: "var(--text-primary)",
                   lineHeight: 1.5,
-                  filter: isVisible(i) ? "none" : "blur(5px)",
-                  transition: "filter 200ms ease",
+                  filter: isVisible(i) ? "blur(0px)" : "blur(8px)",
+                  opacity: isVisible(i) ? 1 : 0.25,
+                  transition: "filter 200ms ease, opacity 200ms ease",
                   boxShadow: isVisible(i)
                     ? "inset 2px 0 0 var(--accent-primary)"
                     : "none",

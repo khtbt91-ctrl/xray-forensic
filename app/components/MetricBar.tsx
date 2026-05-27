@@ -3,15 +3,15 @@
 import { FadeInUp } from "./shared";
 
 const stats = [
-  { number: "2,400+", label: "Trades Diagnosed" },
-  { number: "$2.1M", label: "In Leaks Exposed" },
+  { number: "639", label: "Trades in First Diagnosis" },
+  { number: "$8,475", label: "In Leaks Found (First 10)" },
   { number: "7", label: "Diagnostic Dimensions" },
   { number: "41", label: "Data Points Per Trade" },
 ];
 
 export default function MetricBar() {
   return (
-    <section style={{ maxWidth: 1100, margin: "0 auto", padding: "72px 40px" }}>
+    <section style={{ maxWidth: 1100, margin: "0 auto", padding: "72px 40px 24px" }}>
       <FadeInUp>
         <div className="metric-bar">
           {stats.map((stat, i) => (

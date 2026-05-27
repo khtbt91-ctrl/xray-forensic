@@ -100,7 +100,7 @@ export default function SamplePage() {
               letterSpacing: "0.04em",
             }}
           >
-            SAMPLE — Get your full X-Ray at xray.app &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SAMPLE — Get your full X-Ray at xray.app &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SAMPLE — Get your full X-Ray at xray.app
+            SAMPLE — XRAYFORENSIC.COM &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SAMPLE — XRAYFORENSIC.COM &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SAMPLE — XRAYFORENSIC.COM
           </div>
         ))}
       </div>

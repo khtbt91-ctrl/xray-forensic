@@ -166,6 +166,15 @@ export default function PreChallengeSection() {
               >
                 Pass probability &lt; 40%
               </p>
+              <span style={{
+                fontSize: '0.65rem',
+                color: 'rgba(248,81,73,0.7)',
+                fontFamily: 'JetBrains Mono, monospace',
+                display: 'block',
+                marginTop: '4px',
+              }}>
+                Most traders after 3+ failed challenges
+              </span>
             </div>
 
             {/* Zone 2: BORDERLINE */}

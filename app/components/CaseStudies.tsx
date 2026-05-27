@@ -109,16 +109,14 @@ export default function CaseStudies() {
               <div
                 style={{
                   position: "absolute",
-                  top: 12,
-                  right: 12,
+                  bottom: 16,
+                  right: 16,
                   fontFamily: MONO,
-                  fontSize: "0.6rem",
-                  color: "var(--text-muted)",
+                  fontSize: "0.55rem",
+                  color: "var(--border-active)",
                   textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                  border: "1px solid var(--border-subtle)",
-                  padding: "2px 8px",
-                  borderRadius: 2,
+                  letterSpacing: "0.08em",
+                  opacity: 0.6,
                 }}
               >
                 ILLUSTRATIVE EXAMPLE
