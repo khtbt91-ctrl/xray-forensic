@@ -40,11 +40,11 @@ const TIERS: {
   {
     name: "SIGNAL",
     price: "Free",
-    tagline: "Limited to 1 audit/month. No narrative.",
-    features: ["1 audit/month", "7 scores", "Session breakdown", "3 behavioral flags"],
+    tagline: "Start free. One full diagnosis per month.",
+    features: ["1 audit/month", "7 dimension scores", "Session P&L breakdown", "Top 3 behavioral flags"],
     popular: false,
-    disabled: true,
-    accent: "var(--text-muted)",
+    disabled: false,
+    accent: "var(--text-secondary)",
   },
   {
     name: "AUDIT",
@@ -88,47 +88,41 @@ const TIERS: {
 // ── Step Indicator ────────────────────────────────────────────────────────────
 
 function StepIndicator({
-  step,
-  tierLocked,
+  steps,
+  currentStepKey,
   selectedTier,
 }: {
-  step: number;
-  tierLocked: boolean;
+  steps: { label: string; key: string }[];
+  currentStepKey: string;
   selectedTier: string | null;
 }) {
-  const steps = tierLocked
-    ? [{ label: "Context", number: 1 }, { label: "Upload", number: 2 }]
-    : [{ label: "Context", number: 1 }, { label: "Tier", number: 2 }, { label: "Upload", number: 3 }];
+  const currentIndex = steps.findIndex((s) => s.key === currentStepKey);
+  const progress = steps.length > 1 ? (currentIndex / (steps.length - 1)) * 100 : 100;
 
-  // step prop is 0-indexed; convert to 1-indexed for progress math
-  const currentStep = step + 1;
-  const progress = steps.length > 1
-    ? ((currentStep - 1) / (steps.length - 1)) * 100
-    : 100;
-
-  const lockedTierInfo = selectedTier && tierData[selectedTier as keyof typeof tierData]
-    ? tierData[selectedTier as keyof typeof tierData]
-    : null;
+  const lockedTierInfo =
+    selectedTier && tierData[selectedTier as keyof typeof tierData]
+      ? tierData[selectedTier as keyof typeof tierData]
+      : null;
 
   return (
     <div style={{ marginBottom: 48 }}>
       {/* Step dots */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
         {steps.map((s, i) => {
-          const done = i < step;
-          const active = i === step;
+          const done = i < currentIndex;
+          const active = i === currentIndex;
           return (
-            <React.Fragment key={s.number}>
+            <React.Fragment key={s.key}>
               <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
                 <span
                   style={{
                     fontFamily: MONO,
-                    fontSize: 18,
+                    fontSize: 16,
                     lineHeight: 1,
-                    color: done ? "var(--profit)" : active ? "var(--accent-primary)" : "var(--text-muted)",
+                    color: done ? "var(--profit)" : active ? "var(--accent-primary)" : "var(--border-subtle)",
                   }}
                 >
-                  {done ? "✓" : `${s.number === 1 ? "①" : s.number === 2 ? "②" : "③"}`}
+                  {done ? "✓" : active ? "●" : "○"}
                 </span>
                 <span
                   style={{
@@ -147,7 +141,7 @@ function StepIndicator({
           );
         })}
 
-        {/* Tier badge — only shown when a tier is locked */}
+        {/* Tier badge — shown when a tier is known */}
         {lockedTierInfo && (
           <span style={{
             background: "rgba(88,166,255,0.1)",
@@ -895,11 +889,134 @@ function Step3({
   );
 }
 
+// ── Step Payment ─────────────────────────────────────────────────────────────
+
+function StepPayment({
+  selectedTier,
+  goToNextStep,
+}: {
+  selectedTier: string | null;
+  goToNextStep: () => void;
+}) {
+  const tierInfo =
+    selectedTier && tierData[selectedTier as keyof typeof tierData]
+      ? tierData[selectedTier as keyof typeof tierData]
+      : null;
+
+  return (
+    <div>
+      <h2 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+        Complete Payment
+      </h2>
+      <p style={{ fontSize: 14, color: "var(--text-secondary)", margin: "0 0 32px" }}>
+        Secure your access before uploading your trade history.
+      </p>
+
+      {/* Selected tier summary */}
+      {tierInfo && (
+        <div style={{
+          background: "var(--bg-elevated)",
+          border: "1px solid var(--accent-primary)",
+          borderRadius: 8,
+          padding: "16px 20px",
+          marginBottom: 32,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}>
+          <span style={{ fontFamily: MONO, fontSize: "0.85rem", color: "var(--accent-primary)" }}>
+            {tierInfo.name}
+          </span>
+          <span style={{ fontFamily: MONO, fontSize: "1.1rem", color: "var(--text-primary)", fontWeight: 600 }}>
+            {tierInfo.price}
+          </span>
+        </div>
+      )}
+
+      {/* Stripe payment button */}
+      <button
+        onClick={goToNextStep}
+        style={{
+          width: "100%",
+          padding: 14,
+          background: "var(--accent-primary)",
+          color: "var(--bg-base)",
+          border: "none",
+          borderRadius: 8,
+          fontSize: "0.95rem",
+          fontWeight: 600,
+          cursor: "pointer",
+          marginBottom: 24,
+        }}
+      >
+        Pay with Card
+      </button>
+
+      {/* Divider */}
+      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
+        <div style={{ flex: 1, height: 1, background: "var(--border-subtle)" }} />
+        <span style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>or</span>
+        <div style={{ flex: 1, height: 1, background: "var(--border-subtle)" }} />
+      </div>
+
+      {/* Crypto payment */}
+      <div style={{ padding: 20, background: "var(--bg-card)", borderRadius: 8, border: "1px solid var(--border-subtle)" }}>
+        <p style={{
+          fontFamily: MONO,
+          fontSize: "0.7rem",
+          color: "var(--warning)",
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          marginBottom: 12,
+          margin: "0 0 12px",
+        }}>
+          PAY WITH CRYPTO
+        </p>
+        <p style={{ color: "var(--text-secondary)", fontSize: "0.8rem", lineHeight: 1.65, marginBottom: 16 }}>
+          Send the exact amount in USDT to one of these addresses. Email your transaction hash
+          and CSV to{" "}
+          <a href="mailto:hello@xrayforensic.com" style={{ color: "var(--accent-primary)" }}>
+            hello@xrayforensic.com
+          </a>
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {[
+            { label: "USDT · BEP20", color: "var(--warning)", address: "YOUR_BEP20_ADDRESS" },
+            { label: "USDT · Solana", color: "var(--accent-secondary)", address: "YOUR_SOL_ADDRESS" },
+          ].map((chain) => (
+            <div
+              key={chain.label}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "10px 14px",
+                background: "var(--bg-base)",
+                borderRadius: 6,
+                border: "1px solid var(--border-subtle)",
+              }}
+            >
+              <span style={{ color: chain.color, fontFamily: "monospace", fontSize: "0.7rem" }}>
+                {chain.label}
+              </span>
+              <span style={{ color: "var(--text-muted)", fontFamily: "monospace", fontSize: "0.6rem" }}>
+                {chain.address}
+              </span>
+            </div>
+          ))}
+        </div>
+        <p style={{ color: "var(--text-muted)", fontSize: "0.6rem", marginTop: 12, fontStyle: "italic", marginBottom: 0 }}>
+          Reports delivered within 2 hours of confirmed payment.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 function NewPageInner() {
   const searchParams = useSearchParams();
-  const [step, setStep] = useState(0);
   const [profile, setProfile] = useState<ContextProfile>({
     accountType: "personal",
     firm: "",
@@ -916,6 +1033,7 @@ function NewPageInner() {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [tierLocked, setTierLocked] = useState(false);
   const [selectedOneTime, setSelectedOneTime] = useState<OneTime>(null);
+  const [currentStepKey, setCurrentStepKey] = useState("context");
 
   useEffect(() => {
     const tier = searchParams.get("tier");
@@ -924,6 +1042,57 @@ function NewPageInner() {
       setTierLocked(true);
     }
   }, [searchParams]);
+
+  const isFree = selectedTier?.toLowerCase() === "signal";
+  const isPaid = selectedTier !== null && selectedTier.toLowerCase() !== "signal";
+
+  // Dynamic step array — recomputed on every render
+  const steps = (() => {
+    if (tierLocked && isFree) {
+      return [
+        { label: "Context", key: "context" },
+        { label: "Upload", key: "upload" },
+      ];
+    }
+    if (tierLocked && isPaid) {
+      return [
+        { label: "Context", key: "context" },
+        { label: "Payment", key: "payment" },
+        { label: "Upload", key: "upload" },
+      ];
+    }
+    // Unguided: user selected SIGNAL in Step 2 → no payment needed
+    if (!tierLocked && isFree && selectedTier !== null) {
+      return [
+        { label: "Context", key: "context" },
+        { label: "Tier", key: "tier" },
+        { label: "Upload", key: "upload" },
+      ];
+    }
+    // Unguided: paid selection or no tier yet → full 4-step
+    return [
+      { label: "Context", key: "context" },
+      { label: "Tier", key: "tier" },
+      { label: "Payment", key: "payment" },
+      { label: "Upload", key: "upload" },
+    ];
+  })();
+
+  const goToNextStep = () => {
+    const currentIndex = steps.findIndex((s) => s.key === currentStepKey);
+    if (currentIndex < steps.length - 1) {
+      const nextStep = steps[currentIndex + 1];
+      // Safety net: skip payment if free tier
+      if (nextStep.key === "payment" && isFree) {
+        const afterPayment = steps[currentIndex + 2];
+        if (afterPayment) {
+          setCurrentStepKey(afterPayment.key);
+          return;
+        }
+      }
+      setCurrentStepKey(nextStep.key);
+    }
+  };
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg-base)", color: "var(--text-primary)" }}>
@@ -934,7 +1103,7 @@ function NewPageInner() {
       </nav>
 
       <div style={{ maxWidth: 640, margin: "0 auto", padding: "60px 24px 80px" }}>
-        <StepIndicator step={step} tierLocked={tierLocked} selectedTier={selectedTier} />
+        <StepIndicator steps={steps} currentStepKey={currentStepKey} selectedTier={selectedTier} />
 
         {/* Tier confirmation card — shown when arriving from a pricing CTA */}
         {tierLocked && selectedTier && tierData[selectedTier as keyof typeof tierData] && (
@@ -949,19 +1118,10 @@ function NewPageInner() {
             marginBottom: 24,
           }}>
             <div>
-              <span style={{
-                fontFamily: "JetBrains Mono, monospace",
-                fontSize: "0.75rem",
-                color: "var(--accent-primary)",
-                letterSpacing: "0.08em",
-              }}>
+              <span style={{ fontFamily: MONO, fontSize: "0.75rem", color: "var(--accent-primary)", letterSpacing: "0.08em" }}>
                 {tierData[selectedTier as keyof typeof tierData].name}
               </span>
-              <span style={{
-                color: "var(--text-muted)",
-                fontSize: "0.8rem",
-                marginLeft: 12,
-              }}>
+              <span style={{ color: "var(--text-muted)", fontSize: "0.8rem", marginLeft: 12 }}>
                 {tierData[selectedTier as keyof typeof tierData].price}
               </span>
             </div>
@@ -969,42 +1129,31 @@ function NewPageInner() {
               onClick={() => {
                 setTierLocked(false);
                 setSelectedTier(null);
+                setCurrentStepKey("tier");
               }}
-              style={{
-                background: "transparent",
-                border: "1px solid var(--border-active)",
-                color: "var(--text-secondary)",
-                padding: "4px 12px",
-                borderRadius: 4,
-                cursor: "pointer",
-                fontSize: "0.75rem",
-              }}
+              style={{ background: "transparent", border: "1px solid var(--border-active)", color: "var(--text-secondary)", padding: "4px 12px", borderRadius: 4, cursor: "pointer", fontSize: "0.75rem" }}
             >
               Change
             </button>
           </div>
         )}
 
-        {step === 0 && (
-          <Step1 profile={profile} setProfile={setProfile} onNext={() => setStep(1)} />
+        {currentStepKey === "context" && (
+          <Step1 profile={profile} setProfile={setProfile} onNext={goToNextStep} />
         )}
-
-        {/* tierLocked: Context → Upload (2 steps) */}
-        {step === 1 && tierLocked && (
-          <Step3 profile={profile} selectedTier={selectedTier} />
-        )}
-
-        {/* !tierLocked: Context → Tier → Upload (3 steps) */}
-        {step === 1 && !tierLocked && (
+        {currentStepKey === "tier" && (
           <Step2
             selectedTier={selectedTier}
             setSelectedTier={setSelectedTier}
             selectedOneTime={selectedOneTime}
             setSelectedOneTime={setSelectedOneTime}
-            onNext={() => setStep(2)}
+            onNext={goToNextStep}
           />
         )}
-        {step === 2 && !tierLocked && (
+        {currentStepKey === "payment" && (
+          <StepPayment selectedTier={selectedTier} goToNextStep={goToNextStep} />
+        )}
+        {currentStepKey === "upload" && (
           <Step3 profile={profile} selectedTier={selectedTier} />
         )}
       </div>

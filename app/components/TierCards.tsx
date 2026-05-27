@@ -9,25 +9,33 @@ const TIERS = [
     name: "SIGNAL",
     price: "Free",
     tagline: "One diagnosis. Real evidence. Enough to know if you need the full picture.",
+    inheritedFrom: null as string | null,
     features: [
-      "1 full audit per month",
-      "7 dimension scores with one-line finding each",
+      "1 audit/month",
+      "7 dimension scores (one-line finding each)",
       "Session P&L breakdown",
       "Top 3 behavioral flags with dollar cost",
-      "Watermarked report (no prescription)",
+      "Watermarked report",
     ],
     cta: "Get Diagnosed",
     href: "/new?tier=signal",
     mailto: false,
     highlight: false,
     popular: false,
-    accent: "var(--text-muted)",
+    accent: "var(--text-secondary)",
   },
   {
     name: "AUDIT",
     price: "$29/mo",
     tagline: "Full forensic read. Your first real mirror.",
-    features: ["3 audits/month", "Full narrative", "Ranked prescriptions", "Drill-down stats", "Cost of indiscipline"],
+    inheritedFrom: "SIGNAL" as string | null,
+    features: [
+      "3 audits/month",
+      "Full forensic narrative",
+      "Ranked prescriptions",
+      "Drill-down trade inspection",
+      "Cost of indiscipline breakdown",
+    ],
     cta: "Get AUDIT",
     href: "/new?tier=audit",
     mailto: false,
@@ -39,7 +47,17 @@ const TIERS = [
     name: "FORENSIC",
     price: "$79/mo",
     tagline: "Institutional-grade behavioral intelligence.",
-    features: ["10 audits/month", "Forensic AI narrative — full behavioral read", "Prop firm mode", "Pre-mortem analysis", "DNA profile", "Compliance tracking", "Pre-session briefing", "What-if engine"],
+    inheritedFrom: "AUDIT" as string | null,
+    features: [
+      "10 audits/month",
+      "Forensic AI narrative",
+      "Prop firm challenge mode",
+      "Pre-mortem Monte Carlo simulation",
+      "Trader DNA profile",
+      "Compliance tracking",
+      "Pre-session briefing",
+      "What-If engine",
+    ],
     cta: "Get FORENSIC",
     href: "/new?tier=forensic",
     mailto: false,
@@ -51,7 +69,15 @@ const TIERS = [
     name: "GUARDIAN",
     price: "$149/mo",
     tagline: "The risk desk you never had.",
-    features: ["Unlimited audits", "Everything in FORENSIC", "Live MT5 sync", "Telegram watchdog", "Circuit breaker", "5 accounts", "Certification"],
+    inheritedFrom: "FORENSIC" as string | null,
+    features: [
+      "Unlimited audits",
+      "Live MT5 sync",
+      "Telegram behavioral watchdog",
+      "Circuit breaker automation",
+      "5 connected accounts",
+      "Discipline certification",
+    ],
     cta: "Get GUARDIAN",
     href: "/new?tier=guardian",
     mailto: false,
@@ -63,7 +89,14 @@ const TIERS = [
     name: "SOVEREIGN",
     price: "$399/mo",
     tagline: "White-label intelligence for firms.",
-    features: ["50 accounts", "Firm-wide analytics", "Custom rule engine", "API access", "White-label"],
+    inheritedFrom: "GUARDIAN" as string | null,
+    features: [
+      "50 accounts",
+      "Firm-wide analytics",
+      "Custom rule engine",
+      "API access",
+      "White-label reports",
+    ],
     cta: "Contact",
     href: "mailto:hello@xrayforensic.com",
     mailto: true,
@@ -189,27 +222,28 @@ export default function TierCards() {
                   {tier.tagline}
                 </p>
 
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
-                  {tier.features.map((f, fi) => (
-                    <li key={fi} style={{ fontSize: 12, color: "var(--text-secondary)", display: "flex", gap: 8, alignItems: "flex-start", lineHeight: 1.4 }}>
-                      <span style={{ color: tier.accent, flexShrink: 0 }}>—</span>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-
-                {tier.name === "SIGNAL" && (
-                  <p style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "0.75rem",
-                    fontStyle: "italic",
-                    color: "var(--text-muted)",
-                    marginTop: 16,
-                    lineHeight: 1.5,
-                  }}>
-                    The prescription and protocol library unlock from AUDIT tier.
-                  </p>
-                )}
+                <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+                  {tier.inheritedFrom && (
+                    <p style={{
+                      fontSize: "0.7rem",
+                      color: "var(--text-muted)",
+                      fontStyle: "italic",
+                      margin: "0 0 12px",
+                      paddingBottom: 8,
+                      borderBottom: "1px solid var(--border-subtle)",
+                    }}>
+                      Everything in {tier.inheritedFrom}, plus:
+                    </p>
+                  )}
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+                    {tier.features.map((f, fi) => (
+                      <li key={fi} style={{ fontSize: 12, color: "var(--text-secondary)", display: "flex", gap: 8, alignItems: "flex-start", lineHeight: 1.4 }}>
+                        <span style={{ color: tier.accent, flexShrink: 0 }}>—</span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
                 <div style={{ marginTop: "auto", paddingTop: 20 }}>
                   {tier.mailto ? (
