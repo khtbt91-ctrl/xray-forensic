@@ -1032,6 +1032,7 @@ function NewPageInner() {
   });
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [tierLocked, setTierLocked] = useState(false);
+  const [tierResolved, setTierResolved] = useState(false);
   const [selectedOneTime, setSelectedOneTime] = useState<OneTime>(null);
   const [currentStepKey, setCurrentStepKey] = useState("context");
 
@@ -1041,6 +1042,7 @@ function NewPageInner() {
       setSelectedTier(tier);
       setTierLocked(true);
     }
+    setTierResolved(true);
   }, [searchParams]);
 
   const isFree = selectedTier?.toLowerCase() === "signal";
@@ -1093,6 +1095,23 @@ function NewPageInner() {
       setCurrentStepKey(nextStep.key);
     }
   };
+
+  // Guard: don't render until URL params have been read.
+  // Prevents step-count changing mid-render (e.g. 4-step flash before resolving to 2-step for ?tier=signal).
+  if (!tierResolved) {
+    return (
+      <main style={{ minHeight: "100vh", background: "var(--bg-base)", color: "var(--text-primary)" }}>
+        <nav style={{ borderBottom: "1px solid var(--border-subtle)", padding: "16px 40px", display: "flex", alignItems: "center" }}>
+          <a href="/" style={{ fontFamily: MONO, fontSize: 12, color: "var(--text-muted)", textDecoration: "none" }}>
+            ← X-Ray
+          </a>
+        </nav>
+        <div style={{ maxWidth: 640, margin: "0 auto", padding: "120px 24px", textAlign: "center" }}>
+          <span style={{ fontFamily: MONO, fontSize: 13, color: "var(--text-muted)" }}>Loading…</span>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg-base)", color: "var(--text-primary)" }}>

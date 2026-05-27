@@ -87,8 +87,6 @@ export default function LandingPage() {
                   color: "var(--text-muted)",
                   lineHeight: 1.6,
                   margin: 0,
-                  textAlign: "center",
-                  width: "100%",
                 }}
               >
                 Built on 15 years of institutional trading.
@@ -183,7 +181,7 @@ export default function LandingPage() {
                 hello@xrayforensic.com
               </a>
             </p>
-            <p style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", margin: 0 }}>
+            <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "var(--text-muted)", margin: 0 }}>
               &copy; 2026 X-Ray &middot; Forensic trade diagnostic &middot; Not financial advice &middot; All trading involves risk
             </p>
           </div>

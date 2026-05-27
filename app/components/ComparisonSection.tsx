@@ -73,6 +73,8 @@ export default function ComparisonSection() {
           letter-spacing: 0.08em;
           text-transform: uppercase;
           margin-bottom: 16px;
+          text-align: center;
+          width: 100%;
         }
         .comparison-headline {
           font-family: "Inter", sans-serif;
@@ -81,6 +83,7 @@ export default function ComparisonSection() {
           color: var(--text-primary);
           margin-bottom: 48px;
           line-height: 1.2;
+          text-align: center;
         }
         .comparison-columns {
           display: flex;

@@ -33,6 +33,20 @@ body {
   color: var(--text-primary);
   font-family: Inter, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-align: left;
+}
+
+/* ─── Alignment helpers ──────────────────────────────────────────────────────── */
+.section-centered { text-align: center; }
+.eyebrow {
+  text-align: center;
+  width: 100%;
+  display: block;
+}
+.section-headline { text-align: center; }
+.metric-number {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Financial data — always monospace */

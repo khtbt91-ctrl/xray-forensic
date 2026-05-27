@@ -29,6 +29,8 @@ export default function FrameworkSection() {
               textTransform: "uppercase",
               color: "var(--text-muted)",
               marginBottom: 20,
+              textAlign: "center",
+              width: "100%",
             }}
           >
             THE FRAMEWORK
@@ -40,6 +42,7 @@ export default function FrameworkSection() {
               letterSpacing: "-0.02em",
               margin: "0 0 24px",
               color: "var(--text-primary)",
+              textAlign: "center",
             }}
           >
             Built on 15 years of institutional pattern recognition.
@@ -52,6 +55,7 @@ export default function FrameworkSection() {
               lineHeight: 1.75,
               maxWidth: 720,
               margin: "0 auto 20px",
+              textAlign: "center",
             }}
           >
             Every dimension in X-Ray is calibrated against live market behavior — not backtested
@@ -59,7 +63,7 @@ export default function FrameworkSection() {
             institutional desks: Smart Money Concepts, liquidity engineering, order flow analysis,
             kill zone mechanics.
           </p>
-          <p style={{ fontFamily: "Inter, sans-serif", fontSize: 14, color: "var(--text-muted)", marginBottom: 40 }}>
+          <p style={{ fontFamily: "Inter, sans-serif", fontSize: 14, color: "var(--text-muted)", marginBottom: 40, textAlign: "center" }}>
             The machine doesn&apos;t guess what good trading looks like. It was trained by traders
             who lived it.
           </p>

@@ -165,6 +165,8 @@ export default function ProtocolsSection() {
                 textTransform: "uppercase",
                 color: "var(--text-muted)",
                 marginBottom: 20,
+                textAlign: "center",
+                width: "100%",
               }}
             >
               WHAT X-RAY PRESCRIBES
@@ -177,6 +179,7 @@ export default function ProtocolsSection() {
                 letterSpacing: "-0.01em",
                 margin: "0 0 20px",
                 color: "var(--text-primary)",
+                textAlign: "center",
               }}
             >
               12 INSTITUTIONAL PROTOCOLS
@@ -189,6 +192,7 @@ export default function ProtocolsSection() {
                 lineHeight: 1.75,
                 maxWidth: 560,
                 margin: "0 auto",
+                textAlign: "center",
               }}
             >
               X-Ray doesn&apos;t give you advice. It gives you protocols — the
