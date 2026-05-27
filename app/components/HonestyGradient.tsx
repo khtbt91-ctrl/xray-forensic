@@ -61,6 +61,8 @@ export default function HonestyGradient() {
             color: "var(--text-muted)",
             textAlign: "center",
             width: "100%",
+            display: "block",
+            margin: "0 auto",
             marginBottom: 16,
           }}
         >

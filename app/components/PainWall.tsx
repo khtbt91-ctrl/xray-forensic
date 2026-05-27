@@ -98,7 +98,7 @@ export default function PainWall() {
       </div>
 
       <FadeInUp delay={0.3}>
-        <div style={{ textAlign: "center", marginTop: 44 }}>
+        <div style={{ textAlign: "center", marginTop: 44, width: "100%" }}>
           <p
             style={{
               fontFamily: MONO,
@@ -108,14 +108,16 @@ export default function PainWall() {
               letterSpacing: "0.04em",
               margin: "0 0 14px",
               fontVariantNumeric: "tabular-nums",
+              textAlign: "center",
+              width: "100%",
             }}
           >
             Verdict: YOUR METHOD LOSES MONEY. NO DISCIPLINE FIXES THIS.
           </p>
-          <p style={{ fontFamily: MONO, fontSize: 13, color: "var(--text-secondary)", margin: "0 0 4px" }}>
+          <p style={{ fontFamily: MONO, fontSize: 13, color: "var(--text-secondary)", margin: "0 0 4px", textAlign: "center", width: "100%" }}>
             Prescription: Return to demo. Rebuild.
           </p>
-          <p style={{ fontFamily: MONO, fontSize: 13, color: "var(--text-secondary)", margin: 0 }}>
+          <p style={{ fontFamily: MONO, fontSize: 13, color: "var(--text-secondary)", margin: 0, textAlign: "center", width: "100%" }}>
             Target: Profit factor &gt; 1.3 over 30 trades.
           </p>
         </div>

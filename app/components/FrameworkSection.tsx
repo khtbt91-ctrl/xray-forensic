@@ -28,6 +28,8 @@ export default function FrameworkSection() {
               letterSpacing: "0.2em",
               textTransform: "uppercase",
               color: "var(--text-muted)",
+              display: "block",
+              margin: "0 auto",
               marginBottom: 20,
               textAlign: "center",
               width: "100%",
