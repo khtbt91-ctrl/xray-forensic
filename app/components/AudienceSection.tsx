@@ -23,7 +23,7 @@ const cards = [
 export default function AudienceSection() {
   return (
     <section style={{ maxWidth: 1100, margin: "0 auto", padding: "0 40px 100px" }}>
-      <FadeInUp>
+      <FadeInUp style={{ textAlign: "center", width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
         <p
           style={{
             fontFamily: MONO,
@@ -33,6 +33,10 @@ export default function AudienceSection() {
             color: "var(--text-muted)",
             textAlign: "center",
             marginBottom: 48,
+            width: "100%",
+            display: "block",
+            marginLeft: "auto",
+            marginRight: "auto",
           }}
         >
           WHO THIS IS FOR

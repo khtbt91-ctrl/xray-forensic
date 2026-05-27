@@ -6,7 +6,7 @@ import { MONO, FadeInUp } from "./shared";
 export default function SamplePreview() {
   return (
     <section style={{ maxWidth: 1100, margin: "0 auto", padding: "0 40px 100px" }}>
-      <FadeInUp>
+      <FadeInUp style={{ textAlign: "center", width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
         <p
           style={{
             fontFamily: MONO,
@@ -16,6 +16,10 @@ export default function SamplePreview() {
             color: "var(--text-muted)",
             textAlign: "center",
             marginBottom: 12,
+            width: "100%",
+            display: "block",
+            marginLeft: "auto",
+            marginRight: "auto",
           }}
         >
           Sample Report

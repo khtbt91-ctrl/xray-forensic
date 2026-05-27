@@ -156,7 +156,7 @@ export default function ProtocolsSection() {
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         {/* Header */}
         <div className="fade-in-up">
-          <div style={{ textAlign: "center", marginBottom: 60 }}>
+          <div style={{ textAlign: "center", marginBottom: 60, width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
             <p
               style={{
                 fontFamily: MONO,
@@ -167,6 +167,9 @@ export default function ProtocolsSection() {
                 marginBottom: 20,
                 textAlign: "center",
                 width: "100%",
+                display: "block",
+                marginLeft: "auto",
+                marginRight: "auto",
               }}
             >
               WHAT X-RAY PRESCRIBES
@@ -212,13 +215,18 @@ export default function ProtocolsSection() {
 
         {/* Footer + CTA */}
         <div className="fade-in-up">
-          <div style={{ textAlign: "center", marginTop: 44 }}>
+          <div style={{ textAlign: "center", marginTop: 44, width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
             <p
               style={{
                 fontFamily: "Inter, sans-serif",
                 fontSize: "0.85rem",
                 color: "var(--text-muted)",
                 marginBottom: 28,
+                textAlign: "center",
+                width: "100%",
+                display: "block",
+                marginLeft: "auto",
+                marginRight: "auto",
               }}
             >
               9 more protocols included with every diagnosis.

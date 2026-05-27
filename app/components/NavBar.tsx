@@ -159,7 +159,7 @@ export default function NavBar() {
               marginLeft: "auto",
             }}
           >
-            <Link href="/sample" className="nav-link nav-sample-link">
+            <Link href="/sample" className="nav-link nav-sample-link" style={{ textAlign: "center", display: "block", marginLeft: "auto", marginRight: "auto" }}>
               Sample Report
             </Link>
             <Link
@@ -231,7 +231,7 @@ export default function NavBar() {
           >
             Contact
           </a>
-          <Link href="/sample" className="mobile-nav-link" onClick={close}>
+          <Link href="/sample" className="mobile-nav-link" onClick={close} style={{ textAlign: "center", display: "block", marginLeft: "auto", marginRight: "auto" }}>
             Sample Report
           </Link>
           <div className="mobile-menu-divider" />

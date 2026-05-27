@@ -114,7 +114,7 @@ export default function TierCards() {
 
   return (
     <section id="pricing" style={{ padding: "0 0 100px" }}>
-      <FadeInUp>
+      <FadeInUp style={{ textAlign: "center", width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
         <p
           style={{
             fontFamily: MONO,
@@ -124,6 +124,10 @@ export default function TierCards() {
             color: "var(--text-muted)",
             textAlign: "center",
             marginBottom: 12,
+            width: "100%",
+            display: "block",
+            marginLeft: "auto",
+            marginRight: "auto",
           }}
         >
           CLEARANCE LEVELS

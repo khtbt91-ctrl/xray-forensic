@@ -20,7 +20,7 @@ export default function FrameworkSection() {
       }}
     >
       <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
-        <FadeInUp>
+        <FadeInUp style={{ textAlign: "center", width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
           <p
             style={{
               fontFamily: MONO,
@@ -65,7 +65,7 @@ export default function FrameworkSection() {
             institutional desks: Smart Money Concepts, liquidity engineering, order flow analysis,
             kill zone mechanics.
           </p>
-          <p style={{ fontFamily: "Inter, sans-serif", fontSize: 14, color: "var(--text-muted)", marginBottom: 40, textAlign: "center" }}>
+          <p style={{ fontFamily: "Inter, sans-serif", fontSize: 14, color: "var(--text-muted)", marginBottom: 40, textAlign: "center", width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
             The machine doesn&apos;t guess what good trading looks like. It was trained by traders
             who lived it.
           </p>

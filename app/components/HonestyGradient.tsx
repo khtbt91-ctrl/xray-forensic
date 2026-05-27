@@ -162,6 +162,10 @@ export default function HonestyGradient() {
             color: "var(--text-muted)",
             textAlign: "center",
             marginTop: 16,
+            width: "100%",
+            display: "block",
+            marginLeft: "auto",
+            marginRight: "auto",
           }}
         >
           Hover any row to see what X-Ray actually finds.

@@ -98,7 +98,7 @@ export default function PainWall() {
       </div>
 
       <FadeInUp delay={0.3}>
-        <div style={{ textAlign: "center", marginTop: 44, width: "100%" }}>
+        <div style={{ textAlign: "center", marginTop: 44, width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
           <p
             style={{
               fontFamily: MONO,
@@ -110,6 +110,9 @@ export default function PainWall() {
               fontVariantNumeric: "tabular-nums",
               textAlign: "center",
               width: "100%",
+              display: "block",
+              marginLeft: "auto",
+              marginRight: "auto",
             }}
           >
             Verdict: YOUR METHOD LOSES MONEY. NO DISCIPLINE FIXES THIS.

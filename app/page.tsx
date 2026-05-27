@@ -109,7 +109,7 @@ export default function LandingPage() {
               >
                 PLATFORM
               </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, textAlign: "center", width: "100%", marginLeft: "auto", marginRight: "auto" }}>
                 <Link href="/#how-it-works" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
                   How It Works
                 </Link>
@@ -119,7 +119,7 @@ export default function LandingPage() {
                 <Link href="/#faq" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
                   FAQ
                 </Link>
-                <Link href="/sample" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>
+                <Link href="/sample" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none", textAlign: "center", width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
                   Sample Report
                 </Link>
               </div>
@@ -161,6 +161,10 @@ export default function LandingPage() {
               paddingBottom: 24,
               textAlign: "center",
               marginTop: 0,
+              width: "100%",
+              display: "block",
+              marginLeft: "auto",
+              marginRight: "auto",
             }}
           >
             <p
@@ -171,6 +175,9 @@ export default function LandingPage() {
                 margin: "0 0 8px",
                 textAlign: "center",
                 width: "100%",
+                display: "block",
+                marginLeft: "auto",
+                marginRight: "auto",
               }}
             >
               For prop firms and institutional desks:{" "}

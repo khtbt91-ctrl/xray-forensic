@@ -47,7 +47,7 @@ export default function CaseStudies() {
       id="case-studies"
       style={{ padding: "80px 40px", maxWidth: 1100, margin: "0 auto" }}
     >
-      <FadeInUp>
+      <FadeInUp style={{ textAlign: "center", width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
         <p
           style={{
             fontFamily: MONO,
@@ -57,6 +57,10 @@ export default function CaseStudies() {
             color: "var(--text-muted)",
             textAlign: "center",
             marginBottom: 16,
+            width: "100%",
+            display: "block",
+            marginLeft: "auto",
+            marginRight: "auto",
           }}
         >
           REAL PATTERNS. REAL COSTS.

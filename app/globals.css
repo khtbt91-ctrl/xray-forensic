@@ -643,3 +643,23 @@ button:disabled {
   cursor: not-allowed;
   transform: none;
 }
+
+/* Center all section labels globally */
+[class*="eyebrow"],
+[class*="section-label"],
+[class*="label"],
+[class*="verdict"],
+[class*="prescription"],
+[class*="tag-line"] {
+  text-align: center !important;
+  width: 100% !important;
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Footer bottom bar */
+footer > div:last-child,
+footer > div:last-child * {
+  text-align: center !important;
+}
