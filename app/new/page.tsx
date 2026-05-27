@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useRef, useState, useEffect, Suspense } from "react";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Disclaimer from "../../components/Disclaimer";
+import { tierData } from "@/lib/tiers";
 
 const MONO = "JetBrains Mono, monospace";
 
@@ -86,43 +87,94 @@ const TIERS: {
 
 // ── Step Indicator ────────────────────────────────────────────────────────────
 
-function StepIndicator({ step }: { step: number }) {
-  const steps = ["Context", "Tier", "Upload"];
-  const symbols = ["①", "②", "③"];
+function StepIndicator({
+  step,
+  tierLocked,
+  selectedTier,
+}: {
+  step: number;
+  tierLocked: boolean;
+  selectedTier: string | null;
+}) {
+  const steps = tierLocked
+    ? [{ label: "Context", number: 1 }, { label: "Upload", number: 2 }]
+    : [{ label: "Context", number: 1 }, { label: "Tier", number: 2 }, { label: "Upload", number: 3 }];
+
+  // step prop is 0-indexed; convert to 1-indexed for progress math
+  const currentStep = step + 1;
+  const progress = steps.length > 1
+    ? ((currentStep - 1) / (steps.length - 1)) * 100
+    : 100;
+
+  const lockedTierInfo = selectedTier && tierData[selectedTier as keyof typeof tierData]
+    ? tierData[selectedTier as keyof typeof tierData]
+    : null;
+
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 48, flexWrap: "wrap" }}>
-      {steps.map((label, i) => {
-        const done = i < step;
-        const active = i === step;
-        return (
-          <React.Fragment key={i}>
-            <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-              <span
-                style={{
-                  fontFamily: MONO,
-                  fontSize: 18,
-                  lineHeight: 1,
-                  color: done ? "var(--profit)" : active ? "var(--accent-primary)" : "var(--text-muted)",
-                }}
-              >
-                {done ? "✓" : symbols[i]}
-              </span>
-              <span
-                style={{
-                  fontSize: 13,
-                  fontWeight: active ? 600 : 400,
-                  color: done ? "var(--profit)" : active ? "var(--accent-primary)" : "var(--text-muted)",
-                }}
-              >
-                {label}
-              </span>
-            </div>
-            {i < steps.length - 1 && (
-              <span style={{ color: "var(--border-subtle)", fontSize: 14, margin: "0 2px" }}>→</span>
-            )}
-          </React.Fragment>
-        );
-      })}
+    <div style={{ marginBottom: 48 }}>
+      {/* Step dots */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
+        {steps.map((s, i) => {
+          const done = i < step;
+          const active = i === step;
+          return (
+            <React.Fragment key={s.number}>
+              <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                <span
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 18,
+                    lineHeight: 1,
+                    color: done ? "var(--profit)" : active ? "var(--accent-primary)" : "var(--text-muted)",
+                  }}
+                >
+                  {done ? "✓" : `${s.number === 1 ? "①" : s.number === 2 ? "②" : "③"}`}
+                </span>
+                <span
+                  style={{
+                    fontSize: 13,
+                    fontWeight: active ? 600 : 400,
+                    color: done ? "var(--profit)" : active ? "var(--accent-primary)" : "var(--text-muted)",
+                  }}
+                >
+                  {s.label}
+                </span>
+              </div>
+              {i < steps.length - 1 && (
+                <span style={{ color: "var(--border-subtle)", fontSize: 14, margin: "0 2px" }}>→</span>
+              )}
+            </React.Fragment>
+          );
+        })}
+
+        {/* Tier badge — only shown when a tier is locked */}
+        {lockedTierInfo && (
+          <span style={{
+            background: "rgba(88,166,255,0.1)",
+            color: "var(--accent-primary)",
+            padding: "2px 8px",
+            borderRadius: 4,
+            fontFamily: MONO,
+            fontSize: "0.65rem",
+            marginLeft: 8,
+          }}>
+            {lockedTierInfo.name} · {lockedTierInfo.price}
+          </span>
+        )}
+      </div>
+
+      {/* Progress bar */}
+      <div style={{ height: 2, background: "var(--border-subtle)", borderRadius: 2, overflow: "hidden" }}>
+        <div
+          style={{
+            height: "100%",
+            width: `${progress}%`,
+            background: "var(--accent-primary)",
+            borderRadius: 2,
+            transition: "width 300ms ease",
+          }}
+        />
+      </div>
     </div>
   );
 }
@@ -336,8 +388,8 @@ function Step2({
   setSelectedOneTime,
   onNext,
 }: {
-  selectedTier: TierName | null;
-  setSelectedTier: (t: TierName) => void;
+  selectedTier: string | null;
+  setSelectedTier: (t: string) => void;
   selectedOneTime: OneTime;
   setSelectedOneTime: (t: OneTime) => void;
   onNext: () => void;
@@ -517,7 +569,7 @@ function Step3({
   selectedTier,
 }: {
   profile: ContextProfile;
-  selectedTier: TierName | null;
+  selectedTier: string | null;
 }) {
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
@@ -845,7 +897,8 @@ function Step3({
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 
-export default function NewPage() {
+function NewPageInner() {
+  const searchParams = useSearchParams();
   const [step, setStep] = useState(0);
   const [profile, setProfile] = useState<ContextProfile>({
     accountType: "personal",
@@ -860,8 +913,17 @@ export default function NewPage() {
     clientName: "",
     email: "",
   });
-  const [selectedTier, setSelectedTier] = useState<TierName | null>("FORENSIC");
+  const [selectedTier, setSelectedTier] = useState<string | null>(null);
+  const [tierLocked, setTierLocked] = useState(false);
   const [selectedOneTime, setSelectedOneTime] = useState<OneTime>(null);
+
+  useEffect(() => {
+    const tier = searchParams.get("tier");
+    if (tier && tier in tierData) {
+      setSelectedTier(tier);
+      setTierLocked(true);
+    }
+  }, [searchParams]);
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg-base)", color: "var(--text-primary)" }}>
@@ -872,11 +934,68 @@ export default function NewPage() {
       </nav>
 
       <div style={{ maxWidth: 640, margin: "0 auto", padding: "60px 24px 80px" }}>
-        <StepIndicator step={step} />
+        <StepIndicator step={step} tierLocked={tierLocked} selectedTier={selectedTier} />
+
+        {/* Tier confirmation card — shown when arriving from a pricing CTA */}
+        {tierLocked && selectedTier && tierData[selectedTier as keyof typeof tierData] && (
+          <div style={{
+            background: "var(--bg-elevated)",
+            border: "1px solid var(--accent-primary)",
+            borderRadius: 8,
+            padding: "16px 20px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 24,
+          }}>
+            <div>
+              <span style={{
+                fontFamily: "JetBrains Mono, monospace",
+                fontSize: "0.75rem",
+                color: "var(--accent-primary)",
+                letterSpacing: "0.08em",
+              }}>
+                {tierData[selectedTier as keyof typeof tierData].name}
+              </span>
+              <span style={{
+                color: "var(--text-muted)",
+                fontSize: "0.8rem",
+                marginLeft: 12,
+              }}>
+                {tierData[selectedTier as keyof typeof tierData].price}
+              </span>
+            </div>
+            <button
+              onClick={() => {
+                setTierLocked(false);
+                setSelectedTier(null);
+              }}
+              style={{
+                background: "transparent",
+                border: "1px solid var(--border-active)",
+                color: "var(--text-secondary)",
+                padding: "4px 12px",
+                borderRadius: 4,
+                cursor: "pointer",
+                fontSize: "0.75rem",
+              }}
+            >
+              Change
+            </button>
+          </div>
+        )}
+
         {step === 0 && (
           <Step1 profile={profile} setProfile={setProfile} onNext={() => setStep(1)} />
         )}
-        {step === 1 && (
+
+        {/* tierLocked: Context → Upload (2 steps) */}
+        {step === 1 && tierLocked && (
+          <Step3 profile={profile} selectedTier={selectedTier} />
+        )}
+
+        {/* !tierLocked: Context → Tier → Upload (3 steps) */}
+        {step === 1 && !tierLocked && (
           <Step2
             selectedTier={selectedTier}
             setSelectedTier={setSelectedTier}
@@ -885,8 +1004,18 @@ export default function NewPage() {
             onNext={() => setStep(2)}
           />
         )}
-        {step === 2 && <Step3 profile={profile} selectedTier={selectedTier} />}
+        {step === 2 && !tierLocked && (
+          <Step3 profile={profile} selectedTier={selectedTier} />
+        )}
       </div>
     </main>
+  );
+}
+
+export default function NewPage() {
+  return (
+    <Suspense>
+      <NewPageInner />
+    </Suspense>
   );
 }

@@ -8,19 +8,22 @@ const products = [
     name: "Spot Audit",
     price: "$49",
     tagline: "Single full forensic diagnosis. No subscription.",
-    cta: "Get Audit",
+    cta: "Get Spot Audit",
+    href: "/new?tier=spot-audit",
   },
   {
     name: "Pre-Challenge Clearance",
     price: "$79",
     tagline: "Monte Carlo simulation before you fund. Know your pass probability.",
     cta: "Get Clearance",
+    href: "/new?tier=pre-challenge",
   },
   {
     name: "Failure Autopsy",
     price: "$99",
     tagline: "Complete forensic reconstruction of a blown account or failed challenge. Pinpoints the exact trade where recovery became impossible.",
     cta: "Get Autopsy",
+    href: "/new?tier=failure-autopsy",
   },
 ];
 
@@ -51,7 +54,7 @@ export default function OneTimeProducts() {
               <p style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.55, margin: "0 0 16px" }}>
                 {product.tagline}
               </p>
-              <Link href="/new" className="btn btn-ghost" style={{ fontSize: 12, padding: "7px 14px" }}>
+              <Link href={product.href} className="btn btn-ghost" style={{ fontSize: 12, padding: "7px 14px" }}>
                 {product.cta}
               </Link>
             </div>
