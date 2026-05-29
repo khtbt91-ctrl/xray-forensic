@@ -1,20 +1,42 @@
-﻿---
+---
 name: xray-forensic
-description: Activate whenever working on xray-web 
-or institutional-xray projects. Encodes architecture, 
-design system, brand voice, tier logic, and constraints.
+description: Activate whenever working on xray-web
+or institutional-xray projects.
 ---
 
 # X-Ray Forensic — Session Skill
 
-## Two Projects — Never Confuse Them
-- xray-web (C:\Users\USER\xray-web) = Next.js frontend → Vercel
-- institutional-xray (C:\Users\USER\institutional-xray) = Python backend → Railway
-- NEVER modify both in one session unless explicitly instructed
-- State which project you are working in at the start
+## STATUS: LAUNCH READY
+Platform live at xrayforensic.com
+Backend live at Railway
+All reports rule-based (no AI yet)
+Revenue target: Week 1
+
+## Two Projects
+- xray-web (C:\Users\USER\xray-web) = Next.js → Vercel
+- institutional-xray (C:\Users\USER\institutional-xray) = Python → Railway
+- NEVER modify both in one session
+
+## Live Infrastructure
+- Domain: xrayforensic.com
+- API: https://xray-api-production.up.railway.app
+- Supabase: https://cwafqxlohsgskixgeryh.supabase.co
+- Email: hello@xrayforensic.com
+
+## Launch Tiers (Honest)
+LIVE NOW:
+  signal (free) → limited report (NEEDS GATING)
+  audit ($29/mo) → full rule-based report
+  spot-audit ($49 one-time) → full report
+  pre-challenge ($79 one-time) → full + Monte Carlo
+  failure-autopsy ($99 one-time) → full + focused
+
+COMING SOON (greyed out):
+  forensic ($79/mo) → needs Claude API
+  guardian ($149/mo) → needs live connector
+  sovereign ($399/mo) → needs B2B features
 
 ## Design System (LOCKED)
-```css
 --bg-base: #0D1117
 --bg-card: #161B22
 --bg-elevated: #21262D
@@ -29,61 +51,50 @@ design system, brand voice, tier logic, and constraints.
 --profit: #3FB950
 --loss: #F85149
 --warning: #D29922
-```
 
-## Fonts
-- Inter: body, descriptions, UI
-- JetBrains Mono: numbers, verdicts, data, technical labels
-- IBM Plex Serif Italic: "What you tell yourself" column ONLY
+Fonts: Inter + JetBrains Mono + IBM Plex Serif Italic
+
+## Alignment Rules (CRITICAL)
+All eyebrows/labels: textAlign center, width 100%
+Nav descriptor: textAlign LEFT
+Footer bottom: textAlign center
+globals.css has !important overrides for these
 
 ## Brand Voice
-- Never say: AI-powered, easy, simple, revolutionary, 
+Never: AI-powered, easy, simple, revolutionary,
   guaranteed, community, family
-- Always say: forensic, diagnosis, verdict, prescription, 
+Always: forensic, diagnosis, verdict, prescription,
   evidence, confession, leak
-- CTA: "Get Diagnosed" not "Start Free"
-- Tone: clinical, specific, unflinching, actionable
-- The machine measures. It does not motivate.
-
-## Tier System
-3 report levels: signal → audit → forensic
-8 tier slugs:
-  signal (free) → signal level
-  audit ($29/mo) → audit level
-  spot-audit ($49 one-time) → audit level
-  forensic ($79/mo) → forensic level
-  pre-challenge ($79 one-time) → forensic level
-  failure-autopsy ($99 one-time) → forensic level
-  guardian ($149/mo) → forensic level
-  sovereign ($399/mo) → forensic level
-
-Tier data source of truth:
-  Frontend: lib/tiers.ts
-  Backend: xray/tier_config.py
-  Database: Supabase tiers table
-
-## Infrastructure
-- Railway API: https://xray-api-production.up.railway.app
-- Supabase: https://cwafqxlohsgskixgeryh.supabase.co
-- Domain: xrayforensic.com
-- Email: hello@xrayforensic.com
+CTA: "Get Diagnosed"
+Tone: clinical, specific, unflinching
 
 ## Hard Rules
-1. No framer-motion — CSS animations only
+1. No framer-motion — CSS only
 2. No new dependencies without approval
-3. npm run build must pass with zero errors before push
-4. Always git push after committing
-5. Report commit hash after every session
-6. Use <a> tags for mailto links, not Next.js <Link>
-7. useSearchParams must be read in useEffect (hydration safety)
-8. Never use non-null assertion (!) on nullable state
-9. Supabase Storage uploads: content-type text/html
-10. All currency elements: font-variant-numeric: tabular-nums
+3. npm run build zero errors before push
+4. Always push after commit
+5. Report commit hash after session
+6. <a> for mailto, NOT <Link>
+7. useSearchParams in useEffect only
+8. Never use ! on nullable state
+9. Supabase uploads: content-type text/html
+10. Currency: font-variant-numeric tabular-nums
+11. Revenue funds features. Don't build unbillable.
+12. Do not build what cannot be sold TODAY.
+
+## Competitive Intel (from research)
+X-Ray is UNIQUE in: verdict system, dollar-priced 
+leaks, protocol library, Monte Carlo pre-mortem
+Competitors are journals/trackers — none do forensics
+Price sweet spot: $29-49/mo for solo traders
+CSV acceptable if reliable — auto-sync is Phase 3
+Prop firm market: 5-10% pass rate, $4,270 avg spend
+Top markets: US, UK, India, Brazil, Australia
 
 ## Common Session Starters
-When starting a session, always:
-1. State which project: xray-web or institutional-xray
-2. Read CLAUDE.md or this skill file
-3. Check git status before making changes
-4. npm run build (or python syntax check) after changes
-5. git add, commit with descriptive message, push
+1. State which project
+2. Read this skill
+3. Check git status
+4. Build after changes
+5. Push after commit
+6. Report hash
