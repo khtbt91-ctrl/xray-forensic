@@ -67,7 +67,7 @@ export default function ComparisonSection() {
         .comparison-eyebrow {
           display: block;
           font-family: "JetBrains Mono", monospace;
-          font-size: 0.75rem;
+          font-size: 0.85rem;
           font-weight: 500;
           color: var(--accent-primary);
           letter-spacing: 0.08em;

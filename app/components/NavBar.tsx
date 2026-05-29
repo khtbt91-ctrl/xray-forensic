@@ -135,6 +135,9 @@ export default function NavBar() {
             >
               Pricing
             </Link>
+            <Link href="/tools" className="nav-link">
+              Tools
+            </Link>
             <Link
               href="/#faq"
               className="nav-link"
@@ -210,6 +213,9 @@ export default function NavBar() {
             }}
           >
             Pricing
+          </Link>
+          <Link href="/tools" className="mobile-nav-link" onClick={close}>
+            Tools
           </Link>
           <Link
             href="/#faq"

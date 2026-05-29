@@ -568,6 +568,7 @@ function Step3({
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [magicFile, setMagicFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -611,22 +612,27 @@ function Step3({
     try {
       const formData = new FormData();
       formData.append("file", selectedFile);
-      formData.append(
-        "context",
-        JSON.stringify({
-          client_name: profile.clientName || "Trader",
-          email: profile.email || "",
-          account_type: profile.accountType || "personal",
-          tier_id: (selectedTier || "signal").toLowerCase(),
-          firm: profile.firm || null,
-          challenge_balance: parseFloat(profile.challengeBalance) || null,
-          daily_dd: parseFloat(profile.dailyDdLimit) || null,
-          max_dd: parseFloat(profile.maxDdLimit) || null,
-          profit_target: parseFloat(profile.profitTarget) || null,
-          min_days: parseInt(profile.minTradingDays) || null,
-          days_remaining: parseInt(profile.daysRemaining) || null,
-        })
-      );
+
+      const contextData: Record<string, unknown> = {
+        client_name: profile.clientName || "Trader",
+        email: profile.email || "",
+        account_type: profile.accountType || "personal",
+        tier_id: (selectedTier || "signal").toLowerCase(),
+        firm: profile.firm || null,
+        challenge_balance: parseFloat(profile.challengeBalance) || null,
+        daily_dd: parseFloat(profile.dailyDdLimit) || null,
+        max_dd: parseFloat(profile.maxDdLimit) || null,
+        profit_target: parseFloat(profile.profitTarget) || null,
+        min_days: parseInt(profile.minTradingDays) || null,
+        days_remaining: parseInt(profile.daysRemaining) || null,
+      };
+
+      if (magicFile) {
+        formData.append("magic_file", magicFile);
+        contextData.ea_mode = true;
+      }
+
+      formData.append("context", JSON.stringify(contextData));
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/analyze`,
@@ -654,7 +660,7 @@ function Step3({
         setProcessing(false);
       }
     }
-  }, [selectedFile, profile, selectedTier, router]);
+  }, [selectedFile, magicFile, profile, selectedTier, router]);
 
   if (processing) {
     return (
@@ -719,6 +725,89 @@ function Step3({
       <p style={{ fontSize: 14, color: "var(--text-secondary)", margin: "0 0 24px" }}>
         Export your MT5 history and drop it below.
       </p>
+
+      {selectedTier === 'ea-autopsy' && (
+        <div style={{
+          background: 'var(--bg-elevated)',
+          border: '1px solid var(--warning)',
+          borderRadius: '8px',
+          padding: '16px 20px',
+          marginBottom: '20px'
+        }}>
+          <p style={{
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: '0.7rem',
+            color: 'var(--warning)',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            marginBottom: '8px'
+          }}>
+            EA AUTOPSY — TWO FILES REQUIRED
+          </p>
+          <p style={{
+            color: 'var(--text-secondary)',
+            fontSize: '0.8rem',
+            lineHeight: 1.6,
+            marginBottom: '12px'
+          }}>
+            1. Standard MT5 history export (as usual)
+            2. X-Ray Magic Export CSV (from{' '}
+            <a href="/tools" target="_blank"
+              style={{ color: 'var(--accent-primary)' }}>
+              /tools
+            </a>)
+          </p>
+
+          {/* Second file input for magic export */}
+          <div
+            onClick={() => document.getElementById(
+              'magic-file-input')?.click()}
+            style={{
+              border: `2px dashed ${
+                magicFile
+                  ? 'var(--profit)'
+                  : 'var(--warning)'}`,
+              borderRadius: '6px',
+              padding: '16px',
+              textAlign: 'center',
+              cursor: 'pointer',
+              background: magicFile
+                ? 'rgba(63,185,80,0.05)'
+                : 'var(--bg-card)',
+              marginTop: '12px'
+            }}
+          >
+            <input
+              id="magic-file-input"
+              type="file"
+              accept=".csv"
+              style={{ display: 'none' }}
+              onChange={e => {
+                const f = e.target.files?.[0]
+                if (f) setMagicFile(f)
+              }}
+            />
+            {magicFile ? (
+              <p style={{
+                color: 'var(--profit)',
+                fontFamily: 'monospace',
+                fontSize: '0.8rem',
+                margin: 0
+              }}>
+                ✓ {magicFile.name}
+              </p>
+            ) : (
+              <p style={{
+                color: 'var(--warning)',
+                fontSize: '0.8rem',
+                margin: 0
+              }}>
+                Drop Magic Export CSV here
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* MT5 export guide */}
       <div style={{
@@ -877,14 +966,20 @@ function Step3({
         </div>
       )}
 
-      <button
-        onClick={handleAnalyze}
-        disabled={!selectedFile || processing}
-        className="btn btn-primary"
-        style={{ width: "100%", padding: "14px", fontSize: 15, opacity: (selectedFile && !processing) ? 1 : 0.4, cursor: (selectedFile && !processing) ? "pointer" : "not-allowed" }}
-      >
-        {processing ? 'Processing...' : 'Analyze'}
-      </button>
+      {(() => {
+        const eaReady = selectedTier !== 'ea-autopsy' || !!magicFile;
+        const canAnalyze = !!selectedFile && eaReady && !processing;
+        return (
+          <button
+            onClick={handleAnalyze}
+            disabled={!canAnalyze}
+            className="btn btn-primary"
+            style={{ width: "100%", padding: "14px", fontSize: 15, opacity: canAnalyze ? 1 : 0.4, cursor: canAnalyze ? "pointer" : "not-allowed" }}
+          >
+            {processing ? 'Processing...' : 'Analyze'}
+          </button>
+        );
+      })()}
     </div>
   );
 }

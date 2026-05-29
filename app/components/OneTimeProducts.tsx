@@ -3,7 +3,18 @@
 import Link from "next/link";
 import { MONO, FadeInUp } from "./shared";
 
-const products = [
+type Product = {
+  name: string;
+  price: string;
+  tagline: string;
+  reportLevel: string;
+  cta: string;
+  href: string;
+  badge?: string;
+  footnote?: boolean;
+};
+
+const products: Product[] = [
   {
     name: "Spot Audit",
     price: "$49",
@@ -28,6 +39,16 @@ const products = [
     cta: "Get Autopsy",
     href: "/new?tier=failure-autopsy",
   },
+  {
+    name: "EA Autopsy",
+    price: "$99",
+    tagline: "Did your bot blow the account, or did you? Upload your magic export and get a full per-EA forensic audit.",
+    reportLevel: "FORENSIC-level report + per-EA verdict.",
+    cta: "Get EA Autopsy",
+    href: "/new?tier=ea-autopsy",
+    badge: "EA TRADERS",
+    footnote: true,
+  },
 ];
 
 export default function OneTimeProducts() {
@@ -43,8 +64,15 @@ export default function OneTimeProducts() {
                 border: "1px solid var(--border-subtle)",
                 borderRadius: 8,
                 padding: "20px 24px",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
+              {product.badge && (
+                <p style={{ fontFamily: MONO, fontSize: "0.65rem", color: "var(--warning)", letterSpacing: "0.08em", textTransform: "uppercase", margin: "0 0 6px" }}>
+                  {product.badge}
+                </p>
+              )}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                 <p style={{ fontFamily: MONO, fontSize: 12, color: "var(--text-secondary)", margin: 0, letterSpacing: "0.06em" }}>
                   {product.name}
@@ -60,7 +88,15 @@ export default function OneTimeProducts() {
               <p style={{ fontFamily: MONO, fontSize: "0.7rem", color: "var(--accent-primary)", margin: "0 0 16px" }}>
                 {product.reportLevel}
               </p>
-              <Link href={product.href} className="btn btn-ghost" style={{ fontSize: 12, padding: "7px 14px" }}>
+              {product.footnote && (
+                <p style={{ fontFamily: MONO, fontSize: "0.65rem", color: "var(--text-muted)", fontStyle: "italic", margin: "0 0 16px", lineHeight: 1.5 }}>
+                  Requires free Magic Export script from{" "}
+                  <Link href="/tools" style={{ color: "var(--accent-primary)" }}>
+                    /tools
+                  </Link>
+                </p>
+              )}
+              <Link href={product.href} className="btn btn-ghost" style={{ fontSize: 12, padding: "7px 14px", marginTop: "auto", alignSelf: "flex-start" }}>
                 {product.cta}
               </Link>
             </div>

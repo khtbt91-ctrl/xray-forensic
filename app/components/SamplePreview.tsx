@@ -10,7 +10,7 @@ export default function SamplePreview() {
         <p
           style={{
             fontFamily: MONO,
-            fontSize: 11,
+            fontSize: "0.85rem",
             letterSpacing: "0.2em",
             textTransform: "uppercase",
             color: "var(--text-muted)",
