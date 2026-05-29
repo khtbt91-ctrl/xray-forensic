@@ -984,14 +984,85 @@ function Step3({
   );
 }
 
+// ── CryptoAddress ─────────────────────────────────────────────────────────────
+
+function CryptoAddress({
+  label,
+  color,
+  address,
+}: {
+  label: string;
+  color: string;
+  address: string;
+}) {
+  const [copied, setCopied] = React.useState(false);
+
+  const copy = () => {
+    navigator.clipboard.writeText(address);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '6px',
+      padding: '12px 14px',
+      background: 'var(--bg-card)',
+      borderRadius: '6px',
+      border: '1px solid var(--border-subtle)',
+      marginBottom: '8px',
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span style={{
+          fontFamily: MONO,
+          fontSize: '0.7rem',
+          color: color,
+          fontWeight: 600,
+        }}>
+          {label}
+        </span>
+        <button
+          onClick={copy}
+          style={{
+            background: copied ? 'rgba(63,185,80,0.15)' : 'var(--bg-elevated)',
+            border: `1px solid ${copied ? 'var(--profit)' : 'var(--border-active)'}`,
+            borderRadius: '4px',
+            color: copied ? 'var(--profit)' : 'var(--text-muted)',
+            padding: '3px 10px',
+            cursor: 'pointer',
+            fontSize: '0.65rem',
+            fontFamily: MONO,
+            transition: 'all 150ms ease',
+          }}
+        >
+          {copied ? 'COPIED ✓' : 'COPY'}
+        </button>
+      </div>
+      <span style={{
+        fontFamily: MONO,
+        fontSize: '0.65rem',
+        color: 'var(--text-muted)',
+        wordBreak: 'break-all',
+        lineHeight: 1.5,
+      }}>
+        {address}
+      </span>
+    </div>
+  );
+}
+
 // ── Step Payment ─────────────────────────────────────────────────────────────
 
 function StepPayment({
   selectedTier,
-  goToNextStep,
+  goNext,
+  goPrev,
 }: {
   selectedTier: string | null;
-  goToNextStep: () => void;
+  goNext: () => void;
+  goPrev: () => void;
 }) {
   const tierInfo =
     selectedTier && tierData[selectedTier as keyof typeof tierData]
@@ -1000,14 +1071,11 @@ function StepPayment({
 
   return (
     <div>
-      <h2 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+      <h2 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 24px", letterSpacing: "-0.02em" }}>
         Complete Payment
       </h2>
-      <p style={{ fontSize: 14, color: "var(--text-secondary)", margin: "0 0 32px" }}>
-        Secure your access before uploading your trade history.
-      </p>
 
-      {/* Selected tier summary */}
+      {/* Tier summary */}
       {tierInfo && (
         <div style={{
           background: "var(--bg-elevated)",
@@ -1019,91 +1087,172 @@ function StepPayment({
           justifyContent: "space-between",
           alignItems: "center",
         }}>
-          <span style={{ fontFamily: MONO, fontSize: "0.85rem", color: "var(--accent-primary)" }}>
-            {tierInfo.name}
-          </span>
-          <span style={{ fontFamily: MONO, fontSize: "1.1rem", color: "var(--text-primary)", fontWeight: 600 }}>
+          <div>
+            <span style={{
+              fontFamily: MONO,
+              fontSize: "0.85rem",
+              color: "var(--accent-primary)",
+              display: "block",
+              letterSpacing: "0.06em",
+            }}>
+              {tierInfo.name}
+            </span>
+            {"tagline" in tierInfo && (
+              <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                {(tierInfo as { tagline: string }).tagline}
+              </span>
+            )}
+          </div>
+          <span style={{
+            fontFamily: MONO,
+            fontSize: "1.25rem",
+            color: "var(--text-primary)",
+            fontWeight: 700,
+          }}>
             {tierInfo.price}
           </span>
         </div>
       )}
 
-      {/* Stripe payment button */}
-      <button
-        onClick={goToNextStep}
-        style={{
-          width: "100%",
-          padding: 14,
-          background: "var(--accent-primary)",
-          color: "var(--bg-base)",
-          border: "none",
-          borderRadius: 8,
-          fontSize: "0.95rem",
-          fontWeight: 600,
-          cursor: "pointer",
-          marginBottom: 24,
-        }}
-      >
-        Pay with Card
-      </button>
-
-      {/* Divider */}
-      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
-        <div style={{ flex: 1, height: 1, background: "var(--border-subtle)" }} />
-        <span style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>or</span>
-        <div style={{ flex: 1, height: 1, background: "var(--border-subtle)" }} />
-      </div>
-
-      {/* Crypto payment */}
-      <div style={{ padding: 20, background: "var(--bg-card)", borderRadius: 8, border: "1px solid var(--border-subtle)" }}>
+      {/* Card payments — coming soon */}
+      <div style={{
+        padding: 20,
+        background: "var(--bg-elevated)",
+        borderRadius: 8,
+        border: "1px solid var(--border-subtle)",
+        marginBottom: 16,
+        textAlign: "center",
+      }}>
         <p style={{
           fontFamily: MONO,
           fontSize: "0.7rem",
-          color: "var(--warning)",
+          color: "var(--text-muted)",
           letterSpacing: "0.08em",
           textTransform: "uppercase",
-          marginBottom: 12,
-          margin: "0 0 12px",
+          marginBottom: 6,
         }}>
-          PAY WITH CRYPTO
+          CARD PAYMENTS
         </p>
-        <p style={{ color: "var(--text-secondary)", fontSize: "0.8rem", lineHeight: 1.65, marginBottom: 16 }}>
-          Send the exact amount in USDT to one of these addresses. Email your transaction hash
-          and CSV to{" "}
+        <p style={{ color: "var(--text-muted)", fontSize: "0.8rem", margin: 0 }}>
+          Coming soon. Use crypto below or email us.
+        </p>
+      </div>
+
+      {/* Divider */}
+      <div style={{ display: "flex", alignItems: "center", gap: 16, margin: "20px 0" }}>
+        <div style={{ flex: 1, height: 1, background: "var(--border-subtle)" }} />
+        <span style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>PAY WITH CRYPTO</span>
+        <div style={{ flex: 1, height: 1, background: "var(--border-subtle)" }} />
+      </div>
+
+      {/* Warning */}
+      <div style={{
+        padding: "10px 14px",
+        background: "rgba(210,153,34,0.08)",
+        border: "1px solid rgba(210,153,34,0.3)",
+        borderRadius: 6,
+        marginBottom: 16,
+      }}>
+        <p style={{ fontFamily: MONO, fontSize: "0.7rem", color: "var(--warning)", margin: 0 }}>
+          ⚠ USDT ONLY · Send exact amount · Wrong network = lost funds
+        </p>
+      </div>
+
+      {/* Wallet addresses */}
+      {[
+        {
+          network: "BEP20",
+          label: "USDT · BEP20 (BNB Chain)",
+          color: "var(--warning)",
+          address: "0x902bde6f2196a3bdea59d4b7f6e35732f1b0a988",
+        },
+        {
+          network: "TRC20",
+          label: "USDT · TRC20 (Tron)",
+          color: "var(--accent-secondary)",
+          address: "TSpMmxMzvR9xTwe5arzdjJkm5oaqpkuH7g",
+        },
+      ].map((w) => (
+        <CryptoAddress key={w.network} label={w.label} color={w.color} address={w.address} />
+      ))}
+
+      {/* After sending instructions */}
+      <div style={{
+        padding: "16px 20px",
+        background: "var(--bg-elevated)",
+        borderRadius: 8,
+        border: "1px solid var(--border-subtle)",
+        marginTop: 16,
+        marginBottom: 24,
+      }}>
+        <p style={{
+          fontFamily: MONO,
+          fontSize: "0.65rem",
+          color: "var(--text-muted)",
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          marginBottom: 10,
+        }}>
+          AFTER SENDING
+        </p>
+        <p style={{ color: "var(--text-secondary)", fontSize: "0.8rem", lineHeight: 1.65, margin: 0 }}>
+          Email your transaction hash to{" "}
           <a href="mailto:hello@xrayforensic.com" style={{ color: "var(--accent-primary)" }}>
             hello@xrayforensic.com
           </a>
-        </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {[
-            { label: "USDT · BEP20", color: "var(--warning)", address: "YOUR_BEP20_ADDRESS" },
-            { label: "USDT · Solana", color: "var(--accent-secondary)", address: "YOUR_SOL_ADDRESS" },
-          ].map((chain) => (
-            <div
-              key={chain.label}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "10px 14px",
-                background: "var(--bg-base)",
-                borderRadius: 6,
-                border: "1px solid var(--border-subtle)",
-              }}
-            >
-              <span style={{ color: chain.color, fontFamily: "monospace", fontSize: "0.7rem" }}>
-                {chain.label}
-              </span>
-              <span style={{ color: "var(--text-muted)", fontFamily: "monospace", fontSize: "0.6rem" }}>
-                {chain.address}
-              </span>
-            </div>
-          ))}
-        </div>
-        <p style={{ color: "var(--text-muted)", fontSize: "0.6rem", marginTop: 12, fontStyle: "italic", marginBottom: 0 }}>
+          {" "}with the subject line{" "}
+          <strong style={{ color: "var(--text-primary)", fontFamily: "monospace" }}>
+            PAYMENT — {tierInfo?.name}
+          </strong>
+          . Attach your MT5 history file to the same email if you prefer manual delivery.
           Reports delivered within 2 hours of confirmed payment.
         </p>
       </div>
+
+      {/* Confirmed payment CTA */}
+      <div style={{
+        padding: "16px 20px",
+        background: "rgba(88,166,255,0.05)",
+        border: "1px solid rgba(88,166,255,0.2)",
+        borderRadius: 8,
+        marginBottom: 24,
+      }}>
+        <p style={{ color: "var(--text-secondary)", fontSize: "0.8rem", marginBottom: 12 }}>
+          Already sent payment? Continue to upload your trade history. Your report will be
+          verified and delivered after payment confirmation.
+        </p>
+        <button
+          onClick={goNext}
+          style={{
+            width: "100%",
+            padding: 12,
+            background: "var(--accent-primary)",
+            color: "var(--bg-base)",
+            border: "none",
+            borderRadius: 6,
+            fontSize: "0.9rem",
+            fontWeight: 600,
+            cursor: "pointer",
+          }}
+        >
+          I&apos;ve Sent Payment — Continue to Upload →
+        </button>
+      </div>
+
+      {/* Back */}
+      <button
+        onClick={goPrev}
+        style={{
+          background: "transparent",
+          border: "none",
+          color: "var(--text-muted)",
+          cursor: "pointer",
+          fontSize: "0.8rem",
+          padding: 0,
+        }}
+      >
+        ← Back
+      </button>
     </div>
   );
 }
@@ -1191,6 +1340,13 @@ function NewPageInner() {
     }
   };
 
+  const goToPrevStep = () => {
+    const currentIndex = steps.findIndex((s) => s.key === currentStepKey);
+    if (currentIndex > 0) {
+      setCurrentStepKey(steps[currentIndex - 1].key);
+    }
+  };
+
   // Guard: don't render until URL params have been read.
   // Prevents step-count changing mid-render (e.g. 4-step flash before resolving to 2-step for ?tier=signal).
   if (!tierResolved) {
@@ -1265,7 +1421,7 @@ function NewPageInner() {
           />
         )}
         {currentStepKey === "payment" && (
-          <StepPayment selectedTier={selectedTier} goToNextStep={goToNextStep} />
+          <StepPayment selectedTier={selectedTier} goNext={goToNextStep} goPrev={goToPrevStep} />
         )}
         {currentStepKey === "upload" && (
           <Step3 profile={profile} selectedTier={selectedTier} />
