@@ -19,7 +19,7 @@ export default function PreChallengeSection() {
             <p
               style={{
                 fontFamily: MONO,
-                fontSize: "0.75rem",
+                fontSize: "0.85rem",
                 color: "var(--warning)",
                 textTransform: "uppercase",
                 letterSpacing: "0.1em",
@@ -39,7 +39,7 @@ export default function PreChallengeSection() {
                 lineHeight: 1.3,
               }}
             >
-              You are about to pay $500 for a challenge.
+              Most traders spend $4,270 across failed challenges. X-Ray tells you if you&apos;re ready before you pay again.
             </h2>
 
             <p
@@ -84,6 +84,19 @@ export default function PreChallengeSection() {
             >
               Either way, you stop donating evaluation fees to challenges you
               cannot statistically pass.
+            </p>
+
+            <p style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: '0.8rem',
+              color: 'var(--text-muted)',
+              lineHeight: 1.65,
+              marginTop: '16px',
+              textAlign: 'center',
+              width: '100%',
+            }}>
+              Industry pass rate: 5–10% on first attempt.
+              Your actual probability is in your data.
             </p>
 
             {/* Pricing */}
@@ -263,6 +276,17 @@ export default function PreChallengeSection() {
               Your actual probability is in your data.
               <br />
               X-Ray computes it. Not estimates it.
+            </p>
+
+            <p style={{
+              fontSize: '0.75rem',
+              color: 'var(--text-muted)',
+              textAlign: 'center',
+              width: '100%',
+              marginTop: '8px',
+              fontStyle: 'italic',
+            }}>
+              Based on QuantVPS and Topstep published data, 2024-2025.
             </p>
           </div>
         </FadeInUp>

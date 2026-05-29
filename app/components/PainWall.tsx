@@ -123,6 +123,18 @@ export default function PainWall() {
           <p style={{ fontFamily: MONO, fontSize: 13, color: "var(--text-secondary)", margin: 0, textAlign: "center", width: "100%" }}>
             Target: Profit factor &gt; 1.3 over 30 trades.
           </p>
+          <p style={{
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: '0.8rem',
+            color: 'var(--warning)',
+            textAlign: 'center',
+            width: '100%',
+            display: 'block',
+            marginTop: '32px',
+            letterSpacing: '0.05em',
+          }}>
+            5–10% of prop firm challengers pass on first attempt. Your data shows why.
+          </p>
         </div>
       </FadeInUp>
     </section>

@@ -28,12 +28,12 @@ export default function LandingPage() {
       <HeroSection />
       <TrustBar />
       <PainWall />
+      <PreChallengeSection />
       <RadarSection />
       <FrameworkSection />
       <MetricBar />
       <HonestyGradient />
       <CaseStudies />
-      <PreChallengeSection />
       <AudienceSection />
       <ProtocolsSection />
       <TierCards />
