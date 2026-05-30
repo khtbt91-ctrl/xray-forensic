@@ -567,6 +567,7 @@ function Step3({
 }) {
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
+  const [assetClass, setAssetClass] = useState<'forex' | 'crypto'>('forex');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [magicFile, setMagicFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
@@ -579,13 +580,24 @@ function Step3({
   const validateAndSetFile = (f: File | null) => {
     if (!f) return;
     const name = f.name.toLowerCase();
-    if (!name.endsWith(".csv") && !name.endsWith(".htm") && !name.endsWith(".html")) {
-      setFileError("⚠️ We need a .csv or .htm file from MT5. Try the export steps above.");
+    if (assetClass === "crypto") {
+      if (!name.endsWith(".csv")) {
+        setFileError("⚠️ We need a .csv trade history export from your exchange.");
+        setSelectedFile(null);
+        return;
+      }
+    } else if (
+      !name.endsWith(".csv") &&
+      !name.endsWith(".htm") &&
+      !name.endsWith(".html") &&
+      !name.endsWith(".xml")
+    ) {
+      setFileError("⚠️ We need a .csv, .htm or .xml file from MT5. Try the export steps above.");
       setSelectedFile(null);
-    } else {
-      setFileError(null);
-      setSelectedFile(f);
+      return;
     }
+    setFileError(null);
+    setSelectedFile(f);
   };
 
   const handleAnalyze = useCallback(async () => {
@@ -625,6 +637,7 @@ function Step3({
         profit_target: parseFloat(profile.profitTarget) || null,
         min_days: parseInt(profile.minTradingDays) || null,
         days_remaining: parseInt(profile.daysRemaining) || null,
+        asset_class: assetClass,
       };
 
       if (magicFile) {
@@ -660,7 +673,7 @@ function Step3({
         setProcessing(false);
       }
     }
-  }, [selectedFile, magicFile, profile, selectedTier, router]);
+  }, [selectedFile, magicFile, profile, selectedTier, assetClass, router]);
 
   if (processing) {
     return (
@@ -869,6 +882,76 @@ function Step3({
         </p>
       </div>
 
+      {/* Asset class selector */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '8px',
+        marginBottom: '20px'
+      }}>
+        {[
+          {
+            value: 'forex',
+            label: 'MT5 / Forex',
+            sub: 'MT5 .htm, .xml or .csv export',
+            icon: '📊'
+          },
+          {
+            value: 'crypto',
+            label: 'Crypto Exchange',
+            sub: 'Binance, Bybit, OKX, Bitget, BingX',
+            icon: '₿'
+          },
+        ].map(opt => (
+          <button
+            key={opt.value}
+            onClick={() => {
+              setAssetClass(opt.value as 'forex' | 'crypto');
+              setSelectedFile(null);
+              setFileError(null);
+            }}
+            style={{
+              padding: '14px',
+              background: assetClass === opt.value
+                ? 'rgba(88,166,255,0.1)'
+                : 'var(--bg-elevated)',
+              border: `1px solid ${
+                assetClass === opt.value
+                ? 'var(--accent-primary)'
+                : 'var(--border-subtle)'}`,
+              borderRadius: '8px',
+              cursor: 'pointer',
+              textAlign: 'left',
+              transition: 'all 150ms ease'
+            }}
+          >
+            <div style={{
+              fontSize: '1.1rem',
+              marginBottom: '4px'
+            }}>
+              {opt.icon}
+            </div>
+            <div style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: '0.75rem',
+              color: assetClass === opt.value
+                ? 'var(--accent-primary)'
+                : 'var(--text-primary)',
+              fontWeight: 600,
+              marginBottom: '2px'
+            }}>
+              {opt.label}
+            </div>
+            <div style={{
+              fontSize: '0.65rem',
+              color: 'var(--text-muted)'
+            }}>
+              {opt.sub}
+            </div>
+          </button>
+        ))}
+      </div>
+
       {/* Drop zone */}
       <div
         onClick={() => fileRef.current?.click()}
@@ -894,7 +977,7 @@ function Step3({
         <input
           ref={fileRef}
           type="file"
-          accept=".csv,.htm,.html"
+          accept={assetClass === "crypto" ? ".csv" : ".csv,.htm,.html,.xml"}
           style={{ display: "none" }}
           onChange={(e) => validateAndSetFile(e.target.files?.[0] || null)}
         />
@@ -916,7 +999,9 @@ function Step3({
               Drop your trade history here
             </p>
             <p style={{ fontSize: 13, color: "var(--text-muted)", margin: "0 0 16px" }}>
-              MT5 .htm report or .csv export · Any size · Fully encrypted
+              {assetClass === "crypto"
+                ? "Exchange trade history CSV · Any size · Fully encrypted"
+                : "MT5 .htm, .xml or .csv · Any size · Fully encrypted"}
             </p>
             <span style={{ fontSize: 13, color: "var(--accent-primary)", textDecoration: "underline", cursor: "pointer" }}>
               Browse files
@@ -924,6 +1009,29 @@ function Step3({
           </>
         )}
       </div>
+
+      {assetClass === 'crypto' ? (
+        <p style={{
+          color: 'var(--text-muted)',
+          fontSize: '0.75rem',
+          textAlign: 'center',
+          margin: '0 0 12px',
+          lineHeight: 1.6
+        }}>
+          Binance · Bybit · OKX · Bitget · BingX
+          <br />
+          Export: Account → Orders → Trade History → CSV
+        </p>
+      ) : (
+        <p style={{
+          color: 'var(--text-muted)',
+          fontSize: '0.75rem',
+          textAlign: 'center',
+          margin: '0 0 12px'
+        }}>
+          MT5 .htm, .xml or .csv export
+        </p>
+      )}
 
       {fileError && (
         <p style={{ fontSize: 13, color: "var(--warning)", margin: "0 0 12px", fontFamily: MONO }}>
