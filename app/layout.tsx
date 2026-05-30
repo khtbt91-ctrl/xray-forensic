@@ -3,6 +3,7 @@ import "./globals.css";
 import AnimationInit from "./components/AnimationInit";
 import SupportButton from "./components/SupportButton";
 import ReturnToReportBanner from "./components/ReturnToReportBanner";
+import { AuthProvider } from "@/lib/auth-context";
 
 export const metadata: Metadata = {
   title: "Institutional X-Ray",
@@ -18,10 +19,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AnimationInit />
-        {children}
-        <ReturnToReportBanner />
-        <SupportButton />
+        <AuthProvider>
+          <AnimationInit />
+          {children}
+          <ReturnToReportBanner />
+          <SupportButton />
+        </AuthProvider>
       </body>
     </html>
   );

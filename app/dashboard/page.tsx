@@ -1,0 +1,438 @@
+'use client'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/auth-context'
+
+export default function DashboardPage() {
+  const { user, profile, loading, signOut } = useAuth()
+  const router = useRouter()
+  const [analyses, setAnalyses] = useState<any[]>([])
+  const [loadingData, setLoadingData] = useState(true)
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login')
+    }
+  }, [user, loading, router])
+
+  useEffect(() => {
+    if (!user) return
+    fetchAnalyses()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
+
+  const fetchAnalyses = async () => {
+    try {
+      const { supabase } = await import('@/lib/supabase')
+      const { data } = await supabase
+        .from('analyses')
+        .select(
+          'id, created_at, tier_id, net_pnl, total_trades, win_rate, client_name'
+        )
+        .eq('user_id', user!.id)
+        .order('created_at', { ascending: false })
+        .limit(20)
+
+      setAnalyses(data || [])
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoadingData(false)
+    }
+  }
+
+  if (loading)
+    return (
+      <div
+        style={{
+          background: 'var(--bg-base)',
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'var(--text-muted)',
+          fontFamily: 'monospace',
+        }}
+      >
+        Loading...
+      </div>
+    )
+
+  if (!user || !profile) return null
+
+  const tierColors: Record<string, string> = {
+    signal: 'var(--text-muted)',
+    audit: 'var(--accent-primary)',
+    forensic: 'var(--accent-primary)',
+    guardian: 'var(--warning)',
+    sovereign: 'var(--accent-secondary)',
+  }
+
+  const usagePercent =
+    profile.analyses_limit === -1
+      ? 0
+      : (profile.analyses_used / profile.analyses_limit) * 100
+
+  return (
+    <div
+      style={{
+        background: 'var(--bg-base)',
+        minHeight: '100vh',
+        paddingTop: '80px',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '800px',
+          margin: '0 auto',
+          padding: '32px 24px',
+        }}
+      >
+        {/* Header */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            marginBottom: '32px',
+          }}
+        >
+          <div>
+            <p
+              style={{
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '0.7rem',
+                color: 'var(--accent-primary)',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                marginBottom: '4px',
+              }}
+            >
+              DIAGNOSTIC DASHBOARD
+            </p>
+            <h1
+              style={{
+                fontSize: '1.5rem',
+                fontWeight: 700,
+                color: 'var(--text-primary)',
+                marginBottom: '4px',
+              }}
+            >
+              {user.email}
+            </h1>
+            <span
+              style={{
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '0.75rem',
+                color: tierColors[profile.tier_id] || 'var(--text-muted)',
+                letterSpacing: '0.08em',
+              }}
+            >
+              {profile.tier_id.toUpperCase()} TIER
+            </span>
+          </div>
+          <button
+            onClick={signOut}
+            style={{
+              background: 'transparent',
+              border: '1px solid var(--border-subtle)',
+              color: 'var(--text-muted)',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '0.8rem',
+            }}
+          >
+            Sign Out
+          </button>
+        </div>
+
+        {/* Usage card */}
+        <div
+          style={{
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: '8px',
+            padding: '20px 24px',
+            marginBottom: '24px',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '16px',
+          }}
+        >
+          <div>
+            <p
+              style={{
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '0.65rem',
+                color: 'var(--text-muted)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                marginBottom: '6px',
+              }}
+            >
+              THIS MONTH
+            </p>
+            <p
+              style={{
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '1.5rem',
+                color:
+                  usagePercent >= 100
+                    ? 'var(--loss)'
+                    : 'var(--text-primary)',
+                fontWeight: 700,
+              }}
+            >
+              {profile.analyses_used}
+              <span
+                style={{
+                  fontSize: '0.9rem',
+                  color: 'var(--text-muted)',
+                  fontWeight: 400,
+                }}
+              >
+                /
+                {profile.analyses_limit === -1
+                  ? '∞'
+                  : profile.analyses_limit}
+              </span>
+            </p>
+            {/* Usage bar */}
+            {profile.analyses_limit !== -1 && (
+              <div
+                style={{
+                  height: '4px',
+                  background: 'var(--bg-elevated)',
+                  borderRadius: '2px',
+                  marginTop: '8px',
+                  overflow: 'hidden',
+                }}
+              >
+                <div
+                  style={{
+                    height: '100%',
+                    width: `${Math.min(usagePercent, 100)}%`,
+                    background:
+                      usagePercent >= 100
+                        ? 'var(--loss)'
+                        : usagePercent >= 80
+                        ? 'var(--warning)'
+                        : 'var(--profit)',
+                    borderRadius: '2px',
+                    transition: 'width 300ms ease',
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          <div>
+            <p
+              style={{
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '0.65rem',
+                color: 'var(--text-muted)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                marginBottom: '6px',
+              }}
+            >
+              TOTAL ANALYSES
+            </p>
+            <p
+              style={{
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '1.5rem',
+                color: 'var(--text-primary)',
+                fontWeight: 700,
+              }}
+            >
+              {profile.total_analyses}
+            </p>
+          </div>
+
+          <div style={{ textAlign: 'right' }}>
+            {!profile.can_analyze ? (
+              <a
+                href="/new?upgrade=true"
+                style={{
+                  display: 'inline-block',
+                  padding: '10px 20px',
+                  background: 'var(--accent-primary)',
+                  color: 'var(--bg-base)',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  marginTop: '8px',
+                }}
+              >
+                Upgrade Tier →
+              </a>
+            ) : (
+              <a
+                href="/new"
+                style={{
+                  display: 'inline-block',
+                  padding: '10px 20px',
+                  background: 'var(--accent-primary)',
+                  color: 'var(--bg-base)',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  marginTop: '8px',
+                }}
+              >
+                New Analysis →
+              </a>
+            )}
+          </div>
+        </div>
+
+        {/* Past analyses */}
+        <h2
+          style={{
+            fontWeight: 600,
+            marginBottom: '16px',
+            fontFamily: 'JetBrains Mono, monospace',
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
+            fontSize: '0.8rem',
+            color: 'var(--text-muted)',
+          }}
+        >
+          PAST DIAGNOSES
+        </h2>
+
+        {loadingData ? (
+          <p
+            style={{
+              color: 'var(--text-muted)',
+              fontSize: '0.85rem',
+            }}
+          >
+            Loading your analyses...
+          </p>
+        ) : analyses.length === 0 ? (
+          <div
+            style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '8px',
+              padding: '40px',
+              textAlign: 'center',
+            }}
+          >
+            <p
+              style={{
+                color: 'var(--text-muted)',
+                fontSize: '0.9rem',
+                marginBottom: '16px',
+              }}
+            >
+              No analyses yet.
+            </p>
+            <a
+              href="/new"
+              style={{
+                color: 'var(--accent-primary)',
+                fontSize: '0.85rem',
+                textDecoration: 'none',
+              }}
+            >
+              Run your first diagnosis →
+            </a>
+          </div>
+        ) : (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+            }}
+          >
+            {analyses.map((analysis) => (
+              <a
+                key={analysis.id}
+                href={`/report/${analysis.id}`}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '16px 20px',
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '8px',
+                  textDecoration: 'none',
+                  transition: 'border-color 150ms',
+                }}
+                onMouseEnter={(e) => {
+                  ;(e.currentTarget as HTMLElement).style.borderColor =
+                    'var(--border-active)'
+                }}
+                onMouseLeave={(e) => {
+                  ;(e.currentTarget as HTMLElement).style.borderColor =
+                    'var(--border-subtle)'
+                }}
+              >
+                <div>
+                  <p
+                    style={{
+                      color: 'var(--text-primary)',
+                      fontSize: '0.9rem',
+                      fontWeight: 600,
+                      marginBottom: '2px',
+                    }}
+                  >
+                    {analysis.client_name || 'Unnamed Trader'}
+                  </p>
+                  <p
+                    style={{
+                      color: 'var(--text-muted)',
+                      fontSize: '0.75rem',
+                      fontFamily: 'JetBrains Mono, monospace',
+                    }}
+                  >
+                    {new Date(analysis.created_at).toLocaleDateString()} ·{' '}
+                    {analysis.total_trades} trades ·{' '}
+                    {analysis.tier_id?.toUpperCase()}
+                  </p>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <p
+                    style={{
+                      fontFamily: 'JetBrains Mono, monospace',
+                      fontSize: '1rem',
+                      fontWeight: 700,
+                      fontVariantNumeric: 'tabular-nums',
+                      color:
+                        (analysis.net_pnl || 0) >= 0
+                          ? 'var(--profit)'
+                          : 'var(--loss)',
+                    }}
+                  >
+                    {(analysis.net_pnl || 0) >= 0 ? '+' : ''}$
+                    {Math.abs(analysis.net_pnl || 0).toLocaleString('en-US', {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </p>
+                  <p
+                    style={{
+                      color: 'var(--text-muted)',
+                      fontSize: '0.7rem',
+                    }}
+                  >
+                    {((analysis.win_rate || 0) * 100).toFixed(1)}% WR
+                  </p>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

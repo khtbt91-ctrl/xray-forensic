@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { MONO } from "./shared";
+import { useAuth } from "@/lib/auth-context";
 
 export default function NavBar() {
+  const { user, loading } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -162,9 +164,16 @@ export default function NavBar() {
               marginLeft: "auto",
             }}
           >
-            <Link href="/sample" className="nav-link nav-sample-link" style={{ textAlign: "center", display: "block", marginLeft: "auto", marginRight: "auto" }}>
-              Sample Report
-            </Link>
+            {!loading &&
+              (user ? (
+                <Link href="/dashboard" className="nav-link nav-sample-link" style={{ textAlign: "center", display: "block", marginLeft: "auto", marginRight: "auto" }}>
+                  Dashboard
+                </Link>
+              ) : (
+                <Link href="/login" className="nav-link nav-sample-link" style={{ textAlign: "center", display: "block", marginLeft: "auto", marginRight: "auto" }}>
+                  Sign In
+                </Link>
+              ))}
             <Link
               href="/new"
               className="btn btn-primary nav-cta-desktop"
@@ -237,9 +246,16 @@ export default function NavBar() {
           >
             Contact
           </a>
-          <Link href="/sample" className="mobile-nav-link" onClick={close} style={{ textAlign: "center", display: "block", marginLeft: "auto", marginRight: "auto" }}>
-            Sample Report
-          </Link>
+          {!loading &&
+            (user ? (
+              <Link href="/dashboard" className="mobile-nav-link" onClick={close} style={{ textAlign: "center", display: "block", marginLeft: "auto", marginRight: "auto" }}>
+                Dashboard
+              </Link>
+            ) : (
+              <Link href="/login" className="mobile-nav-link" onClick={close} style={{ textAlign: "center", display: "block", marginLeft: "auto", marginRight: "auto" }}>
+                Sign In
+              </Link>
+            ))}
           <div className="mobile-menu-divider" />
           <Link
             href="/new"

@@ -124,6 +124,11 @@ body {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
+
+/* Spinner — used by auth callback / loading states */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 .terminal-cursor {
   animation: blink 1s step-end infinite;
   color: var(--profit);

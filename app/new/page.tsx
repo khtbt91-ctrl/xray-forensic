@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Disclaimer from "../../components/Disclaimer";
 import { tierData } from "@/lib/tiers";
+import { useAuth } from "@/lib/auth-context";
 
 const MONO = "JetBrains Mono, monospace";
 
@@ -561,9 +562,11 @@ const PROCESSING_STEPS = [
 function Step3({
   profile,
   selectedTier,
+  accessToken,
 }: {
   profile: ContextProfile;
   selectedTier: string | null;
+  accessToken?: string;
 }) {
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
@@ -649,7 +652,12 @@ function Step3({
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/analyze`,
-        { method: "POST", body: formData, signal: controller.signal }
+        {
+          method: "POST",
+          body: formData,
+          signal: controller.signal,
+          headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+        }
       );
 
       clearTimeout(timeoutTimer);
@@ -673,7 +681,7 @@ function Step3({
         setProcessing(false);
       }
     }
-  }, [selectedFile, magicFile, profile, selectedTier, assetClass, router]);
+  }, [selectedFile, magicFile, profile, selectedTier, assetClass, accessToken, router]);
 
   if (processing) {
     return (
@@ -1548,6 +1556,8 @@ function StepPayment({
 
 function NewPageInner() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const { user, session, profile: authProfile, loading: authLoading } = useAuth();
   const [profile, setProfile] = useState<ContextProfile>({
     accountType: "personal",
     firm: "",
@@ -1575,6 +1585,14 @@ function NewPageInner() {
     }
     setTierResolved(true);
   }, [searchParams]);
+
+  // Auth gate — redirect anonymous visitors to sign in, preserving destination.
+  useEffect(() => {
+    if (!authLoading && !user) {
+      localStorage.setItem("xray_return_to", window.location.href);
+      router.push("/login");
+    }
+  }, [user, authLoading, router]);
 
   const isFree = selectedTier?.toLowerCase() === "signal";
   const isPaid = selectedTier !== null && selectedTier.toLowerCase() !== "signal";
@@ -1634,9 +1652,10 @@ function NewPageInner() {
     }
   };
 
-  // Guard: don't render until URL params have been read.
+  // Guard: don't render until URL params + auth have resolved.
+  // Also covers the brief window where an anonymous visitor is being redirected to /login.
   // Prevents step-count changing mid-render (e.g. 4-step flash before resolving to 2-step for ?tier=signal).
-  if (!tierResolved) {
+  if (!tierResolved || authLoading || !user) {
     return (
       <main style={{ minHeight: "100vh", background: "var(--bg-base)", color: "var(--text-primary)" }}>
         <nav style={{ borderBottom: "1px solid var(--border-subtle)", padding: "16px 40px", display: "flex", alignItems: "center" }}>
@@ -1646,6 +1665,37 @@ function NewPageInner() {
         </nav>
         <div style={{ maxWidth: 640, margin: "0 auto", padding: "120px 24px", textAlign: "center" }}>
           <span style={{ fontFamily: MONO, fontSize: 13, color: "var(--text-muted)" }}>Loading…</span>
+        </div>
+      </main>
+    );
+  }
+
+  // Monthly limit reached — block new analyses until the user upgrades.
+  if (authProfile && !authProfile.can_analyze) {
+    return (
+      <main style={{ minHeight: "100vh", background: "var(--bg-base)", color: "var(--text-primary)" }}>
+        <nav style={{ borderBottom: "1px solid var(--border-subtle)", padding: "16px 40px", display: "flex", alignItems: "center" }}>
+          <Link href="/" style={{ fontFamily: MONO, fontSize: 12, color: "var(--text-muted)", textDecoration: "none" }}>
+            ← X-Ray
+          </Link>
+        </nav>
+        <div style={{ maxWidth: 480, margin: "0 auto", padding: "120px 24px", textAlign: "center" }}>
+          <h2 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 12px", letterSpacing: "-0.02em" }}>
+            Monthly limit reached
+          </h2>
+          <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: "0 0 28px" }}>
+            You&apos;ve used {authProfile.analyses_used}/
+            {authProfile.analyses_limit === -1 ? "∞" : authProfile.analyses_limit} analyses this
+            month on the {authProfile.tier_id.toUpperCase()} tier.
+          </p>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+            <Link href="/new?upgrade=true" className="btn btn-primary" style={{ padding: "12px 24px" }}>
+              Upgrade your tier →
+            </Link>
+            <Link href="/dashboard" className="btn btn-ghost" style={{ padding: "12px 24px" }}>
+              Dashboard
+            </Link>
+          </div>
         </div>
       </main>
     );
@@ -1711,7 +1761,7 @@ function NewPageInner() {
           <StepPayment selectedTier={selectedTier} profile={profile} goNext={goToNextStep} />
         )}
         {currentStepKey === "upload" && (
-          <Step3 profile={profile} selectedTier={selectedTier} />
+          <Step3 profile={profile} selectedTier={selectedTier} accessToken={session?.access_token} />
         )}
       </div>
     </main>
