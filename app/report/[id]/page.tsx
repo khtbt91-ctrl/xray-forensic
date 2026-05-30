@@ -116,10 +116,13 @@ export default function ReportPage() {
         top: 0,
         zIndex: 50
       }}>
-        <a href="/" style={{ color: '#8B949E',
-          fontSize: '0.8rem', textDecoration: 'none' }}>
+        <button
+          onClick={() => window.history.back()}
+          style={{ background: 'none', border: 'none', color: '#8B949E',
+            fontSize: '0.8rem', cursor: 'pointer', padding: 0 }}
+        >
           ← Back
-        </a>
+        </button>
         <span style={{ color: '#8B949E', fontSize: '0.7rem',
           fontFamily: 'monospace', letterSpacing: '0.05em' }}>
           X-RAY FORENSIC · {String(id).slice(0,8).toUpperCase()}

@@ -40,6 +40,18 @@ export default function FinalCta() {
               See Sample Verdict
             </Link>
           </div>
+          <p style={{
+            fontSize: "0.7rem",
+            color: "var(--text-muted)",
+            marginTop: 28,
+            lineHeight: 1.6,
+          }}>
+            X-Ray is a diagnostic tool — not financial advice. We never access your MT5 password
+            or broker credentials. Your trade data is analyzed and immediately discarded.{" "}
+            <Link href="/tools" style={{ color: "var(--accent-primary)", textDecoration: "none" }}>
+              Free export tools available.
+            </Link>
+          </p>
         </div>
       </FadeInUp>
     </section>

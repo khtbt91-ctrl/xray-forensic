@@ -465,7 +465,7 @@ function Step2({
               </ul>
               {tier.name === "SOVEREIGN" ? (
                 <a
-                  href="mailto:your-email@example.com"
+                  href="mailto:hello@xrayforensic.com"
                   className="btn btn-ghost"
                   style={{ width: "100%", fontSize: 12, marginTop: 20, display: "inline-flex" }}
                   onClick={(e) => e.stopPropagation()}
@@ -1057,17 +1057,169 @@ function CryptoAddress({
 
 function StepPayment({
   selectedTier,
+  profile,
   goNext,
-  goPrev,
 }: {
   selectedTier: string | null;
+  profile: ContextProfile;
   goNext: () => void;
-  goPrev: () => void;
 }) {
   const tierInfo =
     selectedTier && tierData[selectedTier as keyof typeof tierData]
       ? tierData[selectedTier as keyof typeof tierData]
       : null;
+
+  const [txHash, setTxHash] = useState("");
+  const [paymentId, setPaymentId] = useState<string | null>(null);
+  const [payStatus, setPayStatus] = useState<"idle" | "submitting" | "pending" | "error">("idle");
+  const [payError, setPayError] = useState<string | null>(null);
+
+  // Restore pending state from localStorage on mount
+  useEffect(() => {
+    const storedId = localStorage.getItem("xray_payment_id");
+    const storedStatus = localStorage.getItem("xray_payment_status");
+    if (storedId && storedStatus === "pending") {
+      setPaymentId(storedId);
+      setPayStatus("pending");
+    }
+  }, []);
+
+  // Persist to localStorage when pending; clear on idle/error
+  useEffect(() => {
+    if (paymentId && payStatus === "pending") {
+      localStorage.setItem("xray_payment_id", paymentId);
+      localStorage.setItem("xray_payment_status", "pending");
+    } else if (payStatus === "idle" || payStatus === "error") {
+      localStorage.removeItem("xray_payment_id");
+      localStorage.removeItem("xray_payment_status");
+    }
+  }, [paymentId, payStatus]);
+
+  const submitPayment = async () => {
+    if (!txHash.trim()) { setPayError("Paste your transaction hash first."); return; }
+    setPayStatus("submitting");
+    setPayError(null);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/submit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tx_hash: txHash.trim(),
+          email: profile.email,
+          tier_id: (selectedTier || "audit").toLowerCase(),
+        }),
+      });
+      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || "Submit failed");
+      const data = await res.json();
+      setPaymentId(data.payment_id);
+      if (data.status === "confirmed") { goNext(); return; }
+      setPayStatus("pending");
+    } catch (e: any) {
+      setPayError(e.message || "Could not submit payment.");
+      setPayStatus("error");
+    }
+  };
+
+  // Poll while pending — auto-advance on confirm
+  useEffect(() => {
+    if (payStatus !== "pending" || !paymentId) return;
+    const tick = async () => {
+      try {
+        const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/status/${paymentId}`);
+        if (!r.ok) return;
+        const d = await r.json();
+        if (d.status === "confirmed") { clearInterval(id); goNext(); }
+      } catch { /* keep polling */ }
+    };
+    const id = setInterval(tick, 10000);
+    tick();
+    return () => clearInterval(id);
+  }, [payStatus, paymentId, goNext]);
+
+  // Pending state UI
+  if (payStatus === "pending") {
+    return (
+      <div>
+        <h2 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+          Awaiting Confirmation
+        </h2>
+        <p style={{ fontSize: 14, color: "var(--text-secondary)", margin: "0 0 36px" }}>
+          Keep this tab open — you&apos;ll be redirected automatically.
+        </p>
+        <style>{`
+          @keyframes xray-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(88,166,255,0.4); }
+            50% { opacity: 0.6; transform: scale(1.3); box-shadow: 0 0 0 8px rgba(88,166,255,0); }
+          }
+        `}</style>
+        <div style={{
+          background: "var(--bg-card)",
+          border: "1px solid var(--border-subtle)",
+          borderRadius: 10,
+          padding: "40px 36px",
+          textAlign: "center",
+        }}>
+          <div style={{
+            width: 12,
+            height: 12,
+            borderRadius: "50%",
+            background: "var(--accent-primary)",
+            margin: "0 auto 24px",
+            animation: "xray-pulse 2s ease-in-out infinite",
+          }} />
+          <p style={{ fontFamily: MONO, fontSize: 13, color: "var(--text-primary)", margin: "0 0 12px" }}>
+            Payment submitted. Verifying on-chain.
+          </p>
+          <p style={{
+            fontSize: 13,
+            color: "var(--text-secondary)",
+            lineHeight: 1.65,
+            margin: "0 auto 24px",
+            maxWidth: 360,
+          }}>
+            This can take up to 2 hours. Keep this tab open and you&apos;ll be redirected
+            automatically the moment it clears.
+          </p>
+          <button
+            onClick={async () => {
+              if (!paymentId) return;
+              try {
+                const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/status/${paymentId}`);
+                if (!r.ok) return;
+                const d = await r.json();
+                if (d.status === "confirmed") goNext();
+              } catch {}
+            }}
+            style={{
+              background: "transparent",
+              border: "1px solid var(--border-active)",
+              color: "var(--text-secondary)",
+              padding: "8px 20px",
+              borderRadius: 6,
+              cursor: "pointer",
+              fontSize: "0.8rem",
+              fontFamily: MONO,
+            }}
+          >
+            Check now
+          </button>
+        </div>
+        <button
+          onClick={() => window.history.back()}
+          style={{
+            background: "transparent",
+            border: "none",
+            color: "var(--text-muted)",
+            cursor: "pointer",
+            fontSize: "0.8rem",
+            padding: "16px 0 0",
+          }}
+        >
+          ← Back
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -1176,13 +1328,71 @@ function StepPayment({
         <CryptoAddress key={w.network} label={w.label} color={w.color} address={w.address} />
       ))}
 
-      {/* After sending instructions */}
+      {/* TX hash input */}
+      <div style={{ marginTop: 24, marginBottom: 8 }}>
+        <label style={{
+          display: "block",
+          fontSize: 11,
+          letterSpacing: "0.1em",
+          textTransform: "uppercase",
+          color: "var(--text-muted)",
+          marginBottom: 8,
+        }}>
+          Transaction Hash
+        </label>
+        <input
+          type="text"
+          value={txHash}
+          onChange={(e) => { setTxHash(e.target.value); if (payError) setPayError(null); }}
+          placeholder="0x… or TX hash from your wallet"
+          style={{
+            width: "100%",
+            padding: "10px 14px",
+            background: "var(--bg-elevated)",
+            border: `1px solid ${payError ? "var(--loss)" : "var(--border-subtle)"}`,
+            borderRadius: 6,
+            color: "var(--text-primary)",
+            fontSize: 13,
+            fontFamily: MONO,
+            outline: "none",
+            boxSizing: "border-box",
+          }}
+        />
+        {payError && (
+          <p style={{ fontSize: 12, color: "var(--loss)", margin: "6px 0 0", fontFamily: MONO }}>
+            {payError}
+          </p>
+        )}
+      </div>
+
+      {/* Submit */}
+      <button
+        onClick={submitPayment}
+        disabled={payStatus === "submitting"}
+        style={{
+          width: "100%",
+          padding: 12,
+          background: "var(--accent-primary)",
+          color: "var(--bg-base)",
+          border: "none",
+          borderRadius: 6,
+          fontSize: "0.9rem",
+          fontWeight: 600,
+          cursor: payStatus === "submitting" ? "not-allowed" : "pointer",
+          opacity: payStatus === "submitting" ? 0.6 : 1,
+          marginTop: 16,
+          marginBottom: 24,
+        }}
+      >
+        {payStatus === "submitting" ? "Submitting…" : "I’ve Sent Payment — Submit for Verification"}
+      </button>
+
+      {/* Manual email fallback */}
       <div style={{
         padding: "16px 20px",
         background: "var(--bg-elevated)",
         borderRadius: 8,
         border: "1px solid var(--border-subtle)",
-        marginTop: 16,
         marginBottom: 24,
       }}>
         <p style={{
@@ -1193,7 +1403,7 @@ function StepPayment({
           textTransform: "uppercase",
           marginBottom: 10,
         }}>
-          AFTER SENDING
+          ALTERNATIVELY
         </p>
         <p style={{ color: "var(--text-secondary)", fontSize: "0.8rem", lineHeight: 1.65, margin: 0 }}>
           Email your transaction hash to{" "}
@@ -1204,44 +1414,13 @@ function StepPayment({
           <strong style={{ color: "var(--text-primary)", fontFamily: "monospace" }}>
             PAYMENT — {tierInfo?.name}
           </strong>
-          . Attach your MT5 history file to the same email if you prefer manual delivery.
-          Reports delivered within 2 hours of confirmed payment.
+          . Reports delivered within 2 hours of confirmed payment.
         </p>
-      </div>
-
-      {/* Confirmed payment CTA */}
-      <div style={{
-        padding: "16px 20px",
-        background: "rgba(88,166,255,0.05)",
-        border: "1px solid rgba(88,166,255,0.2)",
-        borderRadius: 8,
-        marginBottom: 24,
-      }}>
-        <p style={{ color: "var(--text-secondary)", fontSize: "0.8rem", marginBottom: 12 }}>
-          Already sent payment? Continue to upload your trade history. Your report will be
-          verified and delivered after payment confirmation.
-        </p>
-        <button
-          onClick={goNext}
-          style={{
-            width: "100%",
-            padding: 12,
-            background: "var(--accent-primary)",
-            color: "var(--bg-base)",
-            border: "none",
-            borderRadius: 6,
-            fontSize: "0.9rem",
-            fontWeight: 600,
-            cursor: "pointer",
-          }}
-        >
-          I&apos;ve Sent Payment — Continue to Upload →
-        </button>
       </div>
 
       {/* Back */}
       <button
-        onClick={goPrev}
+        onClick={() => window.history.back()}
         style={{
           background: "transparent",
           border: "none",
@@ -1421,7 +1600,7 @@ function NewPageInner() {
           />
         )}
         {currentStepKey === "payment" && (
-          <StepPayment selectedTier={selectedTier} goNext={goToNextStep} goPrev={goToPrevStep} />
+          <StepPayment selectedTier={selectedTier} profile={profile} goNext={goToNextStep} />
         )}
         {currentStepKey === "upload" && (
           <Step3 profile={profile} selectedTier={selectedTier} />
