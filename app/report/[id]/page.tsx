@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
+import ReportUpgradeNudge from '@/app/components/ReportUpgradeNudge'
 
 // Persist 24-hour access to the most recently viewed report.
 // Re-saving an existing report refreshes its expiry window.
@@ -18,6 +19,7 @@ export default function ReportPage() {
   const [blobUrl, setBlobUrl] = useState<string|null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string|null>(null)
+  const [reportTier, setReportTier] = useState<string>('signal')
 
   useEffect(() => {
     let objectUrl: string | null = null
@@ -31,6 +33,7 @@ export default function ReportPage() {
         if (!res.ok) throw new Error(`Analysis not found`)
         const data = await res.json()
         if (!data.report_url) throw new Error('No report URL')
+        setReportTier(data.tier_id || 'signal')
 
         // Fetch HTML content from Supabase Storage
         const htmlRes = await fetch(data.report_url)
@@ -168,6 +171,11 @@ export default function ReportPage() {
         title="X-Ray Forensic Report"
         sandbox="allow-scripts allow-same-origin"
       />
+      <div style={{ background: 'var(--bg-base)', padding: '0 24px' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <ReportUpgradeNudge currentTier={reportTier} />
+        </div>
+      </div>
     </div>
   )
 }

@@ -19,6 +19,7 @@ import SamplePreview from "./components/SamplePreview";
 import FaqSection from "./components/FaqSection";
 import ComparisonSection from "./components/ComparisonSection";
 import FinalCta from "./components/FinalCta";
+import TestimonialsSection from "./components/TestimonialsSection";
 
 const MONO = "JetBrains Mono, monospace";
 
@@ -36,6 +37,7 @@ export default function LandingPage() {
       <MetricBar />
       <HonestyGradient />
       <CaseStudies />
+      <TestimonialsSection />
       <AudienceSection />
       <ProtocolsSection />
       <TierCards />

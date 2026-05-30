@@ -284,6 +284,34 @@ export default function TierCards() {
                       </li>
                     ))}
                   </ul>
+
+                  {tier.name === 'AUDIT' && (
+                    <p style={{
+                      fontFamily: MONO,
+                      fontSize: '0.65rem',
+                      color: 'var(--text-muted)',
+                      fontStyle: 'italic',
+                      marginTop: '12px',
+                      paddingTop: '12px',
+                      borderTop: '1px solid var(--border-subtle)',
+                    }}>
+                      &ldquo;Found $4,753 in no-stop losses on first diagnosis.&rdquo;
+                    </p>
+                  )}
+
+                  {tier.name === 'FORENSIC' && (
+                    <p style={{
+                      fontFamily: MONO,
+                      fontSize: '0.65rem',
+                      color: 'var(--text-muted)',
+                      fontStyle: 'italic',
+                      marginTop: '12px',
+                      paddingTop: '12px',
+                      borderTop: '1px solid var(--border-subtle)',
+                    }}>
+                      &ldquo;276 revenge trades exposed. Behavior tracked month-on-month.&rdquo;
+                    </p>
+                  )}
                 </div>
 
                 <div style={{ marginTop: "auto", paddingTop: 20 }}>
