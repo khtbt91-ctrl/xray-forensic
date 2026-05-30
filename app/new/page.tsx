@@ -1316,13 +1316,13 @@ function StepPayment({
           network: "BEP20",
           label: "USDT · BEP20 (BNB Chain)",
           color: "var(--warning)",
-          address: "0x902bde6f2196a3bdea59d4b7f6e35732f1b0a988",
+          address: "0x620869b71e673bFfeAc79420a7141fE8853ba67e",
         },
         {
           network: "TRC20",
           label: "USDT · TRC20 (Tron)",
           color: "var(--accent-secondary)",
-          address: "TSpMmxMzvR9xTwe5arzdjJkm5oaqpkuH7g",
+          address: "TYoZG5HUq8gVh2cgiarCDXV2rbdnetaZhs",
         },
       ].map((w) => (
         <CryptoAddress key={w.network} label={w.label} color={w.color} address={w.address} />
