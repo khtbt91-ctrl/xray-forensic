@@ -9,6 +9,7 @@ interface AuthContextType {
   profile: UserProfile | null
   loading: boolean
   signIn: (email: string) => Promise<void>
+  signInWithGoogle: () => Promise<void>
   signOut: () => Promise<void>
   refreshProfile: () => Promise<void>
 }
@@ -19,6 +20,7 @@ const AuthContext = createContext<AuthContextType>({
   profile: null,
   loading: true,
   signIn: async () => {},
+  signInWithGoogle: async () => {},
   signOut: async () => {},
   refreshProfile: async () => {},
 })
@@ -90,6 +92,16 @@ export function AuthProvider({
     if (error) throw error
   }
 
+  const signInWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
+    if (error) throw error
+  }
+
   const signOut = async () => {
     await supabase.auth.signOut()
     setUser(null)
@@ -111,6 +123,7 @@ export function AuthProvider({
         profile,
         loading,
         signIn,
+        signInWithGoogle,
         signOut,
         refreshProfile,
       }}
