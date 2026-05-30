@@ -102,7 +102,7 @@ export default function SupportButton() {
 
           {/* Email */}
           <a
-            href="mailto:hello@xrayforensic.com?subject=Support Request"
+            href="mailto:support@xrayforensic.com?subject=Support Request"
             style={{
               display: 'flex',
               alignItems: 'center',
