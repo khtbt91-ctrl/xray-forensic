@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import AnimationInit from "./components/AnimationInit";
+import SupportButton from "./components/SupportButton";
+import ReturnToReportBanner from "./components/ReturnToReportBanner";
 
 export const metadata: Metadata = {
   title: "Institutional X-Ray",
@@ -18,6 +20,8 @@ export default function RootLayout({
       <body>
         <AnimationInit />
         {children}
+        <ReturnToReportBanner />
+        <SupportButton />
       </body>
     </html>
   );

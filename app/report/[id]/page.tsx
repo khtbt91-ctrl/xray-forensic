@@ -2,6 +2,17 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 
+// Persist 24-hour access to the most recently viewed report.
+// Re-saving an existing report refreshes its expiry window.
+const saveReportAccess = (reportId: string) => {
+  const access = {
+    reportId,
+    timestamp: Date.now(),
+    expiresAt: Date.now() + (24 * 60 * 60 * 1000)
+  }
+  localStorage.setItem('xray_last_report', JSON.stringify(access))
+}
+
 export default function ReportPage() {
   const { id } = useParams()
   const [blobUrl, setBlobUrl] = useState<string|null>(null)
@@ -38,6 +49,9 @@ export default function ReportPage() {
         const blob = new Blob([htmlText], { type: 'text/html' })
         objectUrl = URL.createObjectURL(blob)
         setBlobUrl(objectUrl)
+
+        // Report loaded — save / refresh 24h access window
+        saveReportAccess(String(id))
 
       } catch (err: any) {
         setError(err.message || 'Failed to load report')
