@@ -1,6 +1,7 @@
 import Link from "next/link";
 import NavBar from "./components/NavBar";
 import HeroSection from "./components/HeroSection";
+import HowItWorks from "./components/HowItWorks";
 import TrustBar from "./components/TrustBar";
 import PainWall from "./components/PainWall";
 import RadarSection from "./components/RadarSection";
@@ -26,6 +27,7 @@ export default function LandingPage() {
     <main style={{ minHeight: "100vh", background: "var(--bg-base)", color: "var(--text-primary)" }}>
       <NavBar />
       <HeroSection />
+      <HowItWorks />
       <TrustBar />
       <PainWall />
       <PreChallengeSection />

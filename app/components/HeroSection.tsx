@@ -11,7 +11,7 @@ type TLine =
   | { kind: "mixed"; before: string; gold: string };
 
 const TERMINAL_LINES: TLine[] = [
-  { kind: "plain", text: "ANALYZING 639 TRADES..." },
+  { kind: "plain", text: "ANALYZING 670 TRADES..." },
   { kind: "plain", text: "> 276 revenge trades detected." },
   { kind: "mixed", before: "> Cost: ", gold: "-$4,753.95" },
   { kind: "plain", text: "> Stop-less trades = 91% of all losses." },
@@ -88,8 +88,22 @@ export default function HeroSection() {
           margin: "0 auto 36px",
         }}
       >
-        X-Ray processes your MT5 history through 7 institutional dimensions. Returns
-        a verdict you cannot negotiate. And a prescription with a target.
+        Upload your trade history. X-Ray returns a forensic verdict you cannot
+        negotiate — and a prescription with a measurable target.
+      </p>
+
+      <p
+        style={{
+          fontFamily: MONO,
+          fontSize: "0.7rem",
+          color: "var(--text-muted)",
+          letterSpacing: "0.08em",
+          textAlign: "center",
+          marginTop: 8,
+          marginBottom: 0,
+        }}
+      >
+        MT5 · Binance · Bybit · OKX · Bitget · BingX
       </p>
 
       <div className="hero-ctas" style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap", marginBottom: 56 }}>

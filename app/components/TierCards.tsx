@@ -22,6 +22,8 @@ const TIERS = [
     mailto: false,
     highlight: false,
     popular: false,
+    comingSoon: false,
+    waitlistSubject: null as string | null,
     accent: "var(--text-secondary)",
   },
   {
@@ -44,6 +46,8 @@ const TIERS = [
     mailto: false,
     highlight: false,
     popular: false,
+    comingSoon: false,
+    waitlistSubject: null as string | null,
     accent: "var(--accent-primary)",
   },
   {
@@ -66,6 +70,8 @@ const TIERS = [
     mailto: false,
     highlight: true,
     popular: true,
+    comingSoon: false,
+    waitlistSubject: null as string | null,
     accent: "var(--accent-primary)",
   },
   {
@@ -86,6 +92,8 @@ const TIERS = [
     mailto: false,
     highlight: false,
     popular: false,
+    comingSoon: true,
+    waitlistSubject: "GUARDIAN Waitlist",
     accent: "var(--warning)",
   },
   {
@@ -105,6 +113,8 @@ const TIERS = [
     mailto: true,
     highlight: false,
     popular: false,
+    comingSoon: true,
+    waitlistSubject: "SOVEREIGN Waitlist",
     accent: "var(--accent-secondary)",
   },
 ];
@@ -219,6 +229,30 @@ export default function TierCards() {
                   </div>
                 )}
 
+                {tier.comingSoon && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: -16,
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      background: "var(--bg-elevated)",
+                      color: "var(--text-muted)",
+                      border: "1px solid var(--border-subtle)",
+                      padding: "4px 16px",
+                      borderRadius: 4,
+                      fontSize: "0.65rem",
+                      fontFamily: MONO,
+                      fontWeight: 600,
+                      letterSpacing: "0.1em",
+                      whiteSpace: "nowrap",
+                      zIndex: 10,
+                    }}
+                  >
+                    COMING SOON
+                  </div>
+                )}
+
                 <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.16em", color: tier.accent, margin: "0 0 8px", marginTop: tier.popular ? 12 : 0 }}>
                   {tier.name}
                 </p>
@@ -253,7 +287,38 @@ export default function TierCards() {
                 </div>
 
                 <div style={{ marginTop: "auto", paddingTop: 20 }}>
-                  {tier.mailto ? (
+                  {tier.comingSoon ? (
+                    <div
+                      style={{
+                        padding: "12px",
+                        background: "var(--bg-elevated)",
+                        border: "1px solid var(--border-subtle)",
+                        borderRadius: "6px",
+                        textAlign: "center",
+                      }}
+                    >
+                      <p
+                        style={{
+                          fontFamily: MONO,
+                          fontSize: "0.7rem",
+                          color: "var(--text-muted)",
+                          margin: "0 0 6px",
+                        }}
+                      >
+                        COMING SOON — Join waitlist
+                      </p>
+                      <a
+                        href={`mailto:hello@xrayforensic.com?subject=${encodeURIComponent(tier.waitlistSubject ?? `${tier.name} Waitlist`)}`}
+                        style={{
+                          color: "var(--accent-primary)",
+                          fontSize: "0.8rem",
+                          textDecoration: "none",
+                        }}
+                      >
+                        hello@xrayforensic.com
+                      </a>
+                    </div>
+                  ) : tier.mailto ? (
                     <a
                       href={tier.href}
                       className={tier.highlight ? "btn btn-primary" : "btn btn-ghost"}

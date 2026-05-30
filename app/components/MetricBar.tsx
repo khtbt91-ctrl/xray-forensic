@@ -3,7 +3,7 @@
 import { FadeInUp } from "./shared";
 
 const stats = [
-  { number: "639", label: "Trades in First Diagnosis" },
+  { number: "670", label: "Trades in First Diagnosis" },
   { number: "$8,475", label: "In Leaks Found (First 10)" },
   { number: "7", label: "Diagnostic Dimensions" },
   { number: "41", label: "Data Points Per Trade" },

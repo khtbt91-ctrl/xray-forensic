@@ -16,6 +16,12 @@ const cards = [
     scenarios: null,
   },
   {
+    accent: "var(--accent-secondary)",
+    title: "THE ALGO / CRYPTO TRADER",
+    body: "Your EA blew the account — or your manual trades did. Your crypto positions bleed at 3 AM when you should be asleep. X-Ray separates EA from manual, identifies which killed the account, and diagnoses your crypto session behavior with the same forensic depth as forex.",
+    scenarios: null,
+  },
+  {
     accent: "var(--warning)",
     title: "THE PROP FIRM TRADER",
     body: null,

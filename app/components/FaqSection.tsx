@@ -24,6 +24,26 @@ const FAQ = [
     q: "How fast do I get my report?",
     a: "SIGNAL and AUDIT reports process in under 30 seconds. FORENSIC-tier forensic diagnosis (AI-assisted) completes in under 2 minutes.",
   },
+  {
+    q: "Do you support crypto exchanges?",
+    a: "Yes. Upload your trade history CSV from Binance, Bybit, OKX, Bitget, or BingX. X-Ray auto-detects the exchange and applies the same 12-module forensic analysis used for forex.",
+  },
+  {
+    q: "What about EA and automated trading?",
+    a: "X-Ray includes an EA Autopsy product. Download the free Magic Export script from /tools, run it in MT5 to capture magic numbers, then upload both files. X-Ray separates each EA from your manual trades and audits them independently.",
+  },
+  {
+    q: "Is my trade data stored or shared?",
+    a: "Your CSV file is processed and immediately discarded. The diagnostic output (scores, metrics) is stored linked to your account so you can access past reports. Your raw trade data is never retained.",
+  },
+  {
+    q: "How accurate is the prop firm pass probability?",
+    a: "The Monte Carlo simulation runs 1,000 scenarios using your actual win rate, average loss, and behavioral patterns. It predicts drawdown breach probability based on your real data — not industry averages. The prediction is only as accurate as your historical consistency.",
+  },
+  {
+    q: "What file formats do you accept?",
+    a: "MT5 HTML report export (.htm), MT5 XML export, MT5 CSV export. For crypto: CSV exports from Binance, Bybit, OKX, Bitget, and BingX. No account connection required — just the exported file.",
+  },
 ];
 
 export default function FaqSection() {

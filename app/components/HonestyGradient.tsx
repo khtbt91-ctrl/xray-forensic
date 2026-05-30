@@ -168,7 +168,7 @@ export default function HonestyGradient() {
             marginRight: "auto",
           }}
         >
-          Hover any row to see what X-Ray actually finds.
+          Tap any row to reveal what X-Ray actually finds.
         </p>
       </FadeInUp>
     </section>

@@ -11,7 +11,6 @@ const principles = [
 export default function FrameworkSection() {
   return (
     <section
-      id="how-it-works"
       style={{
         background: "var(--bg-card)",
         borderTop: "1px solid var(--border-subtle)",

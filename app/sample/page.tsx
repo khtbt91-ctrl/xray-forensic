@@ -126,7 +126,7 @@ export default function SamplePage() {
             ← X-Ray
           </Link>
           <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--warning)" }}>
-            SAMPLE REPORT — Demo Trader — 639 Trades Analyzed
+            SAMPLE REPORT — Demo Trader — 670 Trades Analyzed
           </span>
         </div>
         <Link href="/new" className="btn btn-primary" style={{ fontSize: 13 }}>
@@ -142,10 +142,10 @@ export default function SamplePage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(155px, 1fr))", gap: 24 }}>
             <MetricCell label="Client" value="Demo Trader" />
             <MetricCell label="Period" value="Nov 2025 — May 2026" />
-            <MetricCell label="Total Trades" value="639" />
-            <MetricCell label="Net P&L" value="-$3,527.31" color="var(--loss)" />
-            <MetricCell label="Win Rate" value="37.8%" />
-            <MetricCell label="Profit Factor" value="0.32" color="var(--loss)" />
+            <MetricCell label="Total Trades" value="670" />
+            <MetricCell label="Net P&L" value="-$3,475.98" color="var(--loss)" />
+            <MetricCell label="Win Rate" value="38.8%" />
+            <MetricCell label="Profit Factor" value="0.35" color="var(--loss)" />
             <MetricCell label="Max Drawdown" value="$4,013.46" color="var(--loss)" />
           </div>
         </SectionCard>
