@@ -3,11 +3,67 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 
+function ComplianceVerdict({
+  latest,
+  previous,
+}: {
+  latest: any
+  previous: any
+}) {
+  const count = [
+    latest.revenge_count < previous.revenge_count,
+    latest.no_sl_count < previous.no_sl_count,
+    latest.win_rate > previous.win_rate,
+    latest.profit_factor > previous.profit_factor,
+  ].filter(Boolean).length
+
+  const color =
+    count >= 3
+      ? 'var(--profit)'
+      : count >= 2
+      ? 'var(--warning)'
+      : 'var(--loss)'
+
+  const text =
+    count >= 3
+      ? 'The prescriptions are working. Stay the course.'
+      : count >= 2
+      ? 'Partial improvement. Review the prescriptions you ignored.'
+      : 'Regression detected. The behavior is not changing.'
+
+  return (
+    <div
+      style={{
+        marginTop: '16px',
+        padding: '12px 16px',
+        background: 'var(--bg-elevated)',
+        borderRadius: '6px',
+        borderLeft: `3px solid ${color}`,
+      }}
+    >
+      <p
+        style={{
+          fontFamily: 'JetBrains Mono, monospace',
+          fontSize: '0.75rem',
+          color: color,
+          margin: 0,
+        }}
+      >
+        {text}
+      </p>
+    </div>
+  )
+}
+
 export default function DashboardPage() {
   const { user, profile, loading, signOut } = useAuth()
   const router = useRouter()
   const [analyses, setAnalyses] = useState<any[]>([])
   const [loadingData, setLoadingData] = useState(true)
+  const [complianceData, setComplianceData] = useState<{
+    latest: any
+    previous: any
+  } | null>(null)
 
   useEffect(() => {
     if (!loading && !user) {
@@ -18,6 +74,7 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!user) return
     fetchAnalyses()
+    fetchCompliance()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
@@ -38,6 +95,27 @@ export default function DashboardPage() {
       console.error(e)
     } finally {
       setLoadingData(false)
+    }
+  }
+
+  const fetchCompliance = async () => {
+    try {
+      const { supabase } = await import('@/lib/supabase')
+      const { data } = await supabase
+        .from('prescriptions')
+        .select('*')
+        .eq('user_id', user!.id)
+        .order('created_at', { ascending: false })
+        .limit(2)
+
+      if (data && data.length >= 2) {
+        setComplianceData({
+          latest: data[0],
+          previous: data[1],
+        })
+      }
+    } catch (e) {
+      console.error(e)
     }
   }
 
@@ -291,6 +369,160 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Compliance comparison — month-on-month */}
+        {complianceData && (
+          <div
+            style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '8px',
+              padding: '20px 24px',
+              marginBottom: '24px',
+            }}
+          >
+            <p
+              style={{
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '0.7rem',
+                color: 'var(--accent-primary)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                marginBottom: '16px',
+              }}
+            >
+              MONTH-ON-MONTH PROGRESS
+            </p>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+                gap: '12px',
+              }}
+            >
+              {[
+                {
+                  label: 'Revenge Trades',
+                  prev: complianceData.previous.revenge_count,
+                  curr: complianceData.latest.revenge_count,
+                  lower_is_better: true,
+                },
+                {
+                  label: 'No-SL Trades',
+                  prev: complianceData.previous.no_sl_count,
+                  curr: complianceData.latest.no_sl_count,
+                  lower_is_better: true,
+                },
+                {
+                  label: 'Win Rate',
+                  prev: complianceData.previous.win_rate,
+                  curr: complianceData.latest.win_rate,
+                  lower_is_better: false,
+                  pct: true,
+                },
+                {
+                  label: 'Profit Factor',
+                  prev: complianceData.previous.profit_factor,
+                  curr: complianceData.latest.profit_factor,
+                  lower_is_better: false,
+                },
+                {
+                  label: 'Net P/L',
+                  prev: complianceData.previous.net_pnl,
+                  curr: complianceData.latest.net_pnl,
+                  lower_is_better: false,
+                  money: true,
+                },
+              ].map((metric, i) => {
+                const improved = metric.lower_is_better
+                  ? metric.curr < metric.prev
+                  : metric.curr > metric.prev
+                const unchanged = metric.curr === metric.prev
+                const delta = metric.curr - metric.prev
+                const deltaPct =
+                  metric.prev !== 0
+                    ? (delta / Math.abs(metric.prev)) * 100
+                    : 0
+
+                return (
+                  <div
+                    key={i}
+                    style={{
+                      background: 'var(--bg-elevated)',
+                      borderRadius: '6px',
+                      padding: '12px',
+                      borderLeft: `3px solid ${
+                        unchanged
+                          ? 'var(--border-subtle)'
+                          : improved
+                          ? 'var(--profit)'
+                          : 'var(--loss)'
+                      }`,
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontFamily: 'JetBrains Mono, monospace',
+                        fontSize: '0.6rem',
+                        color: 'var(--text-muted)',
+                        letterSpacing: '0.06em',
+                        textTransform: 'uppercase',
+                        marginBottom: '6px',
+                      }}
+                    >
+                      {metric.label}
+                    </p>
+                    <p
+                      style={{
+                        fontFamily: 'JetBrains Mono, monospace',
+                        fontSize: '1.1rem',
+                        fontWeight: 700,
+                        fontVariantNumeric: 'tabular-nums',
+                        color: unchanged
+                          ? 'var(--text-primary)'
+                          : improved
+                          ? 'var(--profit)'
+                          : 'var(--loss)',
+                        marginBottom: '2px',
+                      }}
+                    >
+                      {metric.money
+                        ? `$${Math.abs(metric.curr).toFixed(0)}`
+                        : metric.pct
+                        ? `${(metric.curr * 100).toFixed(1)}%`
+                        : metric.curr}
+                    </p>
+                    <p
+                      style={{
+                        fontSize: '0.65rem',
+                        color: unchanged
+                          ? 'var(--text-muted)'
+                          : improved
+                          ? 'var(--profit)'
+                          : 'var(--loss)',
+                      }}
+                    >
+                      {unchanged
+                        ? '→ unchanged'
+                        : improved
+                        ? '↑ improving'
+                        : '↓ regression'}
+                      {!unchanged &&
+                        ` (${deltaPct > 0 ? '+' : ''}${deltaPct.toFixed(0)}%)`}
+                    </p>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Verdict */}
+            <ComplianceVerdict
+              latest={complianceData.latest}
+              previous={complianceData.previous}
+            />
+          </div>
+        )}
+
         {/* Past analyses */}
         <h2
           style={{
@@ -430,6 +662,64 @@ export default function DashboardPage() {
                 </div>
               </a>
             ))}
+          </div>
+        )}
+
+        {/* Ready for next diagnosis prompt */}
+        {analyses.length > 0 && profile.can_analyze && (
+          <div
+            style={{
+              marginTop: '24px',
+              padding: '20px 24px',
+              background: 'rgba(88,166,255,0.05)',
+              border: '1px solid rgba(88,166,255,0.15)',
+              borderRadius: '8px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '12px',
+            }}
+          >
+            <div>
+              <p
+                style={{
+                  fontFamily: 'JetBrains Mono, monospace',
+                  fontSize: '0.7rem',
+                  color: 'var(--accent-primary)',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  marginBottom: '4px',
+                }}
+              >
+                READY FOR NEXT DIAGNOSIS?
+              </p>
+              <p
+                style={{
+                  color: 'var(--text-secondary)',
+                  fontSize: '0.8rem',
+                  margin: 0,
+                }}
+              >
+                Upload your latest history. X-Ray will show if your behavior
+                improved since last time.
+              </p>
+            </div>
+            <a
+              href="/new"
+              style={{
+                padding: '10px 20px',
+                background: 'var(--accent-primary)',
+                color: 'var(--bg-base)',
+                borderRadius: '6px',
+                textDecoration: 'none',
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Upload New History →
+            </a>
           </div>
         )}
       </div>
