@@ -7,6 +7,7 @@ import Link from "next/link";
 import Disclaimer from "../../components/Disclaimer";
 import { tierData } from "@/lib/tiers";
 import { useAuth } from "@/lib/auth-context";
+import { supabase } from "@/lib/supabase";
 
 const MONO = "JetBrains Mono, monospace";
 
@@ -569,6 +570,7 @@ function Step3({
   accessToken?: string;
 }) {
   const router = useRouter();
+  const { user } = useAuth();
   const fileRef = useRef<HTMLInputElement>(null);
   const [assetClass, setAssetClass] = useState<'forex' | 'crypto'>('forex');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -601,6 +603,40 @@ function Step3({
     }
     setFileError(null);
     setSelectedFile(f);
+  };
+
+  // Persist a compliance snapshot so the dashboard can show month-on-month progress.
+  // NOTE: /analyze only returns analysis_id, report_url and summary_stats. The
+  // behavioral counts (revenge, no-SL, kill-zone) and dimension scores live inside
+  // the HTML report — until the API surfaces them as JSON they default to 0/{}.
+  const savePrescriptions = async (analysisId: string, data: any) => {
+    if (!user) return;
+    const stats = data?.summary_stats || {};
+    try {
+      // Mark previous snapshot as not latest
+      await supabase
+        .from("prescriptions")
+        .update({ is_latest: false })
+        .eq("user_id", user.id)
+        .eq("is_latest", true);
+
+      // Save new snapshot
+      await supabase.from("prescriptions").insert({
+        user_id: user.id,
+        analysis_id: analysisId,
+        prescriptions: data.prescriptions || [],
+        revenge_count: data.revenge_count || 0,
+        no_sl_count: data.no_sl_count || 0,
+        kill_zone_pct: data.kill_zone_pct || 0,
+        win_rate: stats.win_rate || 0,
+        profit_factor: stats.profit_factor || 0,
+        net_pnl: stats.net_pnl || 0,
+        scores: data.scores || {},
+        is_latest: true,
+      });
+    } catch (e) {
+      console.error("Failed to save prescriptions:", e);
+    }
   };
 
   const handleAnalyze = useCallback(async () => {
@@ -670,6 +706,9 @@ function Step3({
 
       const data = await response.json();
 
+      // Save compliance snapshot for logged-in users (best-effort, non-blocking failure)
+      await savePrescriptions(data.analysis_id, data);
+
       setProcessingStepIndex(4);
       await new Promise((r) => setTimeout(r, 1200));
       router.push(`/report/${data.analysis_id}`);
@@ -681,7 +720,8 @@ function Step3({
         setProcessing(false);
       }
     }
-  }, [selectedFile, magicFile, profile, selectedTier, assetClass, accessToken, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedFile, magicFile, profile, selectedTier, assetClass, accessToken, router, user]);
 
   if (processing) {
     return (
@@ -1586,11 +1626,15 @@ function NewPageInner() {
     setTierResolved(true);
   }, [searchParams]);
 
-  // Auth gate — redirect anonymous visitors to sign in, preserving destination.
+  // Auth gate — small delay lets session load before treating user as anonymous.
   useEffect(() => {
-    if (!authLoading && !user) {
-      localStorage.setItem("xray_return_to", window.location.href);
-      router.push("/login");
+    if (authLoading) return
+    if (!user) {
+      const timer = setTimeout(() => {
+        localStorage.setItem("xray_return_to", window.location.href);
+        router.push("/login");
+      }, 500)
+      return () => clearTimeout(timer)
     }
   }, [user, authLoading, router]);
 

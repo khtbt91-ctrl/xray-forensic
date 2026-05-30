@@ -1,25 +1,57 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
 export default function AuthCallback() {
   const router = useRouter()
+  const [status, setStatus] = useState('Completing sign-in...')
 
   useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        // Redirect to where they were going
-        const returnTo =
-          localStorage.getItem('xray_return_to') || '/new'
-        localStorage.removeItem('xray_return_to')
-        router.push(returnTo)
-      }
-    })
+    const handleCallback = async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession()
 
-    return () => subscription.unsubscribe()
+        if (error) {
+          console.error('Auth error:', error)
+          setStatus('Sign-in failed. Redirecting...')
+          setTimeout(() => router.push('/login'), 2000)
+          return
+        }
+
+        if (data.session) {
+          const returnTo = localStorage.getItem('xray_return_to') || '/'
+          localStorage.removeItem('xray_return_to')
+          setStatus('Signed in! Redirecting...')
+          router.push(returnTo)
+          return
+        }
+
+        // No session yet — wait for SIGNED_IN event
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+          (event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+              subscription.unsubscribe()
+              const returnTo = localStorage.getItem('xray_return_to') || '/'
+              localStorage.removeItem('xray_return_to')
+              setStatus('Signed in! Redirecting...')
+              router.push(returnTo)
+            }
+          }
+        )
+
+        // Fallback after 5 seconds
+        setTimeout(() => {
+          subscription.unsubscribe()
+          router.push('/')
+        }, 5000)
+      } catch (e) {
+        console.error('Callback error:', e)
+        router.push('/')
+      }
+    }
+
+    handleCallback()
   }, [router])
 
   return (
@@ -51,8 +83,13 @@ export default function AuthCallback() {
           color: 'var(--text-muted)',
         }}
       >
-        Signing you in...
+        {status}
       </p>
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   )
 }
