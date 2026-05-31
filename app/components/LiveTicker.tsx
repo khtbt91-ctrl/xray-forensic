@@ -1,6 +1,6 @@
 "use client";
 
-import { MONO } from "./shared";
+const MONO = "'JetBrains Mono', monospace";
 
 // Pre-seeded anonymized findings — replace with API call once real data flows
 // Format reflects real X-Ray output language
@@ -24,9 +24,9 @@ export default function LiveTicker() {
   return (
     <div
       style={{
-        borderTop: "1px solid var(--border-subtle)",
-        borderBottom: "1px solid var(--border-subtle)",
-        background: "var(--bg-card)",
+        borderTop: "1px solid #1e293b",
+        borderBottom: "1px solid #1e293b",
+        background: "#0e1626",
         overflow: "hidden",
         padding: "10px 0",
         position: "relative",
@@ -35,13 +35,13 @@ export default function LiveTicker() {
       {/* Left fade */}
       <div style={{
         position: "absolute", left: 0, top: 0, bottom: 0, width: 80,
-        background: "linear-gradient(to right, var(--bg-card), transparent)",
+        background: "linear-gradient(to right, #0e1626, transparent)",
         zIndex: 2, pointerEvents: "none",
       }} />
       {/* Right fade */}
       <div style={{
         position: "absolute", right: 0, top: 0, bottom: 0, width: 80,
-        background: "linear-gradient(to left, var(--bg-card), transparent)",
+        background: "linear-gradient(to left, #0e1626, transparent)",
         zIndex: 2, pointerEvents: "none",
       }} />
 
@@ -50,8 +50,8 @@ export default function LiveTicker() {
         position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)",
         fontFamily: MONO, fontSize: 9, color: "var(--loss)", letterSpacing: "0.12em",
         textTransform: "uppercase", zIndex: 3,
-        background: "var(--bg-card)", padding: "2px 8px",
-        border: "1px solid var(--border-subtle)", borderRadius: 3,
+        background: "#0e1626", padding: "2px 8px",
+        border: "1px solid #1e293b", borderRadius: 3,
       }}>
         LIVE
       </div>
@@ -76,7 +76,7 @@ export default function LiveTicker() {
                 alignItems: "center",
                 gap: 10,
                 padding: "0 32px",
-                borderRight: "1px solid var(--border-subtle)",
+                borderRight: "1px solid #1e293b",
                 whiteSpace: "nowrap",
               }}
             >
