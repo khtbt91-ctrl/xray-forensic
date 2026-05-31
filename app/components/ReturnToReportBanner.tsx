@@ -35,14 +35,16 @@ export default function ReturnToReportBanner() {
 
   if (!lastReport) return null
 
-  // Don't surface the banner on auth / account pages
+  // Don't surface the banner on auth / account / marketing pages
   if (
+    pathname === '/' ||
     pathname.startsWith('/login') ||
     pathname.startsWith('/auth') ||
     pathname.startsWith('/dashboard') ||
     pathname.startsWith('/roadmap') ||
     pathname.startsWith('/pricing') ||
-    pathname.startsWith('/payment')
+    pathname.startsWith('/payment') ||
+    pathname.startsWith('/new')
   ) {
     return null
   }
