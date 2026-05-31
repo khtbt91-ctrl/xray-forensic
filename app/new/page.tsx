@@ -641,7 +641,10 @@ function Step3({
   };
 
   const handleAnalyze = useCallback(async () => {
-    if (!selectedFile) return;
+    const isEaAutopsy = selectedTier === 'ea-autopsy';
+    // For EA Autopsy: magic file alone is sufficient (it IS the full history with magic numbers)
+    const mainFile = selectedFile || (isEaAutopsy ? magicFile : null);
+    if (!mainFile) return;
 
     setProcessing(true);
     setError(null);
@@ -663,7 +666,7 @@ function Step3({
 
     try {
       const formData = new FormData();
-      formData.append("file", selectedFile);
+      formData.append("file", mainFile);
 
       const contextData: Record<string, unknown> = {
         client_name: profile.clientName || "Trader",
@@ -680,7 +683,16 @@ function Step3({
         asset_class: assetClass,
       };
 
-      if (magicFile) {
+      if (isEaAutopsy) {
+        // Always run EA engine for this tier
+        contextData.ea_mode = true;
+        if (magicFile && selectedFile) {
+          // Both files present: regular MT5 is main file, magic CSV sent separately for number merging
+          formData.append("magic_file", magicFile);
+        }
+        // If only magic file: it's already the main file — its magic column is read directly
+      } else if (magicFile) {
+        // Non-EA tier but magic file present (edge case — pass through)
         formData.append("magic_file", magicFile);
         contextData.ea_mode = true;
       }
@@ -722,7 +734,7 @@ function Step3({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedFile, magicFile, profile, selectedTier, assetClass, accessToken, router, user]);
+  }, [selectedFile, magicFile, selectedTier, profile, assetClass, accessToken, router, user]);
 
   if (processing) {
     return (
@@ -1124,8 +1136,9 @@ function Step3({
       )}
 
       {(() => {
-        const eaReady = selectedTier !== 'ea-autopsy' || !!magicFile;
-        const canAnalyze = !!selectedFile && eaReady && !processing;
+        const isEaAutopsy = selectedTier === 'ea-autopsy';
+        // EA Autopsy: can analyze if either the main file OR the magic file is present
+        const canAnalyze = (isEaAutopsy ? (!!selectedFile || !!magicFile) : !!selectedFile) && !processing;
         return (
           <button
             onClick={handleAnalyze}
@@ -1650,4 +1663,3 @@ export default function NewPage() {
     </Suspense>
   );
 }
-                                                                                                                                                                                                                                             
