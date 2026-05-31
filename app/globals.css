@@ -372,11 +372,12 @@ html, body {
 .waitlist-input::placeholder { color: #475569; }
 
 /* ─── Typography ──────────────────────────────────────────────────────────── */
-p, li, td, th, label, span, div { line-height: 1.65; }
-.prose, p, li { max-width: 65ch; }
-nav p, nav li, .card p, .card li, table p, table li, td, th { max-width: none; }
-h1 { font-family: "Space Grotesk", sans-serif; font-weight: 800; }
-h2 { font-family: "Space Grotesk", sans-serif; font-weight: 700; }
+/* line-height applies broadly, but max-width is ONLY scoped to .prose blocks */
+/* Never constrain p/li globally — breaks centered section labels everywhere */
+.prose { max-width: 65ch; }
+.prose p, .prose li { max-width: 65ch; line-height: 1.7; }
+h1 { font-family: "Inter", sans-serif; font-weight: 800; }
+h2 { font-family: "Inter", sans-serif; font-weight: 700; }
 h3 { font-weight: 600; }
 h4, h5 { font-weight: 500; }
 body, p { font-weight: 400; }
