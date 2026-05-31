@@ -22,7 +22,7 @@ Revenue target: active
 - Domain: https://www.xrayforensic.com (CANONICAL — always www.)
 - API: https://xray-api-production.up.railway.app
 - Supabase: https://cwafqxlohsgskixgeryh.supabase.co
-- Email: hello@xrayforensic.com
+- Email: support@xrayforensic.com
 
 ## AUTH SYSTEM (LIVE)
 

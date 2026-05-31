@@ -189,10 +189,10 @@ export default function TermsPage() {
           credentials. Do not share your login information. Notify us immediately
           at{" "}
           <a
-            href="mailto:hello@xray.trade"
+            href="mailto:support@xrayforensic.com"
             style={{ color: "var(--accent-primary)", textDecoration: "none" }}
           >
-            hello@xray.trade
+            support@xrayforensic.com
           </a>{" "}
           if you suspect unauthorized access.
         </Body>
@@ -303,10 +303,10 @@ export default function TermsPage() {
         <Body>
           For questions, concerns, or data requests:{" "}
           <a
-            href="mailto:hello@xray.trade"
+            href="mailto:support@xrayforensic.com"
             style={{ color: "var(--accent-primary)", textDecoration: "none" }}
           >
-            hello@xray.trade
+            support@xrayforensic.com
           </a>
         </Body>
 
