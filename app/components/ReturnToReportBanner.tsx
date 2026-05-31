@@ -39,7 +39,10 @@ export default function ReturnToReportBanner() {
   if (
     pathname.startsWith('/login') ||
     pathname.startsWith('/auth') ||
-    pathname.startsWith('/dashboard')
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/roadmap') ||
+    pathname.startsWith('/pricing') ||
+    pathname.startsWith('/payment')
   ) {
     return null
   }

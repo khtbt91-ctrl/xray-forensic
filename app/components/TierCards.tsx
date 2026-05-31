@@ -4,118 +4,85 @@ import { useState } from "react";
 import Link from "next/link";
 import { MONO, FadeInUp } from "./shared";
 
-const TIERS = [
+type Feature = { text: string; included: boolean };
+
+const TIERS: {
+  name: string;
+  price: string;
+  tagline: string;
+  features: Feature[];
+  cta: string;
+  href: string;
+  highlight: boolean;
+  popular: boolean;
+  accent: string;
+}[] = [
   {
     name: "SIGNAL",
     price: "Free",
-    tagline: "One diagnosis. Real evidence. Enough to know if you need the full picture.",
-    inheritedFrom: null as string | null,
+    tagline: "One diagnosis. Real evidence.",
     features: [
-      "1 audit/month",
-      "7 dimension scores (one-line finding each)",
-      "Session P&L breakdown",
-      "Top 3 behavioral flags with dollar cost",
-      "Watermarked report",
+      { text: "1 analysis per month", included: true },
+      { text: "Basic 7-dimension report", included: true },
+      { text: "Prescriptions", included: false },
+      { text: "Compliance tracking", included: false },
     ],
-    cta: "Get Diagnosed",
-    href: "/new?tier=signal",
-    mailto: false,
+    cta: "Get Started",
+    href: "/pricing",
     highlight: false,
     popular: false,
-    comingSoon: false,
-    waitlistSubject: null as string | null,
     accent: "var(--text-secondary)",
   },
   {
-    name: "AUDIT",
+    name: "FORENSIC",
     price: "$29/mo",
     tagline: "Full forensic read. Your first real mirror.",
-    inheritedFrom: "SIGNAL" as string | null,
     features: [
-      "3 audits/month",
-      "Full forensic narrative",
-      "Ranked prescriptions",
-      "Drill-down trade inspection",
-      "Cost of indiscipline breakdown",
-      "Verdict grade",
-      "Priority actions ranked by dollar impact",
-      "Triggered protocols",
+      { text: "4 analyses per month", included: true },
+      { text: "Full AI diagnostic report", included: true },
+      { text: "5 ranked prescriptions", included: true },
+      { text: "What-If engine (2/mo)", included: true },
+      { text: "Compliance tracking", included: true },
     ],
-    cta: "Get AUDIT",
-    href: "/new?tier=audit",
-    mailto: false,
+    cta: "Start with Forensic",
+    href: "/pricing",
     highlight: false,
     popular: false,
-    comingSoon: false,
-    waitlistSubject: null as string | null,
     accent: "var(--accent-primary)",
   },
   {
-    name: "FORENSIC",
+    name: "OPERATOR",
     price: "$79/mo",
     tagline: "Institutional-grade behavioral intelligence.",
-    inheritedFrom: "AUDIT" as string | null,
     features: [
-      "10 audits/month",
-      "Forensic AI narrative",
-      "Prop firm challenge mode",
-      "Pre-mortem Monte Carlo simulation",
-      "Trader DNA profile",
-      "Compliance tracking",
-      "Pre-session briefing",
-      "What-If engine",
+      { text: "Unlimited analyses", included: true },
+      { text: "Everything in Forensic", included: true },
+      { text: "Trader DNA profile", included: true },
+      { text: "Anonymous benchmarking", included: true },
+      { text: "Broker connection (Phase 2)", included: true },
     ],
-    cta: "Get FORENSIC",
-    href: "/new?tier=forensic",
-    mailto: false,
+    cta: "Go Operator",
+    href: "/pricing",
     highlight: true,
     popular: true,
-    comingSoon: false,
-    waitlistSubject: null as string | null,
     accent: "var(--accent-primary)",
   },
   {
-    name: "GUARDIAN",
+    name: "ELITE",
     price: "$149/mo",
     tagline: "The risk desk you never had.",
-    inheritedFrom: "FORENSIC" as string | null,
     features: [
-      "Unlimited audits",
-      "Live MT5 sync",
-      "Telegram behavioral watchdog",
-      "Circuit breaker automation",
-      "5 connected accounts",
-      "Discipline certification",
+      { text: "Everything in Operator", included: true },
+      { text: "Real-time behavioral alerts", included: true },
+      { text: "Discipline certification", included: true },
+      { text: "5 broker connections", included: true },
+      { text: "Priority diagnosis", included: true },
     ],
-    cta: "Get GUARDIAN",
-    href: "/new?tier=guardian",
-    mailto: false,
+    cta: "Go Elite",
+    href: "/pricing",
     highlight: false,
     popular: false,
-    comingSoon: true,
-    waitlistSubject: "GUARDIAN Waitlist",
-    accent: "var(--warning)",
-  },
-  {
-    name: "SOVEREIGN",
-    price: "$399/mo",
-    tagline: "White-label intelligence for firms.",
-    inheritedFrom: "GUARDIAN" as string | null,
-    features: [
-      "50 accounts",
-      "Firm-wide analytics",
-      "Custom rule engine",
-      "API access",
-      "White-label reports",
-    ],
-    cta: "Contact",
-    href: "mailto:support@xrayforensic.com",
-    mailto: true,
-    highlight: false,
-    popular: false,
-    comingSoon: true,
-    waitlistSubject: "SOVEREIGN Waitlist",
-    accent: "var(--accent-secondary)",
+    accent: "var(--accent-primary)",
   },
 ];
 
@@ -229,31 +196,8 @@ export default function TierCards() {
                   </div>
                 )}
 
-                {tier.comingSoon && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: -16,
-                      left: "50%",
-                      transform: "translateX(-50%)",
-                      background: "var(--bg-elevated)",
-                      color: "var(--text-muted)",
-                      border: "1px solid var(--border-subtle)",
-                      padding: "4px 16px",
-                      borderRadius: 4,
-                      fontSize: "0.65rem",
-                      fontFamily: MONO,
-                      fontWeight: 600,
-                      letterSpacing: "0.1em",
-                      whiteSpace: "nowrap",
-                      zIndex: 10,
-                    }}
-                  >
-                    COMING SOON
-                  </div>
-                )}
 
-                <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.16em", color: tier.accent, margin: "0 0 8px", marginTop: tier.popular ? 12 : 0 }}>
+<p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.16em", color: tier.accent, margin: "0 0 8px", marginTop: tier.popular ? 12 : 0 }}>
                   {tier.name}
                 </p>
                 <p style={{ fontFamily: MONO, fontSize: 28, fontWeight: 500, margin: "0 0 8px", color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}>
@@ -264,105 +208,26 @@ export default function TierCards() {
                 </p>
 
                 <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-                  {tier.inheritedFrom && (
-                    <p style={{
-                      fontSize: "0.7rem",
-                      color: "var(--text-muted)",
-                      fontStyle: "italic",
-                      margin: "0 0 12px",
-                      paddingBottom: 8,
-                      borderBottom: "1px solid var(--border-subtle)",
-                    }}>
-                      Everything in {tier.inheritedFrom}, plus:
-                    </p>
-                  )}
                   <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
                     {tier.features.map((f, fi) => (
-                      <li key={fi} style={{ fontSize: 12, color: "var(--text-secondary)", display: "flex", gap: 8, alignItems: "flex-start", lineHeight: 1.4 }}>
-                        <span style={{ color: tier.accent, flexShrink: 0 }}>—</span>
-                        {f}
+                      <li key={fi} style={{ fontSize: 12, color: f.included ? "var(--text-secondary)" : "#4B5563", display: "flex", gap: 8, alignItems: "flex-start", lineHeight: 1.4 }}>
+                        <span style={{ color: f.included ? tier.accent : "#374151", flexShrink: 0 }}>
+                          {f.included ? "—" : "—"}
+                        </span>
+                        {f.text}
                       </li>
                     ))}
                   </ul>
-
-                  {tier.name === 'AUDIT' && (
-                    <p style={{
-                      fontFamily: MONO,
-                      fontSize: '0.65rem',
-                      color: 'var(--text-muted)',
-                      fontStyle: 'italic',
-                      marginTop: '12px',
-                      paddingTop: '12px',
-                      borderTop: '1px solid var(--border-subtle)',
-                    }}>
-                      &ldquo;Found $4,753 in no-stop losses on first diagnosis.&rdquo;
-                    </p>
-                  )}
-
-                  {tier.name === 'FORENSIC' && (
-                    <p style={{
-                      fontFamily: MONO,
-                      fontSize: '0.65rem',
-                      color: 'var(--text-muted)',
-                      fontStyle: 'italic',
-                      marginTop: '12px',
-                      paddingTop: '12px',
-                      borderTop: '1px solid var(--border-subtle)',
-                    }}>
-                      &ldquo;276 revenge trades exposed. Behavior tracked month-on-month.&rdquo;
-                    </p>
-                  )}
                 </div>
 
                 <div style={{ marginTop: "auto", paddingTop: 20 }}>
-                  {tier.comingSoon ? (
-                    <div
-                      style={{
-                        padding: "12px",
-                        background: "var(--bg-elevated)",
-                        border: "1px solid var(--border-subtle)",
-                        borderRadius: "6px",
-                        textAlign: "center",
-                      }}
-                    >
-                      <p
-                        style={{
-                          fontFamily: MONO,
-                          fontSize: "0.7rem",
-                          color: "var(--text-muted)",
-                          margin: "0 0 6px",
-                        }}
-                      >
-                        COMING SOON — Join waitlist
-                      </p>
-                      <a
-                        href={`mailto:support@xrayforensic.com?subject=${encodeURIComponent(tier.waitlistSubject ?? `${tier.name} Waitlist`)}`}
-                        style={{
-                          color: "var(--accent-primary)",
-                          fontSize: "0.8rem",
-                          textDecoration: "none",
-                        }}
-                      >
-                        support@xrayforensic.com
-                      </a>
-                    </div>
-                  ) : tier.mailto ? (
-                    <a
-                      href={tier.href}
-                      className={tier.highlight ? "btn btn-primary" : "btn btn-ghost"}
-                      style={{ width: "100%", fontSize: 13, display: "inline-flex", justifyContent: "center" }}
-                    >
-                      {tier.cta}
-                    </a>
-                  ) : (
-                    <Link
-                      href={tier.href}
-                      className={tier.highlight ? "btn btn-primary" : "btn btn-ghost"}
-                      style={{ width: "100%", fontSize: 13, display: "inline-flex", justifyContent: "center" }}
-                    >
-                      {tier.cta}
-                    </Link>
-                  )}
+                  <Link
+                    href={tier.href}
+                    className={tier.highlight ? "btn btn-primary" : "btn btn-ghost"}
+                    style={{ width: "100%", fontSize: 13, display: "inline-flex", justifyContent: "center" }}
+                  >
+                    {tier.cta}
+                  </Link>
                 </div>
               </div>
             );

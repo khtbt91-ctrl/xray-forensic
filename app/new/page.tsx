@@ -4,6 +4,7 @@ import React, { useCallback, useRef, useState, useEffect, Suspense } from "react
 
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import NavBar from "../../components/NavBar";
 import Disclaimer from "../../components/Disclaimer";
 import { tierData } from "@/lib/tiers";
 import { useAuth } from "@/lib/auth-context";
@@ -1581,11 +1582,7 @@ function NewPageInner() {
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg-base)", color: "var(--text-primary)" }}>
-      <nav style={{ borderBottom: "1px solid var(--border-subtle)", padding: "16px 40px", display: "flex", alignItems: "center" }}>
-        <Link href="/" style={{ fontFamily: MONO, fontSize: 12, color: "var(--text-muted)", textDecoration: "none" }}>
-          ← X-Ray
-        </Link>
-      </nav>
+      <NavBar />
 
       <div style={{ maxWidth: 640, margin: "0 auto", padding: "60px 24px 80px" }}>
         <StepIndicator steps={steps} currentStepKey={currentStepKey} selectedTier={selectedTier} />
@@ -1653,3 +1650,4 @@ export default function NewPage() {
     </Suspense>
   );
 }
+                                                                                                                                                                                                                                             

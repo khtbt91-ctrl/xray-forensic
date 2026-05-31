@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
+import NavBar from "../components/NavBar";
 
 const GOLD = "#C9A84C";
 const MONO = "JetBrains Mono, monospace";
@@ -102,20 +103,7 @@ export default function PricingPage() {
         }
       `}</style>
 
-      {/* Nav */}
-      <nav style={{
-        borderBottom: "1px solid var(--border-subtle)",
-        padding: "16px 40px",
-        display: "flex",
-        alignItems: "center",
-      }}>
-        <Link
-          href="/"
-          style={{ fontFamily: MONO, fontSize: 12, color: "var(--text-muted)", textDecoration: "none" }}
-        >
-          ← X-Ray
-        </Link>
-      </nav>
+      <NavBar />
 
       {/* Header */}
       <div style={{ maxWidth: 960, margin: "0 auto", padding: "80px 24px 64px", textAlign: "center" }}>
@@ -343,6 +331,50 @@ export default function PricingPage() {
         </div>
       </div>
 
+      {/* Institutional / SOVEREIGN waitlist strip */}
+      <div style={{
+        borderTop: "1px solid #222",
+        padding: "60px 24px",
+        textAlign: "center",
+      }}>
+        <p style={{
+          fontFamily: MONO,
+          fontSize: 11,
+          letterSpacing: "0.15em",
+          textTransform: "uppercase",
+          color: GOLD,
+          margin: "0 0 24px",
+        }}>
+          INSTITUTIONAL · PHASE 3
+        </p>
+        <p style={{
+          fontSize: 18,
+          color: "#9CA3AF",
+          lineHeight: 1.7,
+          maxWidth: 540,
+          margin: "0 auto 36px",
+        }}>
+          Trading desk infrastructure. Multi-account visibility. Automated risk protocols.
+          Real-time behavioral intervention at scale.
+        </p>
+        <a
+          href="mailto:support@xrayforensic.com?subject=SOVEREIGN%20waitlist"
+          style={{
+            display: "inline-block",
+            padding: "12px 32px",
+            background: "transparent",
+            border: `1px solid ${GOLD}`,
+            borderRadius: 6,
+            color: GOLD,
+            fontFamily: MONO,
+            fontSize: 13,
+            textDecoration: "none",
+          }}
+        >
+          Join the waitlist →
+        </a>
+      </div>
+
       {/* Bottom strip */}
       <div style={{
         borderTop: "1px solid var(--border-subtle)",
@@ -382,3 +414,4 @@ export default function PricingPage() {
     </main>
   );
 }
+                                                                                                                                                                                                                                                                                                                                      

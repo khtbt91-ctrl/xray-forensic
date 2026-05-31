@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
+import NavBar from "../components/NavBar";
 
 const GOLD = "#C9A84C";
 const MONO = "JetBrains Mono, monospace";
@@ -28,23 +29,6 @@ const CRYPTO_ADDRESSES = [
   },
 ];
 
-function NavBar() {
-  return (
-    <nav style={{
-      borderBottom: "1px solid var(--border-subtle)",
-      padding: "16px 40px",
-      display: "flex",
-      alignItems: "center",
-    }}>
-      <Link
-        href="/"
-        style={{ fontFamily: MONO, fontSize: 12, color: "var(--text-muted)", textDecoration: "none" }}
-      >
-        ← X-Ray
-      </Link>
-    </nav>
-  );
-}
 
 function PaymentContent() {
   const router = useRouter();
@@ -281,3 +265,4 @@ export default function PaymentPage() {
     </Suspense>
   );
 }
+                                                                                                                                                                                                                                                                                                                                                 

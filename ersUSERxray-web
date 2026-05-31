@@ -1,0 +1,95 @@
+warning: in the working copy of 'app/pricing/page.tsx', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/app/pricing/page.tsx b/app/pricing/page.tsx[m
+[1mindex 693e3137..a3085ad0 100644[m
+[1m--- a/app/pricing/page.tsx[m
+[1m+++ b/app/pricing/page.tsx[m
+[36m@@ -1,7 +1,8 @@[m
+ "use client";[m
+ [m
+ import Link from "next/link";[m
+[31m-import { useState } from "react";[m
+[32m+[m[32mimport { useRouter } from "next/navigation";[m
+[32m+[m[32mimport { useAuth } from "@/lib/auth-context";[m
+ [m
+ const GOLD = "#C9A84C";[m
+ const MONO = "JetBrains Mono, monospace";[m
+[36m@@ -73,29 +74,17 @@[m [mconst TIERS = [[m
+ ];[m
+ [m
+ export default function PricingPage() {[m
+[31m-  const [loadingTier, setLoadingTier] = useState<string | null>(null);[m
+[32m+[m[32m  const router = useRouter();[m
+[32m+[m[32m  const { user, profile } = useAuth();[m
+ [m
+[31m-  // TODO: Update PRICES in /app/api/stripe/checkout/route.ts — currently only[m
+[31m-  // "basic" ($49) and "pro" ($99) are mapped. Add "forensic", "operator",[m
+[31m-  // "elite" with the correct cent amounts before these CTAs go live. Until[m
+[31m-  // then, checkout calls return 400 and fall back to the support email.[m
+[31m-  const handleUpgrade = async (tierId: string, tierName: string) => {[m
+[31m-    setLoadingTier(tierId);[m
+[31m-    try {[m
+[31m-      const res = await fetch("/api/stripe/checkout", {[m
+[31m-        method: "POST",[m
+[31m-        headers: { "Content-Type": "application/json" },[m
+[31m-        body: JSON.stringify({ tier: tierId, client_name: "" }),[m
+[31m-      });[m
+[31m-      if (!res.ok) throw new Error("invalid_tier");[m
+[31m-      const { url } = await res.json();[m
+[31m-      if (url) window.location.href = url;[m
+[31m-    } catch {[m
+[31m-      window.location.href = `mailto:support@xrayforensic.com?subject=${encodeURIComponent(`Upgrade to ${tierName}`)}`;[m
+[31m-    } finally {[m
+[31m-      setLoadingTier(null);[m
+[31m-    }[m
+[31m-  };[m
+[32m+[m[32m  // Route the free CTA based on auth state and remaining quota.[m
+[32m+[m[32m  // analyses_limit === -1 means unlimited (never treat as reached).[m
+[32m+[m[32m  const limitReached =[m
+[32m+[m[32m    !!profile &&[m
+[32m+[m[32m    profile.analyses_limit !== -1 &&[m
+[32m+[m[32m    profile.analyses_used >= profile.analyses_limit;[m
+[32m+[m[32m  const freeCTAHref = !user ? "/login" : limitReached ? "/dashboard" : "/new";[m
+[32m+[m[32m  const freeCTALabel = limitReached ? "View Dashboard" : "Get Started";[m
+ [m
+   return ([m
+     <main style={{ minHeight: "100vh", background: "#0A0A0A", color: "var(--text-primary)" }}>[m
+[36m@@ -313,7 +302,7 @@[m [mexport default function PricingPage() {[m
+               {/* CTA */}[m
+               {tier.free ? ([m
+                 <Link[m
+[31m-                  href="/new"[m
+[32m+[m[32m                  href={freeCTAHref}[m
+                   style={{[m
+                     display: "block",[m
+                     textAlign: "center",[m
+[36m@@ -327,12 +316,11 @@[m [mexport default function PricingPage() {[m
+                     textDecoration: "none",[m
+                   }}[m
+                 >[m
+[31m-                  {tier.cta}[m
+[32m+[m[32m                  {freeCTALabel}[m
+                 </Link>[m
+               ) : ([m
+                 <button[m
+[31m-                  onClick={() => handleUpgrade(tier.id, tier.name)}[m
+[31m-                  disabled={loadingTier === tier.id}[m
+[32m+[m[32m                  onClick={() => router.push(`/payment?tier=${tier.id}&amount=${tier.price ?? ""}`)}[m
+                   style={{[m
+                     padding: "12px 20px",[m
+                     background: tier.popular ? GOLD : "transparent",[m
+[36m@@ -342,13 +330,12 @@[m [mexport default function PricingPage() {[m
+                     fontFamily: MONO,[m
+                     fontSize: 13,[m
+                     fontWeight: tier.popular ? 700 : 500,[m
+[31m-                    cursor: loadingTier === tier.id ? "not-allowed" : "pointer",[m
+[31m-                    opacity: loadingTier === tier.id ? 0.6 : 1,[m
+[32m+[m[32m                    cursor: "pointer",[m
+                     width: "100%",[m
+                     transition: "all 0.15s",[m
+                   }}[m
+                 >[m
+[31m-                  {loadingTier === tier.id ? "Redirecting…" : tier.cta}[m
+[32m+[m[32m                  {tier.cta}[m
+                 </button>[m
+               )}[m
+             </div>[m

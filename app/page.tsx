@@ -40,9 +40,9 @@ export default function LandingPage() {
       <TestimonialsSection />
       <AudienceSection />
       <ProtocolsSection />
+      <LeakCalculator />
       <TierCards />
       <OneTimeProducts />
-      <LeakCalculator />
       <SamplePreview />
       <ComparisonSection />
       <FaqSection />

@@ -2,6 +2,7 @@
 import { Component, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
+import NavBar from '../components/NavBar'
 
 class DashboardErrorBoundary extends Component<
   { children: React.ReactNode },
@@ -314,6 +315,7 @@ function DashboardContent() {
         paddingTop: '80px',
       }}
     >
+      <NavBar />
       <div
         style={{
           maxWidth: '800px',
@@ -885,7 +887,4 @@ function DashboardContent() {
 export default function DashboardPage() {
   return (
     <DashboardErrorBoundary>
-      <DashboardContent />
-    </DashboardErrorBoundary>
-  )
-}
+    

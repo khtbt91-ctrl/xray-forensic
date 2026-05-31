@@ -394,13 +394,12 @@ function IntelligenceSection() {
 
 /* ─── ROADMAP ───────────────────────────────────────────────────────────────── */
 
-type PhaseStatus = "COMPLETE" | "ACTIVE" | "NEXT" | "BUILDING" | "PLANNED" | "VISION";
+type PhaseStatus = "COMPLETE" | "ACTIVE" | "NEXT" | "PLANNED" | "VISION";
 
 const STATUS_COLORS: Record<PhaseStatus, string> = {
   COMPLETE: "var(--profit)",
   ACTIVE: "var(--accent-primary)",
   NEXT: "var(--warning)",
-  BUILDING: "var(--accent-secondary)",
   PLANNED: "var(--text-muted)",
   VISION: "var(--text-muted)",
 };
@@ -426,7 +425,7 @@ const PHASES: { phase: string; status: PhaseStatus; title: string; body: string 
   },
   {
     phase: "Phase 3",
-    status: "BUILDING",
+    status: "PLANNED",
     title: "Live Intervention",
     body: "Real-time account monitoring. Behavioral alerts before damage occurs — not after. Automated protection protocols. Multi-account visibility. [Further details withheld]",
   },
@@ -572,130 +571,6 @@ function RoadmapSection() {
             })}
           </div>
         </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── WHAT'S COMING ────────────────────────────────────────────────────────── */
-
-const TEASERS = [
-  {
-    title: "AI LIVE ASSESSMENT",
-    body: "A conversational diagnostic layer that processes your trades and behavioral patterns in natural language. Ask it anything about your trading. It has read every trade you've ever taken.",
-    tag: "Phase 4 · Details to be announced",
-  },
-  {
-    title: "SIGNAL INTELLIGENCE",
-    body: "AI-powered market intelligence framework built on the same institutional logic that powers the diagnostic engine. Not signals for sale — signals for education and edge development.",
-    tag: "Phase 4 · Architecture proprietary",
-  },
-  {
-    title: "FUNDED ACCOUNT PROGRAM",
-    body: "X-Ray-verified traders will have access to a proprietary funded account pathway. Discipline certification is the qualification. Capital is the reward.",
-    tag: "Phase 5 · Expression of interest opening soon",
-  },
-];
-
-function WhatsComingSection() {
-  return (
-    <section
-      style={{ background: "var(--bg-card)", borderTop: "1px solid var(--border-subtle)" }}
-    >
-      <div className="about-inner">
-        <FadeIn>
-          <Label text="On the Horizon" />
-          <SectionHeadline>The platform is growing.</SectionHeadline>
-        </FadeIn>
-        <div className="teaser-grid">
-          {TEASERS.map((t, i) => (
-            <FadeIn key={t.title} delay={i * 0.1}>
-              <div
-                className="card"
-                style={{
-                  padding: 28,
-                  height: "100%",
-                  boxSizing: "border-box",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <div
-                  style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}
-                >
-                  <div
-                    className="teaser-dot"
-                    style={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: "50%",
-                      background: "var(--warning)",
-                      flexShrink: 0,
-                    }}
-                  />
-                  <span
-                    style={{
-                      fontFamily: MONO,
-                      fontSize: "0.62rem",
-                      color: "var(--text-muted)",
-                      letterSpacing: "0.1em",
-                    }}
-                  >
-                    UPCOMING
-                  </span>
-                </div>
-                <h3
-                  style={{
-                    fontFamily: MONO,
-                    fontSize: "0.82rem",
-                    fontWeight: 500,
-                    color: "var(--text-primary)",
-                    margin: "0 0 14px",
-                    letterSpacing: "0.06em",
-                  }}
-                >
-                  {t.title}
-                </h3>
-                <p
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "0.88rem",
-                    lineHeight: 1.65,
-                    color: "var(--text-secondary)",
-                    margin: "0 0 20px",
-                    flex: 1,
-                  }}
-                >
-                  {t.body}
-                </p>
-                <div
-                  style={{
-                    fontFamily: MONO,
-                    fontSize: "0.62rem",
-                    color: "var(--text-muted)",
-                    letterSpacing: "0.06em",
-                  }}
-                >
-                  {t.tag}
-                </div>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-        <FadeIn delay={0.35} style={{ textAlign: "center", marginTop: 44 }}>
-          <p
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "0.9rem",
-              color: "var(--text-muted)",
-              fontStyle: "italic",
-              margin: 0,
-            }}
-          >
-            We build in sequence. Each phase funds the next. The platform you see today is the
-            foundation — not the ceiling.
-          </p>
-        </FadeIn>
       </div>
     </section>
   );
@@ -977,7 +852,6 @@ export default function AboutPage() {
       <CoreBeliefsSection />
       <IntelligenceSection />
       <RoadmapSection />
-      <WhatsComingSection />
       <ClosingSection />
       <WaitlistSection />
       <Footer />

@@ -87,14 +87,14 @@ body {
 }
 
 .btn-primary {
-  background: var(--accent-primary);
-  color: #0D1117;
-  border-color: var(--accent-primary);
+  background: #C9A84C;
+  color: #000000;
+  border-color: #C9A84C;
 }
 
 .btn-primary:hover {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
+  background: #d4b06a;
+  border-color: #d4b06a;
 }
 
 .btn-ghost {
@@ -584,6 +584,36 @@ body {
   animation: pulseWarning 2s ease-in-out infinite;
 }
 
+/* Roadmap active-phase dot pulse (blue #3B82F6) */
+@keyframes pulseBlue {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5); }
+  50%       { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
+}
+.roadmap-dot-active {
+  animation: pulseBlue 2s ease-in-out infinite;
+}
+
+/* Funded account CTA email input */
+.funded-input {
+  flex: 1;
+  min-width: 220px;
+  background: #161B22;
+  border: 1px solid #30363D;
+  border-radius: 6px;
+  padding: 12px 16px;
+  color: #E6EDF3;
+  font-size: 15px;
+  font-family: Inter, sans-serif;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.funded-input:focus {
+  border-color: #C9A84C;
+}
+.funded-input::placeholder {
+  color: #6E7681;
+}
+
 /* Waitlist form input */
 .waitlist-input {
   flex: 1;
@@ -599,7 +629,7 @@ body {
   transition: border-color 0.15s;
 }
 .waitlist-input:focus {
-  border-color: var(--accent-primary);
+  border-color: #C9A84C;
 }
 .waitlist-input::placeholder {
   color: var(--text-muted);

@@ -1,5 +1,5 @@
 'use client'
-import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { supabase, UserProfile } from './supabase'
 import type { User, Session } from '@supabase/supabase-js'
 
@@ -34,8 +34,13 @@ export function AuthProvider({
   const [session, setSession] = useState<Session | null>(null)
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
+  const lastFetchedToken = useRef<string | null>(null)
 
   const fetchProfile = useCallback(async (token: string) => {
+    // Skip if we already fetched with this exact token (prevents duplicate calls
+    // from initAuth + onAuthStateChange INITIAL_SESSION firing simultaneously)
+    if (lastFetchedToken.current === token) return
+    lastFetchedToken.current = token
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/user/profile`,

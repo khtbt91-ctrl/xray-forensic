@@ -16,6 +16,37 @@ export type Testimonial = {
 
 // TODO: Add 2-3 real beta user testimonials before public launch
 // Required format: name, role, location, metric, quote
+
+// PENDING — replace with real user data before uncommenting
+// {
+//   id: 2,
+//   name: "",
+//   location: "",
+//   instrument: "",
+//   tier: "forensic",
+//   flag_label: "",
+//   flag_amount: "",
+//   quote: "",
+//   avatar_initials: "",
+//   verified: false,
+//   date: "",
+// },
+
+// PENDING — replace with real user data before uncommenting
+// {
+//   id: 3,
+//   name: "",
+//   location: "",
+//   instrument: "",
+//   tier: "audit",
+//   flag_label: "",
+//   flag_amount: "",
+//   quote: "",
+//   avatar_initials: "",
+//   verified: false,
+//   date: "",
+// },
+
 export const testimonials: Testimonial[] = [
   {
     id: 1,
