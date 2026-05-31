@@ -1,7 +1,64 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { Component, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
+
+class DashboardErrorBoundary extends Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div
+          style={{
+            background: 'var(--bg-base)',
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '12px',
+          }}
+        >
+          <p
+            style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: '0.75rem',
+              color: 'var(--loss)',
+              letterSpacing: '0.1em',
+            }}
+          >
+            DASHBOARD ERROR
+          </p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+            Something went wrong loading your dashboard.
+          </p>
+          <a
+            href="/dashboard"
+            style={{
+              color: 'var(--accent-primary)',
+              fontSize: '0.8rem',
+              textDecoration: 'none',
+            }}
+          >
+            Reload →
+          </a>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
 
 function ComplianceVerdict({
   latest,
@@ -55,7 +112,7 @@ function ComplianceVerdict({
   )
 }
 
-export default function DashboardPage() {
+function DashboardContent() {
   const { user, profile, loading, signOut } = useAuth()
   const router = useRouter()
   const [analyses, setAnalyses] = useState<any[]>([])
@@ -70,6 +127,13 @@ export default function DashboardPage() {
       router.push('/login')
     }
   }, [user, loading, router])
+
+  useEffect(() => {
+    if (!loading && user && !profile) {
+      const timer = setTimeout(() => router.push('/new'), 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [loading, user, profile, router])
 
   useEffect(() => {
     if (!user) return
@@ -125,18 +189,109 @@ export default function DashboardPage() {
         style={{
           background: 'var(--bg-base)',
           minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'var(--text-muted)',
-          fontFamily: 'monospace',
+          paddingTop: '80px',
         }}
       >
-        Loading...
+        <div
+          style={{ maxWidth: '800px', margin: '0 auto', padding: '32px 24px' }}
+        >
+          <div style={{ marginBottom: '32px' }}>
+            <div
+              style={{
+                width: '140px',
+                height: '10px',
+                background: 'var(--bg-elevated)',
+                borderRadius: '4px',
+                marginBottom: '14px',
+              }}
+            />
+            <div
+              style={{
+                width: '260px',
+                height: '22px',
+                background: 'var(--bg-elevated)',
+                borderRadius: '4px',
+                marginBottom: '10px',
+              }}
+            />
+            <div
+              style={{
+                width: '90px',
+                height: '10px',
+                background: 'var(--bg-elevated)',
+                borderRadius: '4px',
+              }}
+            />
+          </div>
+          <div
+            style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '8px',
+              height: '88px',
+              marginBottom: '24px',
+              opacity: 0.5,
+            }}
+          />
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              style={{
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: '8px',
+                height: '64px',
+                marginBottom: '8px',
+                opacity: 0.35,
+              }}
+            />
+          ))}
+        </div>
       </div>
     )
 
-  if (!user || !profile) return null
+  if (!user) {
+    // login redirect is in progress via useEffect — hold on bg-base
+    return <div style={{ background: 'var(--bg-base)', minHeight: '100vh' }} />
+  }
+
+  if (!profile) {
+    return (
+      <div
+        style={{
+          background: 'var(--bg-base)',
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '16px',
+        }}
+      >
+        <div
+          style={{
+            width: '20px',
+            height: '20px',
+            border: '2px solid var(--border-subtle)',
+            borderTopColor: 'var(--accent-primary)',
+            borderRadius: '50%',
+            animation: 'spin 0.8s linear infinite',
+          }}
+        />
+        <p
+          style={{
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: '0.75rem',
+            color: 'var(--text-muted)',
+            letterSpacing: '0.1em',
+          }}
+        >
+          SETTING UP YOUR ACCOUNT...
+        </p>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    )
+  }
 
   const tierColors: Record<string, string> = {
     signal: 'var(--text-muted)',
@@ -724,5 +879,13 @@ export default function DashboardPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function DashboardPage() {
+  return (
+    <DashboardErrorBoundary>
+      <DashboardContent />
+    </DashboardErrorBoundary>
   )
 }

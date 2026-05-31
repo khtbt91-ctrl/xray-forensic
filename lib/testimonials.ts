@@ -14,6 +14,8 @@ export type Testimonial = {
   pending?: boolean
 }
 
+// TODO: Add 2-3 real beta user testimonials before public launch
+// Required format: name, role, location, metric, quote
 export const testimonials: Testimonial[] = [
   {
     id: 1,
@@ -28,34 +30,6 @@ export const testimonials: Testimonial[] = [
     avatar_initials: "K",
     verified: true,
     date: "2026-05",
-  },
-  {
-    id: 2,
-    name: "Early User",
-    location: "Pips Masters Community",
-    instrument: "Forex",
-    tier: "audit",
-    flag_label: "Behavioral leak identified",
-    flag_amount: "Pending",
-    quote: "Report incoming. First community diagnoses in progress.",
-    avatar_initials: "?",
-    verified: false,
-    date: "2026-06",
-    pending: true,
-  },
-  {
-    id: 3,
-    name: "Early User",
-    location: "Pips Masters Community",
-    instrument: "Crypto",
-    tier: "audit",
-    flag_label: "Behavioral leak identified",
-    flag_amount: "Pending",
-    quote: "Report incoming. First community diagnoses in progress.",
-    avatar_initials: "?",
-    verified: false,
-    date: "2026-06",
-    pending: true,
   },
 ]
 

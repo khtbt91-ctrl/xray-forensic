@@ -35,6 +35,15 @@ export default function ReturnToReportBanner() {
 
   if (!lastReport) return null
 
+  // Don't surface the banner on auth / account pages
+  if (
+    pathname.startsWith('/login') ||
+    pathname.startsWith('/auth') ||
+    pathname.startsWith('/dashboard')
+  ) {
+    return null
+  }
+
   // Don't prompt to "return" to the report you're already viewing
   if (pathname === `/report/${lastReport.reportId}`) return null
 
