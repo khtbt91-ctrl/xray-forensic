@@ -186,10 +186,10 @@ export default function LandingPage() {
             >
               For prop firms and institutional desks:{" "}
               <a
-                href="mailto:hello@xrayforensic.com"
+                href="mailto:support@xrayforensic.com"
                 style={{ color: "var(--accent-primary)", textDecoration: "none" }}
               >
-                hello@xrayforensic.com
+                support@xrayforensic.com
               </a>
             </p>
             <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "var(--text-muted)", margin: 0 }}>

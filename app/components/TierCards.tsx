@@ -109,7 +109,7 @@ const TIERS = [
       "White-label reports",
     ],
     cta: "Contact",
-    href: "mailto:hello@xrayforensic.com",
+    href: "mailto:support@xrayforensic.com",
     mailto: true,
     highlight: false,
     popular: false,
@@ -336,14 +336,14 @@ export default function TierCards() {
                         COMING SOON — Join waitlist
                       </p>
                       <a
-                        href={`mailto:hello@xrayforensic.com?subject=${encodeURIComponent(tier.waitlistSubject ?? `${tier.name} Waitlist`)}`}
+                        href={`mailto:support@xrayforensic.com?subject=${encodeURIComponent(tier.waitlistSubject ?? `${tier.name} Waitlist`)}`}
                         style={{
                           color: "var(--accent-primary)",
                           fontSize: "0.8rem",
                           textDecoration: "none",
                         }}
                       >
-                        hello@xrayforensic.com
+                        support@xrayforensic.com
                       </a>
                     </div>
                   ) : tier.mailto ? (

@@ -467,7 +467,7 @@ function Step2({
               </ul>
               {tier.name === "SOVEREIGN" ? (
                 <a
-                  href="mailto:hello@xrayforensic.com"
+                  href="mailto:support@xrayforensic.com"
                   className="btn btn-ghost"
                   style={{ width: "100%", fontSize: 12, marginTop: 20, display: "inline-flex" }}
                   onClick={(e) => e.stopPropagation()}
@@ -1109,8 +1109,8 @@ function Step3({
           </p>
           <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", marginTop: 8, marginBottom: 0 }}>
             This can happen with unsupported file formats or network issues. Try again or contact{" "}
-            <a href="mailto:hello@xrayforensic.com" style={{ color: "var(--accent-primary)" }}>
-              hello@xrayforensic.com
+            <a href="mailto:support@xrayforensic.com" style={{ color: "var(--accent-primary)" }}>
+              support@xrayforensic.com
             </a>
           </p>
           <button
@@ -1563,8 +1563,8 @@ function StepPayment({
         </p>
         <p style={{ color: "var(--text-secondary)", fontSize: "0.8rem", lineHeight: 1.65, margin: 0 }}>
           Email your transaction hash to{" "}
-          <a href="mailto:hello@xrayforensic.com" style={{ color: "var(--accent-primary)" }}>
-            hello@xrayforensic.com
+          <a href="mailto:support@xrayforensic.com" style={{ color: "var(--accent-primary)" }}>
+            support@xrayforensic.com
           </a>
           {" "}with the subject line{" "}
           <strong style={{ color: "var(--text-primary)", fontFamily: "monospace" }}>
@@ -1733,7 +1733,7 @@ function NewPageInner() {
             month on the {authProfile.tier_id.toUpperCase()} tier.
           </p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
-            <Link href="/new?upgrade=true" className="btn btn-primary" style={{ padding: "12px 24px" }}>
+            <Link href="/pricing" className="btn btn-primary" style={{ padding: "12px 24px" }}>
               Upgrade your tier →
             </Link>
             <Link href="/dashboard" className="btn btn-ghost" style={{ padding: "12px 24px" }}>

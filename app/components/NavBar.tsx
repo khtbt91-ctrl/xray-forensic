@@ -150,7 +150,7 @@ export default function NavBar() {
             <Link href="/about" className="nav-link">
               About
             </Link>
-            <a href="mailto:hello@xrayforensic.com" className="nav-link">
+            <a href="mailto:support@xrayforensic.com" className="nav-link">
               Contact
             </a>
           </div>
@@ -240,7 +240,7 @@ export default function NavBar() {
             About
           </Link>
           <a
-            href="mailto:hello@xrayforensic.com"
+            href="mailto:support@xrayforensic.com"
             className="mobile-nav-link"
             onClick={close}
           >
