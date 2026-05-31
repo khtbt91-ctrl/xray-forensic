@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 
 export default function NavBar() {
-  const { user, profile, loading } = useAuth();
+  const { user, loading } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -17,9 +17,7 @@ export default function NavBar() {
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
   const close = () => setMenuOpen(false);
@@ -35,251 +33,244 @@ export default function NavBar() {
     }
   };
 
+  const navItems = [
+    { id: "how-it-works", label: "How It Works", href: "/#how-it-works" },
+    { id: "pricing",      label: "Pricing",      href: "/#pricing" },
+    { id: "tools",        label: "Tools",        href: "/tools" },
+    { id: "faq",          label: "FAQ",          href: "/#faq" },
+    { id: "about",        label: "About",        href: "/about" },
+  ];
+
   return (
     <>
-      <nav
+      <header
         className="site-nav"
         style={{
-          position: "fixed",
+          position: "sticky",
           top: 0,
-          left: 0,
-          right: 0,
           zIndex: 50,
-          height: 64,
-          display: "flex",
-          justifyContent: "center",
-          padding: "0 24px",
-          transition: "background 0.2s, border-color 0.2s",
-          background: scrolled ? "rgba(5,8,17,0.95)" : "rgba(5,8,17,0.7)",
+          borderBottom: scrolled ? "1px solid #1e293b" : "1px solid transparent",
+          padding: "14px 32px",
+          background: "rgba(5,8,17,0.90)",
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
-          borderBottom: "1px solid var(--border)",
+          transition: "border-color 0.2s",
         }}
       >
         <div
           style={{
-            position: "relative",
+            maxWidth: "1400px",
+            margin: "0 auto",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            width: "100%",
-            maxWidth: 1400,
-            margin: "0 auto",
-            padding: "0 32px",
           }}
         >
-          {/* LEFT — Logo */}
-          <Link
-            href="/"
-            style={{
-              textDecoration: "none",
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              flexShrink: 0,
-            }}
+          {/* ── Brand ── */}
+          <button
+            onClick={() => { if (typeof window !== "undefined") window.location.href = "/"; }}
+            style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", gap: "8px" }}
           >
-            {/* Gold X icon */}
-            <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: 28,
-                height: 28,
-                background: "var(--gold)",
-                borderRadius: 4,
-                flexShrink: 0,
-              }}
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M2 2L14 14M14 2L2 14" stroke="#000" strokeWidth="2.5" strokeLinecap="round"/>
-              </svg>
+            <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <span
+                style={{
+                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontWeight: 900,
+                  fontStyle: "italic",
+                  fontSize: "1.35rem",
+                  color: "#e5b83c",
+                  filter: "drop-shadow(0 0 8px rgba(229,184,60,0.4))",
+                  letterSpacing: "0.04em",
+                }}
+              >
+                X-RAY
+              </span>
+              <span
+                style={{
+                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontWeight: 300,
+                  fontSize: "1.1rem",
+                  letterSpacing: "0.18em",
+                  color: "#e2e8f0",
+                }}
+              >
+                FORENSIC
+              </span>
             </span>
             <span
-              className="nav-logo-text"
+              className="animate-pulse-subtle"
               style={{
-                fontFamily: "'Space Grotesk', sans-serif",
-                fontSize: "1.1rem",
+                fontFamily: "'JetBrains Mono', monospace",
+                color: "#e5b83c",
+                fontSize: "0.875rem",
                 fontWeight: 700,
-                color: "var(--text-primary)",
-                letterSpacing: "0.04em",
               }}
             >
-              X-RAY FORENSIC
+              &gt;_
             </span>
-          </Link>
+          </button>
 
-          {/* CENTER — Nav links */}
-          <div
+          {/* ── Center nav — desktop ── */}
+          <nav
             className="nav-center"
             style={{
               position: "absolute",
               left: "50%",
               transform: "translateX(-50%)",
               display: "flex",
-              gap: 28,
               alignItems: "center",
+              gap: "32px",
             }}
           >
-            <Link
-              href="/#how-it-works"
-              className="nav-link"
-              onClick={(e) => handleNavClick(e, "how-it-works")}
-            >
-              HOW IT WORKS
-            </Link>
-            <Link
-              href="/#pricing"
-              className="nav-link"
-              onClick={(e) => handleNavClick(e, "pricing")}
-            >
-              PRICING
-            </Link>
-            <Link href="/tools" className="nav-link">
-              TOOLS
-            </Link>
-            <Link
-              href="/#faq"
-              className="nav-link"
-              onClick={(e) => handleNavClick(e, "faq")}
-            >
-              FAQ
-            </Link>
-            <Link href="/about" className="nav-link">
-              ABOUT
-            </Link>
-            <a href="mailto:support@xrayforensic.com" className="nav-link">
-              CONTACT
-            </a>
-          </div>
-
-          {/* RIGHT — Actions */}
-          <div
-            style={{
-              display: "flex",
-              gap: 12,
-              alignItems: "center",
-              marginLeft: "auto",
-            }}
-          >
-            {!loading && user ? (
+            {navItems.map((item) => (
               <Link
-                href="/dashboard"
-                className="nav-sample-link"
+                key={item.id}
+                href={item.href}
+                onClick={item.href.startsWith("/#") ? (e) => handleNavClick(e, item.id) : undefined}
                 style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: "0.7rem",
-                  color: "var(--text-secondary)",
+                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontSize: "0.8rem",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: "#94a3b8",
                   textDecoration: "none",
-                  letterSpacing: "0.05em",
-                  background: "var(--card)",
-                  border: "1px solid var(--border)",
-                  borderRadius: 4,
-                  padding: "4px 10px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
+                  transition: "color 0.2s",
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "#f8fafc"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "#94a3b8"; }}
               >
-                <span style={{ color: "var(--gold)" }}>●</span>
-                {profile?.tier_id
-                  ? profile.tier_id.toUpperCase()
-                  : "OPERATOR"}{" "}
-                · {user.email?.split("@")[0]}
+                {item.label}
               </Link>
-            ) : !loading ? (
-              <Link
-                href="/login"
-                className="nav-link nav-sample-link"
-                style={{ letterSpacing: "0.05em" }}
-              >
-                SIGN IN
-              </Link>
-            ) : null}
+            ))}
+          </nav>
 
+          {/* ── Right controls ── */}
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+
+            {/* Auth status pill */}
+            {!loading && (
+              user ? (
+                <Link
+                  href="/dashboard"
+                  className="nav-sample-link"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    borderRadius: "100px",
+                    padding: "4px 12px",
+                    fontSize: "0.7rem",
+                    fontFamily: "'JetBrains Mono', monospace",
+                    background: "rgba(229,184,60,0.08)",
+                    border: "1px solid rgba(229,184,60,0.35)",
+                    color: "#e5b83c",
+                    textDecoration: "none",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {/* Ping dot */}
+                  <span style={{ position: "relative", display: "inline-flex", width: "8px", height: "8px", flexShrink: 0 }}>
+                    <span style={{
+                      position: "absolute", inset: 0, borderRadius: "50%",
+                      background: "#e5b83c", opacity: 0.75,
+                      animation: "nav-ping 1s cubic-bezier(0,0,0.2,1) infinite",
+                    }} />
+                    <span style={{ position: "relative", borderRadius: "50%", background: "#e5b83c", width: "8px", height: "8px" }} />
+                  </span>
+                  <span>OPERATOR STATUS ACTIVE</span>
+                </Link>
+              ) : (
+                <div
+                  className="nav-sample-link"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    borderRadius: "100px",
+                    padding: "4px 12px",
+                    fontSize: "0.7rem",
+                    fontFamily: "'JetBrains Mono', monospace",
+                    background: "#0a1120",
+                    border: "1px solid #1e293b",
+                    color: "#94a3b8",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#e5b83c", flexShrink: 0, display: "inline-block" }} />
+                  <span>GUEST LICENSE</span>
+                </div>
+              )
+            )}
+
+            {/* Get Diagnosed CTA — ghost gold → fills on hover */}
             <Link
               href="/new"
               className="nav-cta-desktop"
               style={{
-                fontFamily: "'Space Grotesk', sans-serif",
-                fontWeight: 700,
-                fontSize: "0.8rem",
-                background: "var(--gold)",
-                color: "#000",
-                border: "none",
-                borderRadius: 6,
-                padding: "8px 18px",
-                textDecoration: "none",
                 display: "inline-flex",
                 alignItems: "center",
-                letterSpacing: "0.02em",
-                transition: "background 0.15s",
+                gap: "6px",
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 600,
+                fontSize: "0.8rem",
+                letterSpacing: "0.08em",
+                background: "transparent",
+                color: "#e5b83c",
+                border: "1px solid #e5b83c",
+                borderRadius: "4px",
+                padding: "7px 14px",
+                textDecoration: "none",
+                transition: "background 0.3s, color 0.3s, box-shadow 0.3s",
+                boxShadow: "0 0 15px rgba(229,184,60,0.05)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#e5b83c";
+                e.currentTarget.style.color = "#000";
+                e.currentTarget.style.boxShadow = "0 0 20px rgba(229,184,60,0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.color = "#e5b83c";
+                e.currentTarget.style.boxShadow = "0 0 15px rgba(229,184,60,0.05)";
               }}
             >
-              Get Diagnosed
+              <span>Get Diagnosed</span>
+              <span>&gt;</span>
             </Link>
 
+            {/* Hamburger */}
             <button
               className="nav-hamburger"
               onClick={() => setMenuOpen(true)}
               aria-label="Open menu"
             >
-              <span />
-              <span />
-              <span />
+              <span /><span /><span />
             </button>
           </div>
         </div>
-      </nav>
+      </header>
 
+      {/* ── Mobile menu ── */}
       {menuOpen && (
         <div className="mobile-menu">
-          <button
-            className="mobile-menu-close"
-            onClick={close}
-            aria-label="Close menu"
-          >
-            ✕
-          </button>
-          <Link
-            href="/#how-it-works"
-            className="mobile-nav-link"
-            onClick={(e) => { handleNavClick(e, "how-it-works"); close(); }}
-          >
-            How It Works
-          </Link>
-          <Link
-            href="/#pricing"
-            className="mobile-nav-link"
-            onClick={(e) => { handleNavClick(e, "pricing"); close(); }}
-          >
-            Pricing
-          </Link>
-          <Link href="/tools" className="mobile-nav-link" onClick={close}>
-            Tools
-          </Link>
-          <Link
-            href="/#faq"
-            className="mobile-nav-link"
-            onClick={(e) => { handleNavClick(e, "faq"); close(); }}
-          >
-            FAQ
-          </Link>
-          <Link href="/about" className="mobile-nav-link" onClick={close}>
-            About
-          </Link>
-          <a href="mailto:support@xrayforensic.com" className="mobile-nav-link" onClick={close}>
-            Contact
-          </a>
+          <button className="mobile-menu-close" onClick={close} aria-label="Close menu">✕</button>
+          {navItems.map((item) => (
+            <Link
+              key={item.id}
+              href={item.href}
+              className="mobile-nav-link"
+              onClick={(e) => {
+                if (item.href.startsWith("/#")) handleNavClick(e, item.id);
+                close();
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
           {!loading && (user ? (
-            <Link href="/dashboard" className="mobile-nav-link" onClick={close}>
-              Dashboard
-            </Link>
+            <Link href="/dashboard" className="mobile-nav-link" onClick={close}>Dashboard</Link>
           ) : (
-            <Link href="/login" className="mobile-nav-link" onClick={close}>
-              Sign In
-            </Link>
+            <Link href="/login" className="mobile-nav-link" onClick={close}>Sign In</Link>
           ))}
           <div className="mobile-menu-divider" />
           <Link href="/new" className="btn btn-primary mobile-menu-cta" onClick={close}>
@@ -287,6 +278,13 @@ export default function NavBar() {
           </Link>
         </div>
       )}
+
+      {/* Ping keyframe — scoped here, not in globals */}
+      <style>{`
+        @keyframes nav-ping {
+          75%, 100% { transform: scale(2); opacity: 0; }
+        }
+      `}</style>
     </>
   );
 }
