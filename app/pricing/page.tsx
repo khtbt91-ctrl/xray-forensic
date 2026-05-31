@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import NavBar from "../components/NavBar";
 
-const GOLD = "#C9A84C";
-const MONO = "JetBrains Mono, monospace";
+const GOLD = "#e5b83c";
+const MONO = "'JetBrains Mono', monospace";
+const SPACE = "'Space Grotesk', sans-serif";
 
 const TIERS = [
   {
@@ -78,8 +79,6 @@ export default function PricingPage() {
   const router = useRouter();
   const { user, profile } = useAuth();
 
-  // Route the free CTA based on auth state and remaining quota.
-  // analyses_limit === -1 means unlimited (never treat as reached).
   const limitReached =
     !!profile &&
     profile.analyses_limit !== -1 &&
@@ -88,12 +87,13 @@ export default function PricingPage() {
   const freeCTALabel = limitReached ? "View Dashboard" : "Get Started";
 
   return (
-    <main style={{ minHeight: "100vh", background: "#0A0A0A", color: "var(--text-primary)" }}>
+    <main style={{ minHeight: "100vh", background: "#050811", color: "#f8fafc" }}>
       <style>{`
         .pricing-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           gap: 20px;
+          align-items: start;
         }
         @media (max-width: 1023px) {
           .pricing-grid { grid-template-columns: repeat(2, 1fr); }
@@ -106,30 +106,32 @@ export default function PricingPage() {
       <NavBar />
 
       {/* Header */}
-      <div style={{ maxWidth: 960, margin: "0 auto", padding: "80px 24px 64px", textAlign: "center" }}>
+      <div style={{ maxWidth: 960, margin: "0 auto", padding: "calc(64px + 80px) 24px 64px", textAlign: "center" }}>
         <p style={{
           fontFamily: MONO,
-          fontSize: 10,
+          fontSize: 12,
           letterSpacing: "0.2em",
           textTransform: "uppercase",
           color: GOLD,
-          margin: "0 0 20px",
+          margin: "0 0 16px",
         }}>
-          PRICING
+          LICENSE PLANS
         </p>
         <h1 style={{
-          fontSize: 40,
+          fontFamily: SPACE,
+          fontSize: "clamp(2rem, 4vw, 3rem)",
           fontWeight: 800,
-          letterSpacing: "-0.03em",
-          color: "#FFFFFF",
-          lineHeight: 1.15,
-          margin: "0 0 20px",
+          letterSpacing: "-0.02em",
+          color: "#f8fafc",
+          lineHeight: 1.1,
+          margin: "0 0 16px",
+          textTransform: "uppercase",
         }}>
-          Forensic intelligence.<br />Priced for operators.
+          Institutional Tier Pricing
         </h1>
         <p style={{
           fontSize: 16,
-          color: "#9CA3AF",
+          color: "#94a3b8",
           lineHeight: 1.7,
           maxWidth: 520,
           margin: "0 auto",
@@ -145,36 +147,39 @@ export default function PricingPage() {
           {TIERS.map((tier) => (
             <div
               key={tier.id}
+              className={tier.popular ? "glow-gold" : ""}
               style={{
                 position: "relative",
-                background: "var(--bg-card)",
-                border: `1px solid ${tier.popular ? GOLD : "var(--border-subtle)"}`,
-                borderRadius: 10,
-                padding: 32,
+                background: "#0e1626",
+                border: tier.popular ? `2px solid ${GOLD}` : "1px solid #1e293b",
+                borderRadius: 12,
+                padding: 28,
                 display: "flex",
                 flexDirection: "column",
-                boxShadow: tier.popular ? `0 0 40px rgba(201,168,76,0.10)` : "none",
+                transform: tier.popular ? "translateY(-6px) scale(1.02)" : "none",
+                zIndex: tier.popular ? 10 : 1,
+                transition: "border-color 0.2s",
+                overflow: "hidden",
               }}
             >
-              {/* MOST POPULAR badge */}
+              {/* Corner ribbon for most popular */}
               {tier.popular && (
                 <div style={{
                   position: "absolute",
-                  top: -1,
-                  left: "50%",
-                  transform: "translateX(-50%)",
+                  top: "14px",
+                  right: "-28px",
                   background: GOLD,
-                  color: "#000000",
-                  fontSize: 10,
+                  color: "#000",
+                  fontSize: "10px",
                   fontFamily: MONO,
                   fontWeight: 700,
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                  padding: "4px 14px",
-                  borderRadius: "0 0 6px 6px",
+                  letterSpacing: "0.1em",
+                  padding: "4px 36px",
+                  transform: "rotate(45deg)",
+                  transformOrigin: "center",
                   whiteSpace: "nowrap",
                 }}>
-                  MOST POPULAR
+                  Most Popular
                 </div>
               )}
 
@@ -182,10 +187,11 @@ export default function PricingPage() {
               <p style={{
                 fontFamily: MONO,
                 fontSize: 12,
+                fontWeight: 700,
                 letterSpacing: "0.15em",
                 textTransform: "uppercase",
-                color: GOLD,
-                margin: tier.popular ? "20px 0 8px" : "0 0 8px",
+                color: tier.popular ? GOLD : "#94a3b8",
+                margin: "0 0 6px",
               }}>
                 {tier.name}
               </p>
@@ -193,7 +199,7 @@ export default function PricingPage() {
               {/* Tagline */}
               <p style={{
                 fontSize: 13,
-                color: "var(--text-secondary)",
+                color: "#94a3b8",
                 margin: "0 0 20px",
                 lineHeight: 1.5,
               }}>
@@ -202,12 +208,12 @@ export default function PricingPage() {
 
               {/* Price */}
               {tier.free ? (
-                <div style={{ marginBottom: 28 }}>
+                <div style={{ marginBottom: 24 }}>
                   <span style={{
                     fontFamily: MONO,
-                    fontSize: 56,
+                    fontSize: 40,
                     fontWeight: 800,
-                    color: "#FFFFFF",
+                    color: "#f8fafc",
                     lineHeight: 1,
                     display: "block",
                   }}>
@@ -215,32 +221,32 @@ export default function PricingPage() {
                   </span>
                 </div>
               ) : (
-                <div style={{ display: "flex", alignItems: "flex-start", gap: 2, marginBottom: 28 }}>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 2, marginBottom: 24 }}>
                   <span style={{
                     fontFamily: MONO,
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: 600,
-                    color: "#9CA3AF",
-                    paddingTop: 10,
+                    color: "#475569",
+                    paddingTop: 6,
                     lineHeight: 1,
                   }}>
                     $
                   </span>
                   <span style={{
                     fontFamily: MONO,
-                    fontSize: 56,
+                    fontSize: 40,
                     fontWeight: 800,
-                    color: "#FFFFFF",
+                    color: "#f8fafc",
                     lineHeight: 1,
                   }}>
                     {tier.price}
                   </span>
                   <span style={{
                     fontFamily: MONO,
-                    fontSize: 20,
-                    color: "#9CA3AF",
+                    fontSize: 14,
+                    color: "#475569",
                     alignSelf: "flex-end",
-                    paddingBottom: 6,
+                    paddingBottom: 4,
                     lineHeight: 1,
                   }}>
                     /mo
@@ -249,32 +255,29 @@ export default function PricingPage() {
               )}
 
               {/* Divider */}
-              <div style={{ height: 1, background: "var(--border-subtle)", marginBottom: 24 }} />
+              <div style={{ height: 1, background: "#1e293b", marginBottom: 20 }} />
 
               {/* Features */}
               <ul style={{
                 listStyle: "none",
                 padding: 0,
-                margin: "0 0 32px",
+                margin: "0 0 28px",
                 display: "flex",
                 flexDirection: "column",
-                gap: 12,
+                gap: 10,
                 flex: 1,
               }}>
                 {tier.features.map((f) => (
-                  <li
-                    key={f.text}
-                    style={{
-                      display: "flex",
-                      gap: 10,
-                      alignItems: "flex-start",
-                      fontSize: 15,
-                      color: f.included ? "#E5E7EB" : "#4B5563",
-                      lineHeight: 1.4,
-                    }}
-                  >
+                  <li key={f.text} style={{
+                    display: "flex",
+                    gap: 10,
+                    alignItems: "flex-start",
+                    fontSize: 13,
+                    color: f.included ? "#f8fafc" : "#475569",
+                    lineHeight: 1.4,
+                  }}>
                     <span style={{
-                      color: f.included ? GOLD : "#374151",
+                      color: f.included ? GOLD : "#334155",
                       flexShrink: 0,
                       fontFamily: MONO,
                       fontSize: 13,
@@ -282,7 +285,9 @@ export default function PricingPage() {
                     }}>
                       {f.included ? "✓" : "—"}
                     </span>
-                    {f.text}
+                    <span style={{ textDecoration: f.included ? "none" : "line-through" }}>
+                      {f.text}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -295,13 +300,15 @@ export default function PricingPage() {
                     display: "block",
                     textAlign: "center",
                     padding: "12px 20px",
-                    background: "transparent",
-                    border: "1px solid var(--border-active)",
+                    background: "#0b1220",
+                    border: "1px solid #1e293b",
                     borderRadius: 6,
-                    color: "var(--text-secondary)",
-                    fontFamily: MONO,
+                    color: "#94a3b8",
+                    fontFamily: SPACE,
+                    fontWeight: 600,
                     fontSize: 13,
                     textDecoration: "none",
+                    transition: "border-color 0.15s",
                   }}
                 >
                   {freeCTALabel}
@@ -311,13 +318,13 @@ export default function PricingPage() {
                   onClick={() => router.push(`/payment?tier=${tier.id}&amount=${tier.price ?? ""}`)}
                   style={{
                     padding: "12px 20px",
-                    background: tier.popular ? GOLD : "transparent",
-                    border: `1px solid ${tier.popular ? GOLD : "var(--border-active)"}`,
+                    background: tier.popular ? GOLD : "#0b1220",
+                    border: `1px solid ${tier.popular ? GOLD : "#1e293b"}`,
                     borderRadius: 6,
-                    color: tier.popular ? "#000000" : "var(--text-secondary)",
-                    fontFamily: MONO,
+                    color: tier.popular ? "#000000" : "#94a3b8",
+                    fontFamily: SPACE,
                     fontSize: 13,
-                    fontWeight: tier.popular ? 700 : 500,
+                    fontWeight: tier.popular ? 700 : 600,
                     cursor: "pointer",
                     width: "100%",
                     transition: "all 0.15s",
@@ -331,65 +338,92 @@ export default function PricingPage() {
         </div>
       </div>
 
-      {/* Institutional / SOVEREIGN waitlist strip */}
-      <div style={{
-        borderTop: "1px solid #222",
-        padding: "60px 24px",
-        textAlign: "center",
-      }}>
-        <p style={{
-          fontFamily: MONO,
-          fontSize: 11,
-          letterSpacing: "0.15em",
-          textTransform: "uppercase",
-          color: GOLD,
-          margin: "0 0 24px",
-        }}>
-          INSTITUTIONAL · PHASE 3
-        </p>
-        <p style={{
-          fontSize: 18,
-          color: "#9CA3AF",
-          lineHeight: 1.7,
-          maxWidth: 540,
-          margin: "0 auto 36px",
-        }}>
-          Trading desk infrastructure. Multi-account visibility. Automated risk protocols.
-          Real-time behavioral intervention at scale.
-        </p>
-        <a
-          href="mailto:support@xrayforensic.com?subject=SOVEREIGN%20waitlist"
+      {/* Phase 3 waitlist */}
+      <div style={{ maxWidth: 760, margin: "0 auto 96px", padding: "0 24px" }}>
+        <div
+          className="glow-gold"
           style={{
-            display: "inline-block",
-            padding: "12px 32px",
-            background: "transparent",
-            border: `1px solid ${GOLD}`,
-            borderRadius: 6,
-            color: GOLD,
-            fontFamily: MONO,
-            fontSize: 13,
-            textDecoration: "none",
+            background: "#0e1626",
+            border: "1px solid rgba(229,184,60,0.45)",
+            borderRadius: 12,
+            padding: "48px 40px",
+            textAlign: "center",
           }}
         >
-          Join the waitlist →
-        </a>
+          <p style={{
+            fontFamily: MONO,
+            fontSize: 11,
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            color: GOLD,
+            margin: "0 0 16px",
+          }}>
+            PHASE 3: INSTITUTIONAL INFRASTRUCTURE WAITLIST
+          </p>
+          <h2 style={{
+            fontFamily: SPACE,
+            fontSize: "clamp(1.25rem, 2.5vw, 1.75rem)",
+            fontWeight: 700,
+            color: "#f8fafc",
+            margin: "0 0 12px",
+          }}>
+            Trading desk infrastructure coming.
+          </h2>
+          <p style={{
+            fontSize: 15,
+            color: "#94a3b8",
+            lineHeight: 1.7,
+            maxWidth: 480,
+            margin: "0 auto 32px",
+          }}>
+            Multi-account visibility. Automated risk protocols.
+            Real-time behavioral intervention at scale.
+          </p>
+          <a
+            href="mailto:support@xrayforensic.com?subject=SOVEREIGN%20waitlist"
+            style={{
+              display: "inline-block",
+              padding: "12px 32px",
+              background: GOLD,
+              color: "#000",
+              fontFamily: SPACE,
+              fontWeight: 700,
+              fontSize: 14,
+              borderRadius: 6,
+              textDecoration: "none",
+            }}
+          >
+            Join Waitlist →
+          </a>
+        </div>
       </div>
 
-      {/* Bottom strip */}
+      {/* Bottom CTA */}
       <div style={{
-        borderTop: "1px solid var(--border-subtle)",
-        background: "var(--bg-card)",
+        borderTop: "1px solid #1e293b",
+        background: "#0e1626",
         padding: "72px 24px",
         textAlign: "center",
       }}>
-        <p style={{ fontSize: 22, fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.6, margin: "0 0 4px" }}>
+        <p style={{
+          fontFamily: SPACE,
+          fontSize: 24,
+          fontWeight: 700,
+          color: "#f8fafc",
+          lineHeight: 1.5,
+          margin: "0 0 4px",
+        }}>
           Not sure which tier fits?
         </p>
-        <p style={{ fontSize: 22, fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.6, margin: "0 0 4px" }}>
-          Run your first diagnosis free.
-        </p>
-        <p style={{ fontSize: 22, fontWeight: 400, color: "#9CA3AF", lineHeight: 1.6, margin: "0 0 36px" }}>
-          The report will tell you.
+        <p style={{
+          fontFamily: SPACE,
+          fontSize: 24,
+          fontWeight: 400,
+          color: "#94a3b8",
+          lineHeight: 1.5,
+          margin: "0 0 32px",
+        }}>
+          Run your first diagnosis free. The report will tell you.
         </p>
         <Link
           href="/new"
@@ -400,12 +434,11 @@ export default function PricingPage() {
             padding: "14px 36px",
             background: GOLD,
             color: "#000000",
-            fontFamily: MONO,
-            fontSize: 14,
+            fontFamily: SPACE,
+            fontSize: 15,
             fontWeight: 700,
             borderRadius: 6,
             textDecoration: "none",
-            letterSpacing: "0.06em",
           }}
         >
           Start Free →
@@ -414,4 +447,3 @@ export default function PricingPage() {
     </main>
   );
 }
-                                                                                                                                                                                                                                                                                                                                      

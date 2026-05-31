@@ -7,8 +7,9 @@ import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import NavBar from "../components/NavBar";
 
-const GOLD = "#C9A84C";
-const MONO = "JetBrains Mono, monospace";
+const GOLD = "#e5b83c";
+const MONO = "'JetBrains Mono', monospace";
+const SPACE = "'Space Grotesk', sans-serif";
 
 const TIER_MAP: Record<string, { name: string; amount: number }> = {
   forensic: { name: "Forensic", amount: 29 },
@@ -28,7 +29,6 @@ const CRYPTO_ADDRESSES = [
     address: "TYoZG5HUq8gVh2cgiarCDXV2rbdnetaZhs",
   },
 ];
-
 
 function PaymentContent() {
   const router = useRouter();
@@ -56,7 +56,7 @@ function PaymentContent() {
 
   if (!tier) {
     return (
-      <main style={{ minHeight: "100vh", background: "#0A0A0A", color: "var(--text-primary)" }}>
+      <main style={{ minHeight: "100vh", background: "#050811", color: "#f8fafc" }}>
         <NavBar />
         <div style={{ textAlign: "center", padding: "120px 24px" }}>
           <p style={{
@@ -64,12 +64,12 @@ function PaymentContent() {
             fontSize: 10,
             letterSpacing: "0.2em",
             textTransform: "uppercase",
-            color: "var(--loss)",
+            color: "#ef4444",
             marginBottom: 16,
           }}>
             INVALID TIER
           </p>
-          <p style={{ fontSize: 18, color: "#E5E7EB", marginBottom: 32 }}>
+          <p style={{ fontSize: 18, color: "#94a3b8", marginBottom: 32 }}>
             This payment link isn&apos;t valid.
           </p>
           <Link href="/pricing" style={{ fontFamily: MONO, fontSize: 13, color: GOLD, textDecoration: "none" }}>
@@ -89,13 +89,34 @@ function PaymentContent() {
   const mailtoHref = `mailto:support@xrayforensic.com?subject=${mailtoSubject}&body=${mailtoBody}`;
 
   return (
-    <main style={{ minHeight: "100vh", background: "#0A0A0A", color: "var(--text-primary)" }}>
+    <main style={{ minHeight: "100vh", background: "#050811", color: "#f8fafc" }}>
       <NavBar />
 
-      <div style={{ maxWidth: 600, margin: "0 auto", padding: "64px 24px 96px" }}>
+      <div style={{ maxWidth: 580, margin: "0 auto", padding: "calc(64px + 64px) 24px 96px" }}>
+
+        {/* Back link */}
+        <Link
+          href="/pricing"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
+            fontFamily: MONO,
+            fontSize: "12px",
+            color: "#94a3b8",
+            textDecoration: "none",
+            marginBottom: "32px",
+            letterSpacing: "0.05em",
+            transition: "color 0.15s",
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = GOLD }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = "#94a3b8" }}
+        >
+          ← Back
+        </Link>
 
         {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: 48 }}>
+        <div style={{ textAlign: "center", marginBottom: 40 }}>
           <p style={{
             fontFamily: MONO,
             fontSize: 11,
@@ -107,43 +128,58 @@ function PaymentContent() {
             X-RAY FORENSIC
           </p>
           <h1 style={{
-            fontSize: 40,
+            fontFamily: SPACE,
+            fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
             fontWeight: 800,
-            letterSpacing: "-0.03em",
-            color: "#FFFFFF",
+            letterSpacing: "-0.02em",
+            color: "#f8fafc",
             lineHeight: 1.1,
             textAlign: "center",
             margin: "0 0 12px",
           }}>
-            Complete Payment
+            Complete Your Upgrade
           </h1>
-          <p style={{ fontFamily: MONO, fontSize: 15, color: "#9CA3AF", margin: 0 }}>
-            {name} — ${amount}/month
+          <p style={{
+            fontFamily: MONO,
+            fontSize: 14,
+            color: GOLD,
+            letterSpacing: "0.08em",
+            margin: 0,
+          }}>
+            {name.toUpperCase()} TIER — ${amount}/month
           </p>
         </div>
 
-        {/* Warning */}
-        <p style={{
-          fontSize: 16,
-          color: "#9CA3AF",
-          textAlign: "center",
-          lineHeight: 1.65,
-          margin: "0 0 32px",
+        {/* Warning banner */}
+        <div style={{
+          background: "rgba(245,158,11,0.06)",
+          border: "1px solid rgba(245,158,11,0.25)",
+          borderRadius: 8,
+          padding: "14px 18px",
+          marginBottom: 28,
         }}>
-          Double-check the address before sending.<br />
-          Crypto transactions cannot be reversed.
-        </p>
+          <p style={{
+            fontFamily: MONO,
+            fontSize: 12,
+            color: "#f59e0b",
+            letterSpacing: "0.05em",
+            lineHeight: 1.6,
+            margin: 0,
+          }}>
+            ⚠ Double-check the address before sending. Crypto transactions cannot be reversed.
+          </p>
+        </div>
 
         {/* Crypto address cards */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 36 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 28 }}>
           {CRYPTO_ADDRESSES.map(({ network, chain, address }) => (
             <div
               key={network}
               style={{
-                background: "var(--bg-card)",
-                border: "1px solid var(--border-subtle)",
+                background: "#0e1626",
+                border: "1px solid #1e293b",
                 borderRadius: 10,
-                padding: "20px 24px",
+                padding: "18px 20px",
               }}
             >
               <div style={{
@@ -165,7 +201,7 @@ function PaymentContent() {
                   <span style={{
                     fontFamily: MONO,
                     fontSize: 11,
-                    color: "#6B7280",
+                    color: "#475569",
                     marginLeft: 8,
                   }}>
                     {chain}
@@ -175,34 +211,34 @@ function PaymentContent() {
                   onClick={() => handleCopy(address)}
                   style={{
                     padding: "5px 14px",
-                    background: copied === address ? "rgba(201,168,76,0.15)" : "transparent",
-                    border: `1px solid ${copied === address ? GOLD : "rgba(201,168,76,0.4)"}`,
+                    background: copied === address ? "rgba(229,184,60,0.12)" : "transparent",
+                    border: `1px solid ${copied === address ? GOLD : "rgba(229,184,60,0.35)"}`,
                     borderRadius: 5,
                     color: GOLD,
                     fontFamily: MONO,
                     fontSize: 11,
-                    fontWeight: 600,
+                    fontWeight: 700,
                     cursor: "pointer",
                     transition: "all 0.15s",
-                    letterSpacing: "0.05em",
+                    letterSpacing: "0.08em",
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {copied === address ? "Copied!" : "Copy"}
+                  {copied === address ? "Copied!" : "COPY"}
                 </button>
               </div>
 
               <p style={{
                 fontFamily: MONO,
-                fontSize: 13,
-                color: "#E5E7EB",
+                fontSize: 12,
+                color: "#94a3b8",
                 wordBreak: "break-all",
                 lineHeight: 1.6,
                 margin: 0,
-                padding: "12px 14px",
-                background: "var(--bg-elevated)",
+                padding: "10px 12px",
+                background: "#0b1220",
                 borderRadius: 6,
-                border: "1px solid var(--border-subtle)",
+                border: "1px solid #1e293b",
               }}>
                 {address}
               </p>
@@ -212,16 +248,17 @@ function PaymentContent() {
 
         {/* Instructions */}
         <div style={{
-          padding: "20px 24px",
-          background: "var(--bg-card)",
-          border: "1px solid var(--border-subtle)",
-          borderRadius: 10,
-          marginBottom: 36,
+          padding: "16px 20px",
+          background: "#0e1626",
+          border: "1px solid #1e293b",
+          borderRadius: 8,
+          marginBottom: 32,
         }}>
-          <p style={{ fontSize: 14, color: "#9CA3AF", lineHeight: 1.75, margin: 0 }}>
+          <p style={{ fontFamily: MONO, fontSize: 12, color: "#94a3b8", lineHeight: 1.75, margin: 0 }}>
             Send exactly{" "}
-            <span style={{ color: "#E5E7EB", fontFamily: MONO }}>${amount} USDT</span>
-            {" "}to either address. Then click the button below to notify us. We verify and activate your tier within 24 hours.
+            <span style={{ color: GOLD }}>${amount} USDT</span>
+            {" "}to either address. Then click the button below to notify us.
+            We verify and activate your tier within 24 hours.
           </p>
         </div>
 
@@ -230,26 +267,31 @@ function PaymentContent() {
           <a
             href={mailtoHref}
             style={{
-              display: "inline-block",
-              padding: "14px 32px",
+              display: "block",
+              padding: "16px 32px",
               background: GOLD,
               color: "#000000",
-              fontFamily: MONO,
-              fontSize: 13,
+              fontFamily: SPACE,
+              fontSize: 15,
               fontWeight: 700,
               borderRadius: 6,
               textDecoration: "none",
-              letterSpacing: "0.06em",
-              marginBottom: 20,
+              marginBottom: 16,
+              transition: "background 0.15s",
             }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "#b88d1d" }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = GOLD }}
           >
-            I&apos;ve Sent Payment — Notify Support →
+            I&apos;ve Sent Payment →
           </a>
-          <p style={{ fontSize: 13, color: "#6B7280", margin: 0 }}>
-            Or email us directly:{" "}
-            <span style={{ color: "#9CA3AF", fontFamily: MONO }}>
+          <p style={{ fontSize: 12, color: "#475569", margin: 0 }}>
+            Or email us:{" "}
+            <a
+              href="mailto:support@xrayforensic.com"
+              style={{ color: "#94a3b8", fontFamily: MONO, textDecoration: "none" }}
+            >
               support@xrayforensic.com
-            </span>
+            </a>
           </p>
         </div>
 
@@ -260,9 +302,8 @@ function PaymentContent() {
 
 export default function PaymentPage() {
   return (
-    <Suspense fallback={<div style={{ background: "#0A0A0A", minHeight: "100vh" }} />}>
+    <Suspense fallback={<div style={{ background: "#050811", minHeight: "100vh" }} />}>
       <PaymentContent />
     </Suspense>
   );
 }
-                                                                                                                                                                                                                                                                                                                                                 
