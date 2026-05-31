@@ -24,4 +24,5 @@ export type UserProfile = {
   total_analyses: number;
   can_analyze: boolean;
   limit_reason?: string | null;
+  roles?: string[];
 };

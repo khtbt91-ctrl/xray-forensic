@@ -1220,158 +1220,72 @@ function StepPayment({
   profile: ContextProfile;
   goNext: () => void;
 }) {
+  const { profile: authProfile } = useAuth();
   const tierInfo =
     selectedTier && tierData[selectedTier as keyof typeof tierData]
       ? tierData[selectedTier as keyof typeof tierData]
       : null;
 
-  const [txHash, setTxHash] = useState("");
-  const [paymentId, setPaymentId] = useState<string | null>(null);
-  const [payStatus, setPayStatus] = useState<"idle" | "submitting" | "pending" | "error">("idle");
-  const [payError, setPayError] = useState<string | null>(null);
+  const [notified, setNotified] = useState(false);
 
-  // Restore pending state from localStorage on mount
+  // Admin bypass — skip payment step entirely
   useEffect(() => {
-    const storedId = localStorage.getItem("xray_payment_id");
-    const storedStatus = localStorage.getItem("xray_payment_status");
-    if (storedId && storedStatus === "pending") {
-      setPaymentId(storedId);
-      setPayStatus("pending");
-    }
-  }, []);
+    if (authProfile?.subscription_status === "admin") goNext();
+  }, [authProfile?.subscription_status, goNext]);
 
-  // Persist to localStorage when pending; clear on idle/error
-  useEffect(() => {
-    if (paymentId && payStatus === "pending") {
-      localStorage.setItem("xray_payment_id", paymentId);
-      localStorage.setItem("xray_payment_status", "pending");
-    } else if (payStatus === "idle" || payStatus === "error") {
-      localStorage.removeItem("xray_payment_id");
-      localStorage.removeItem("xray_payment_status");
-    }
-  }, [paymentId, payStatus]);
+  if (authProfile?.subscription_status === "admin") return null;
 
-  const submitPayment = async () => {
-    if (!txHash.trim()) { setPayError("Paste your transaction hash first."); return; }
-    setPayStatus("submitting");
-    setPayError(null);
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/submit`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          tx_hash: txHash.trim(),
-          email: profile.email,
-          tier_id: (selectedTier || "audit").toLowerCase(),
-        }),
-      });
-      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || "Submit failed");
-      const data = await res.json();
-      setPaymentId(data.payment_id);
-      if (data.status === "confirmed") { goNext(); return; }
-      setPayStatus("pending");
-    } catch (e: any) {
-      setPayError(e.message || "Could not submit payment.");
-      setPayStatus("error");
-    }
-  };
+  const tierAmount = tierInfo ? tierInfo.price.replace(/[^0-9]/g, "") : "";
 
-  // Poll while pending — auto-advance on confirm
-  useEffect(() => {
-    if (payStatus !== "pending" || !paymentId) return;
-    const tick = async () => {
-      try {
-        const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/status/${paymentId}`);
-        if (!r.ok) return;
-        const d = await r.json();
-        if (d.status === "confirmed") { clearInterval(id); goNext(); }
-      } catch { /* keep polling */ }
-    };
-    const id = setInterval(tick, 10000);
-    tick();
-    return () => clearInterval(id);
-  }, [payStatus, paymentId, goNext]);
+  const mailtoSubject = encodeURIComponent(
+    `Payment sent — ${tierInfo?.name ?? selectedTier} upgrade`
+  );
+  const mailtoBody = encodeURIComponent(
+    `Account email: ${profile.email ?? ""}\nTier: ${tierInfo?.name ?? selectedTier}\nAmount: $${tierAmount} USDT\nNetwork used (BEP20 or TRC20): `
+  );
+  const mailtoHref = `mailto:support@xrayforensic.com?subject=${mailtoSubject}&body=${mailtoBody}`;
 
-  // Pending state UI
-  if (payStatus === "pending") {
+  if (notified) {
     return (
       <div>
         <h2 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.02em" }}>
-          Awaiting Confirmation
+          Notification Sent
         </h2>
         <p style={{ fontSize: 14, color: "var(--text-secondary)", margin: "0 0 36px" }}>
-          Keep this tab open — you&apos;ll be redirected automatically.
+          We verify and activate your tier within 24 hours.
         </p>
-        <style>{`
-          @keyframes xray-pulse {
-            0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(88,166,255,0.4); }
-            50% { opacity: 0.6; transform: scale(1.3); box-shadow: 0 0 0 8px rgba(88,166,255,0); }
-          }
-        `}</style>
         <div style={{
           background: "var(--bg-card)",
           border: "1px solid var(--border-subtle)",
           borderRadius: 10,
-          padding: "40px 36px",
+          padding: "32px",
           textAlign: "center",
+          marginBottom: 24,
         }}>
-          <div style={{
-            width: 12,
-            height: 12,
-            borderRadius: "50%",
-            background: "var(--accent-primary)",
-            margin: "0 auto 24px",
-            animation: "xray-pulse 2s ease-in-out infinite",
-          }} />
-          <p style={{ fontFamily: MONO, fontSize: 13, color: "var(--text-primary)", margin: "0 0 12px" }}>
-            Payment submitted. Verifying on-chain.
+          <p style={{ fontFamily: MONO, fontSize: 13, color: "var(--text-primary)", margin: "0 0 8px" }}>
+            ✓ Support notified.
           </p>
-          <p style={{
-            fontSize: 13,
-            color: "var(--text-secondary)",
-            lineHeight: 1.65,
-            margin: "0 auto 24px",
-            maxWidth: 360,
-          }}>
-            This can take up to 2 hours. Keep this tab open and you&apos;ll be redirected
-            automatically the moment it clears.
+          <p style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0 }}>
+            You can continue to upload your CSV now — your report will be ready once payment clears.
           </p>
-          <button
-            onClick={async () => {
-              if (!paymentId) return;
-              try {
-                const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/status/${paymentId}`);
-                if (!r.ok) return;
-                const d = await r.json();
-                if (d.status === "confirmed") goNext();
-              } catch {}
-            }}
-            style={{
-              background: "transparent",
-              border: "1px solid var(--border-active)",
-              color: "var(--text-secondary)",
-              padding: "8px 20px",
-              borderRadius: 6,
-              cursor: "pointer",
-              fontSize: "0.8rem",
-              fontFamily: MONO,
-            }}
-          >
-            Check now
-          </button>
         </div>
         <button
-          onClick={() => window.history.back()}
+          onClick={goNext}
           style={{
-            background: "transparent",
+            width: "100%",
+            padding: 14,
+            background: "#C9A84C",
+            color: "#000000",
             border: "none",
-            color: "var(--text-muted)",
+            borderRadius: 6,
+            fontSize: "0.9rem",
+            fontWeight: 700,
             cursor: "pointer",
-            fontSize: "0.8rem",
-            padding: "16px 0 0",
+            fontFamily: MONO,
+            letterSpacing: "0.05em",
           }}
         >
-          ← Back
+          Continue to Upload →
         </button>
       </div>
     );
@@ -1422,37 +1336,6 @@ function StepPayment({
         </div>
       )}
 
-      {/* Card payments — coming soon */}
-      <div style={{
-        padding: 20,
-        background: "var(--bg-elevated)",
-        borderRadius: 8,
-        border: "1px solid var(--border-subtle)",
-        marginBottom: 16,
-        textAlign: "center",
-      }}>
-        <p style={{
-          fontFamily: MONO,
-          fontSize: "0.7rem",
-          color: "var(--text-muted)",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          marginBottom: 6,
-        }}>
-          CARD PAYMENTS
-        </p>
-        <p style={{ color: "var(--text-muted)", fontSize: "0.8rem", margin: 0 }}>
-          Coming soon. Use crypto below or email us.
-        </p>
-      </div>
-
-      {/* Divider */}
-      <div style={{ display: "flex", alignItems: "center", gap: 16, margin: "20px 0" }}>
-        <div style={{ flex: 1, height: 1, background: "var(--border-subtle)" }} />
-        <span style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>PAY WITH CRYPTO</span>
-        <div style={{ flex: 1, height: 1, background: "var(--border-subtle)" }} />
-      </div>
-
       {/* Warning */}
       <div style={{
         padding: "10px 14px",
@@ -1484,95 +1367,46 @@ function StepPayment({
         <CryptoAddress key={w.network} label={w.label} color={w.color} address={w.address} />
       ))}
 
-      {/* TX hash input */}
-      <div style={{ marginTop: 24, marginBottom: 8 }}>
-        <label style={{
-          display: "block",
-          fontSize: 11,
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
-          color: "var(--text-muted)",
-          marginBottom: 8,
-        }}>
-          Transaction Hash
-        </label>
-        <input
-          type="text"
-          value={txHash}
-          onChange={(e) => { setTxHash(e.target.value); if (payError) setPayError(null); }}
-          placeholder="0x… or TX hash from your wallet"
-          style={{
-            width: "100%",
-            padding: "10px 14px",
-            background: "var(--bg-elevated)",
-            border: `1px solid ${payError ? "var(--loss)" : "var(--border-subtle)"}`,
-            borderRadius: 6,
-            color: "var(--text-primary)",
-            fontSize: 13,
-            fontFamily: MONO,
-            outline: "none",
-            boxSizing: "border-box",
-          }}
-        />
-        {payError && (
-          <p style={{ fontSize: 12, color: "var(--loss)", margin: "6px 0 0", fontFamily: MONO }}>
-            {payError}
-          </p>
-        )}
-      </div>
-
-      {/* Submit */}
-      <button
-        onClick={submitPayment}
-        disabled={payStatus === "submitting"}
-        style={{
-          width: "100%",
-          padding: 12,
-          background: "var(--accent-primary)",
-          color: "var(--bg-base)",
-          border: "none",
-          borderRadius: 6,
-          fontSize: "0.9rem",
-          fontWeight: 600,
-          cursor: payStatus === "submitting" ? "not-allowed" : "pointer",
-          opacity: payStatus === "submitting" ? 0.6 : 1,
-          marginTop: 16,
-          marginBottom: 24,
-        }}
-      >
-        {payStatus === "submitting" ? "Submitting…" : "I’ve Sent Payment — Submit for Verification"}
-      </button>
-
-      {/* Manual email fallback */}
+      {/* Instructions */}
       <div style={{
         padding: "16px 20px",
-        background: "var(--bg-elevated)",
-        borderRadius: 8,
+        background: "var(--bg-card)",
         border: "1px solid var(--border-subtle)",
-        marginBottom: 24,
+        borderRadius: 8,
+        margin: "20px 0",
       }}>
-        <p style={{
-          fontFamily: MONO,
-          fontSize: "0.65rem",
-          color: "var(--text-muted)",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          marginBottom: 10,
-        }}>
-          ALTERNATIVELY
-        </p>
-        <p style={{ color: "var(--text-secondary)", fontSize: "0.8rem", lineHeight: 1.65, margin: 0 }}>
-          Email your transaction hash to{" "}
-          <a href="mailto:support@xrayforensic.com" style={{ color: "var(--accent-primary)" }}>
-            support@xrayforensic.com
-          </a>
-          {" "}with the subject line{" "}
-          <strong style={{ color: "var(--text-primary)", fontFamily: "monospace" }}>
-            PAYMENT — {tierInfo?.name}
-          </strong>
-          . Reports delivered within 2 hours of confirmed payment.
+        <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.75, margin: 0 }}>
+          Send exactly{" "}
+          <span style={{ color: "var(--text-primary)", fontFamily: MONO }}>
+            ${tierAmount} USDT
+          </span>
+          {" "}to either address. Then click the button below to notify us. We verify and activate your tier within 24 hours.
         </p>
       </div>
+
+      {/* Notify button */}
+      <a
+        href={mailtoHref}
+        onClick={() => setNotified(true)}
+        style={{
+          display: "block",
+          padding: "14px",
+          background: "#C9A84C",
+          color: "#000000",
+          borderRadius: 6,
+          fontSize: "0.9rem",
+          fontWeight: 700,
+          cursor: "pointer",
+          fontFamily: MONO,
+          letterSpacing: "0.05em",
+          textDecoration: "none",
+          textAlign: "center",
+          boxSizing: "border-box",
+          marginBottom: 16,
+        }}
+      >
+        I&apos;ve Sent Payment — Notify Support →
+      </a>
 
       {/* Back */}
       <button
