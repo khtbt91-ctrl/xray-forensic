@@ -1,8 +1,10 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
 
 const GOLD = "#C9A84C";
 const MONO = "JetBrains Mono, monospace";
@@ -45,6 +47,14 @@ function NavBar() {
 }
 
 function PaymentContent() {
+  const router = useRouter();
+  const { profile } = useAuth();
+
+  if (profile?.subscription_status === "admin") {
+    router.push("/dashboard");
+    return null;
+  }
+
   const searchParams = useSearchParams();
   const tierParam = (searchParams.get("tier") ?? "").toLowerCase();
   const tier = TIER_MAP[tierParam];
@@ -104,30 +114,31 @@ function PaymentContent() {
         <div style={{ textAlign: "center", marginBottom: 48 }}>
           <p style={{
             fontFamily: MONO,
-            fontSize: 10,
-            letterSpacing: "0.2em",
+            fontSize: 11,
+            letterSpacing: "0.15em",
             textTransform: "uppercase",
             color: GOLD,
-            margin: "0 0 20px",
+            margin: "0 0 16px",
           }}>
-            PAYMENT
+            X-RAY FORENSIC
           </p>
           <h1 style={{
-            fontSize: 32,
+            fontSize: 40,
             fontWeight: 800,
             letterSpacing: "-0.03em",
             color: "#FFFFFF",
-            lineHeight: 1.2,
+            lineHeight: 1.1,
+            textAlign: "center",
             margin: "0 0 12px",
           }}>
-            Complete Your Upgrade
+            Complete Payment
           </h1>
           <p style={{ fontFamily: MONO, fontSize: 15, color: "#9CA3AF", margin: 0 }}>
             {name} — ${amount}/month
           </p>
         </div>
 
-        {/* Warning — above addresses so it's read first */}
+        {/* Warning */}
         <p style={{
           fontSize: 16,
           color: "#9CA3AF",
@@ -151,7 +162,6 @@ function PaymentContent() {
                 padding: "20px 24px",
               }}
             >
-              {/* Network label + copy button */}
               <div style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -198,7 +208,6 @@ function PaymentContent() {
                 </button>
               </div>
 
-              {/* Address */}
               <p style={{
                 fontFamily: MONO,
                 fontSize: 13,
@@ -250,7 +259,7 @@ function PaymentContent() {
               marginBottom: 20,
             }}
           >
-            I&apos;ve sent payment — notify support →
+            I&apos;ve Sent Payment — Notify Support →
           </a>
           <p style={{ fontSize: 13, color: "#6B7280", margin: 0 }}>
             Or email us directly:{" "}
