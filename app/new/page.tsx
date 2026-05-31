@@ -4,13 +4,15 @@ import React, { useCallback, useRef, useState, useEffect, Suspense } from "react
 
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import NavBar from "../../components/NavBar";
+import NavBar from "../components/NavBar";
 import Disclaimer from "../../components/Disclaimer";
 import { tierData } from "@/lib/tiers";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/lib/supabase";
 
-const MONO = "JetBrains Mono, monospace";
+const MONO = "'JetBrains Mono', monospace";
+const SPACE = "'Space Grotesk', sans-serif";
+const GOLD = "#e5b83c";
 
 type AccountType = "personal" | "prop" | "funded" | "demo";
 
@@ -108,37 +110,32 @@ function StepIndicator({
       : null;
 
   return (
-    <div style={{ marginBottom: 48 }}>
-      {/* Step dots */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
+    <div style={{ marginBottom: 40 }}>
+      {/* Step breadcrumb */}
+      <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
         {steps.map((s, i) => {
           const done = i < currentIndex;
           const active = i === currentIndex;
           return (
             <React.Fragment key={s.key}>
-              <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                <span
-                  style={{
-                    fontFamily: MONO,
-                    fontSize: 16,
-                    lineHeight: 1,
-                    color: done ? "var(--profit)" : active ? "var(--accent-primary)" : "var(--border-subtle)",
-                  }}
-                >
-                  {done ? "✓" : active ? "●" : "○"}
-                </span>
-                <span
-                  style={{
-                    fontSize: 13,
-                    fontWeight: active ? 600 : 400,
-                    color: done ? "var(--profit)" : active ? "var(--accent-primary)" : "var(--text-muted)",
-                  }}
-                >
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                {done && (
+                  <span style={{ fontFamily: MONO, fontSize: 12, color: "#10b981" }}>✓</span>
+                )}
+                <span style={{
+                  fontFamily: MONO,
+                  fontSize: 12,
+                  fontWeight: active ? 700 : 400,
+                  color: done ? "#475569" : active ? GOLD : "#475569",
+                  letterSpacing: "0.05em",
+                  borderBottom: active ? `1px solid ${GOLD}` : "none",
+                  paddingBottom: active ? 2 : 0,
+                }}>
                   {s.label}
                 </span>
               </div>
               {i < steps.length - 1 && (
-                <span style={{ color: "var(--border-subtle)", fontSize: 14, margin: "0 2px" }}>→</span>
+                <span style={{ color: "#1e293b", fontSize: 12 }}>→</span>
               )}
             </React.Fragment>
           );
@@ -147,13 +144,14 @@ function StepIndicator({
         {/* Tier badge — shown when a tier is known */}
         {lockedTierInfo && (
           <span style={{
-            background: "rgba(88,166,255,0.1)",
-            color: "var(--accent-primary)",
+            background: "rgba(229,184,60,0.08)",
+            color: GOLD,
             padding: "2px 8px",
             borderRadius: 4,
             fontFamily: MONO,
             fontSize: "0.65rem",
             marginLeft: 8,
+            border: "1px solid rgba(229,184,60,0.2)",
           }}>
             {lockedTierInfo.name} · {lockedTierInfo.price}
           </span>
@@ -161,16 +159,14 @@ function StepIndicator({
       </div>
 
       {/* Progress bar */}
-      <div style={{ height: 2, background: "var(--border-subtle)", borderRadius: 2, overflow: "hidden" }}>
-        <div
-          style={{
-            height: "100%",
-            width: `${progress}%`,
-            background: "var(--accent-primary)",
-            borderRadius: 2,
-            transition: "width 300ms ease",
-          }}
-        />
+      <div style={{ height: 2, background: "#1e293b", borderRadius: 2, overflow: "hidden" }}>
+        <div style={{
+          height: "100%",
+          width: `${progress}%`,
+          background: GOLD,
+          borderRadius: 2,
+          transition: "width 300ms ease",
+        }} />
       </div>
     </div>
   );
@@ -737,47 +733,80 @@ function Step3({
   }, [selectedFile, magicFile, selectedTier, profile, assetClass, accessToken, router, user]);
 
   if (processing) {
+    const totalSteps = PROCESSING_STEPS.length;
+    const progressPct = ((processingStepIndex) / (totalSteps - 1)) * 100;
+    const isDone = processingStepIndex >= totalSteps - 1;
+
     return (
       <div>
-        <h2 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.02em" }}>Analyzing…</h2>
-        <p style={{ fontSize: 14, color: "var(--text-secondary)", margin: "0 0 36px" }}>
+        <p style={{
+          fontFamily: MONO,
+          fontSize: 11,
+          color: GOLD,
+          letterSpacing: "0.12em",
+          textTransform: "uppercase",
+          margin: "0 0 8px",
+        }}>
+          X-RAY FORENSIC
+        </p>
+        <h2 style={{
+          fontFamily: SPACE,
+          fontSize: 24,
+          fontWeight: 700,
+          margin: "0 0 6px",
+          color: "#f8fafc",
+        }}>
+          {isDone ? "Diagnosis Complete" : "Analyzing…"}
+        </h2>
+        <p style={{ fontFamily: MONO, fontSize: 12, color: "#94a3b8", margin: "0 0 32px" }}>
           Do not close this tab.
         </p>
-        <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", borderRadius: 10, padding: "40px 36px" }}>
+
+        {/* Gold progress bar */}
+        <div style={{ height: 2, background: "#1e293b", borderRadius: 2, overflow: "hidden", marginBottom: 32 }}>
+          <div style={{
+            height: "100%",
+            width: `${progressPct}%`,
+            background: GOLD,
+            borderRadius: 2,
+            transition: "width 600ms ease",
+          }} />
+        </div>
+
+        <div style={{ background: "#0e1626", border: "1px solid #1e293b", borderRadius: 10, padding: "32px 28px" }}>
           {PROCESSING_STEPS.map((s, i) => {
             const done = i < processingStepIndex;
             const active = i === processingStepIndex;
             return (
-              <div
-                key={i}
-                style={{
-                  display: "flex",
-                  gap: 16,
-                  alignItems: "flex-start",
-                  marginBottom: i < PROCESSING_STEPS.length - 1 ? 20 : 0,
-                }}
-              >
+              <div key={i} style={{
+                display: "flex",
+                gap: 14,
+                alignItems: "flex-start",
+                marginBottom: i < PROCESSING_STEPS.length - 1 ? 18 : 0,
+              }}>
                 <span style={{
                   fontFamily: MONO,
-                  fontSize: 14,
-                  lineHeight: "1.4",
+                  fontSize: 13,
+                  lineHeight: "1.5",
                   flexShrink: 0,
-                  color: done ? "var(--profit)" : active ? "var(--accent-primary)" : "var(--text-muted)",
+                  color: done ? "#10b981" : active ? GOLD : "#1e293b",
+                  transition: "color 0.3s",
                 }}>
                   {done ? "✓" : active ? "›" : "·"}
                 </span>
                 <div>
                   <p style={{
                     fontFamily: MONO,
-                    fontSize: 13,
+                    fontSize: 12,
                     fontWeight: active ? 700 : 400,
-                    color: done ? "var(--profit)" : active ? "var(--text-primary)" : "var(--text-muted)",
+                    color: done ? "#10b981" : active ? "#f8fafc" : "#475569",
                     margin: active ? "0 0 4px" : 0,
+                    transition: "color 0.3s",
                   }}>
                     {s.title}
                   </p>
                   {active && (
-                    <p style={{ fontSize: 11, color: "var(--text-secondary)", margin: 0, lineHeight: 1.5 }}>
+                    <p style={{ fontFamily: MONO, fontSize: 10, color: "#94a3b8", margin: 0, lineHeight: 1.5 }}>
                       {s.sub}
                     </p>
                   )}
@@ -785,6 +814,25 @@ function Step3({
               </div>
             );
           })}
+
+          {isDone && (
+            <div style={{
+              marginTop: 20,
+              paddingTop: 20,
+              borderTop: "1px solid #1e293b",
+              textAlign: "center",
+            }}>
+              <p style={{
+                fontFamily: MONO,
+                fontSize: 11,
+                color: GOLD,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+              }}>
+                [DIAGNOSIS COMPLETE]
+              </p>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -1025,12 +1073,12 @@ function Step3({
           if (f) validateAndSetFile(f);
         }}
         style={{
-          border: `1.5px dashed ${dragOver ? "var(--accent-primary)" : selectedFile ? "var(--profit)" : fileError ? "var(--warning)" : "var(--border-subtle)"}`,
-          borderRadius: 10,
-          padding: "56px 40px",
+          border: `2px dashed ${dragOver ? GOLD : selectedFile ? "#10b981" : fileError ? "#f59e0b" : "rgba(229,184,60,0.4)"}`,
+          borderRadius: 12,
+          padding: "52px 40px",
           textAlign: "center",
           cursor: "pointer",
-          background: dragOver ? "rgba(88,166,255,0.04)" : selectedFile ? "rgba(63,185,80,0.04)" : "transparent",
+          background: dragOver ? "rgba(229,184,60,0.05)" : selectedFile ? "rgba(16,185,129,0.04)" : "#0e1626",
           transition: "border-color 0.15s, background 0.15s",
           marginBottom: 12,
         }}
@@ -1044,28 +1092,33 @@ function Step3({
         />
         {selectedFile ? (
           <>
-            <p style={{ fontSize: 20, margin: "0 0 8px", color: "var(--profit)" }}>✓</p>
-            <p style={{ fontSize: 14, color: "var(--profit)", margin: "0 0 4px", fontWeight: 500 }}>{selectedFile.name}</p>
-            <p style={{ fontSize: 12, color: "var(--text-secondary)", margin: "0 0 10px" }}>
-              {(selectedFile.size / 1024).toFixed(0)} KB — click to change
+            <div style={{ fontSize: 28, marginBottom: 10, color: "#10b981" }}>✓</div>
+            <p style={{ fontFamily: SPACE, fontSize: 16, color: "#10b981", margin: "0 0 4px", fontWeight: 600 }}>{selectedFile.name}</p>
+            <p style={{ fontFamily: MONO, fontSize: 11, color: "#94a3b8", margin: "0 0 10px" }}>
+              {(selectedFile.size / 1024).toFixed(0)} KB · click to change
             </p>
-            <p style={{ fontSize: 13, color: "var(--profit)", margin: 0 }}>
-              Looks good. Hit 'Analyze' when you're ready ↓
+            <p style={{ fontFamily: MONO, fontSize: 12, color: "#10b981", margin: 0 }}>
+              Ready. Hit Analyze ↓
             </p>
           </>
         ) : (
           <>
-            <p style={{ fontFamily: MONO, fontSize: 28, color: "var(--text-muted)", margin: "0 0 12px", lineHeight: 1 }}>↑</p>
-            <p style={{ fontSize: 15, color: "var(--text-secondary)", margin: "0 0 8px", fontWeight: 500 }}>
-              Drop your trade history here
+            {/* Upload icon */}
+            <div style={{ marginBottom: 16 }}>
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke={GOLD} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ margin: "0 auto" }}>
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+            <p style={{ fontFamily: SPACE, fontSize: 22, fontWeight: 700, color: "#f8fafc", margin: "0 0 8px" }}>
+              Drop your MT5 export here
             </p>
-            <p style={{ fontSize: 13, color: "var(--text-muted)", margin: "0 0 16px" }}>
-              {assetClass === "crypto"
-                ? "Exchange trade history CSV · Any size · Fully encrypted"
-                : "MT5 .htm, .xml or .csv · Any size · Fully encrypted"}
+            <p style={{ fontFamily: MONO, fontSize: 11, color: "#94a3b8", margin: "0 0 16px", letterSpacing: "0.06em" }}>
+              {assetClass === "crypto" ? ".csv accepted" : ".htm · .csv · .xml accepted"}
             </p>
-            <span style={{ fontSize: 13, color: "var(--accent-primary)", textDecoration: "underline", cursor: "pointer" }}>
-              Browse files
+            <span style={{ fontFamily: MONO, fontSize: 12, color: GOLD, cursor: "pointer", borderBottom: `1px solid ${GOLD}40` }}>
+              or browse files
             </span>
           </>
         )}
@@ -1100,7 +1153,7 @@ function Step3({
         </p>
       )}
 
-      <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", textAlign: "center", margin: "0 0 20px" }}>
+      <p style={{ fontFamily: MONO, fontSize: "0.65rem", color: "#475569", textAlign: "center", margin: "0 0 20px", letterSpacing: "0.04em" }}>
         🔒 Your file is analyzed and immediately discarded. We never store your raw trade data.
       </p>
 
@@ -1288,7 +1341,7 @@ function StepPayment({
           style={{
             width: "100%",
             padding: 14,
-            background: "#C9A84C",
+            background: GOLD,
             color: "#000000",
             border: "none",
             borderRadius: 6,
@@ -1405,7 +1458,7 @@ function StepPayment({
         style={{
           display: "block",
           padding: "14px",
-          background: "#C9A84C",
+          background: GOLD,
           color: "#000000",
           borderRadius: 6,
           fontSize: "0.9rem",

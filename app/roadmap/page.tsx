@@ -4,25 +4,50 @@ import { useState, useEffect, useRef } from "react";
 import type { CSSProperties, ReactNode, FormEvent } from "react";
 import NavBar from "../components/NavBar";
 
-const MONO = "JetBrains Mono, monospace";
-const GOLD = "#C9A84C";
+const MONO = "'JetBrains Mono', monospace";
+const SPACE = "'Space Grotesk', sans-serif";
+const GOLD = "#e5b83c";
 
 type Status = "COMPLETE" | "ACTIVE" | "NEXT" | "PLANNED" | "VISION";
 
 const DOT_COLOR: Record<Status, string> = {
-  COMPLETE: "#22C55E",
-  ACTIVE: "#3B82F6",
-  NEXT: "#C9A84C",
-  PLANNED: "#444",
-  VISION: "#8B5CF6",
+  COMPLETE: "#10b981",
+  ACTIVE:   "#3b82f6",
+  NEXT:     "#e5b83c",
+  PLANNED:  "#475569",
+  VISION:   "#8b5cf6",
 };
 
-const BADGE_COLOR: Record<Status, string> = {
-  COMPLETE: "#22C55E",
-  ACTIVE: "#3B82F6",
-  NEXT: "#C9A84C",
-  PLANNED: "#666",
-  VISION: "#8B5CF6",
+const BADGE_BG: Record<Status, string> = {
+  COMPLETE: "rgba(16,185,129,0.1)",
+  ACTIVE:   "rgba(59,130,246,0.1)",
+  NEXT:     "rgba(229,184,60,0.1)",
+  PLANNED:  "rgba(71,85,105,0.1)",
+  VISION:   "rgba(139,92,246,0.1)",
+};
+
+const CARD_BG: Record<Status, string> = {
+  COMPLETE: "rgba(14,22,38,0.8)",
+  ACTIVE:   "#10192d",
+  NEXT:     "rgba(16,25,45,0.8)",
+  PLANNED:  "rgba(14,22,38,0.8)",
+  VISION:   "rgba(14,22,38,0.8)",
+};
+
+const CARD_BORDER: Record<Status, string> = {
+  COMPLETE: "#1e293b",
+  ACTIVE:   "#3b82f6",
+  NEXT:     "rgba(229,184,60,0.2)",
+  PLANNED:  "#1e293b",
+  VISION:   "rgba(139,92,246,0.2)",
+};
+
+const DOT_ANIM: Record<Status, string> = {
+  COMPLETE: "",
+  ACTIVE:   "roadmap-dot-active",
+  NEXT:     "",
+  PLANNED:  "",
+  VISION:   "",
 };
 
 interface Phase {
@@ -122,41 +147,40 @@ function FadeIn({
 
 function HeroSection() {
   return (
-    <div
-      style={{
-        maxWidth: 960,
-        margin: "0 auto",
-        padding: "calc(64px + 80px) 40px 80px",
-      }}
-    >
+    <div style={{ maxWidth: 960, margin: "0 auto", padding: "calc(64px + 80px) 40px 64px" }}>
       <FadeIn>
-        <p
-          style={{
-            fontFamily: MONO,
-            fontSize: 11,
-            color: GOLD,
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            margin: "0 0 20px",
-          }}
-        >
-          Roadmap
+        <p style={{
+          fontFamily: MONO,
+          fontSize: 11,
+          color: GOLD,
+          letterSpacing: "0.15em",
+          textTransform: "uppercase",
+          margin: "0 0 16px",
+        }}>
+          PRODUCT EVOLUTION
         </p>
-        <h1
-          style={{
-            fontFamily: "Inter, sans-serif",
-            fontSize: "clamp(2rem, 5vw, 56px)",
-            fontWeight: 800,
-            color: "#E6EDF3",
-            margin: 0,
-            lineHeight: 1.1,
-            letterSpacing: "-0.02em",
-          }}
-        >
-          Where we&apos;ve been.
-          <br />
-          Where we&apos;re going.
+        <h1 style={{
+          fontFamily: SPACE,
+          fontSize: "clamp(2rem, 5vw, 3rem)",
+          fontWeight: 800,
+          color: "#f8fafc",
+          margin: "0 0 16px",
+          lineHeight: 1.1,
+          letterSpacing: "-0.01em",
+          textTransform: "uppercase",
+        }}>
+          Platform Development Roadmap
         </h1>
+        <p style={{
+          fontFamily: "Inter, sans-serif",
+          fontSize: 16,
+          color: "#94a3b8",
+          lineHeight: 1.65,
+          maxWidth: 520,
+          margin: 0,
+        }}>
+          Built in sequence. Each phase funds the next. Where we&apos;ve been — and where we&apos;re going.
+        </p>
       </FadeIn>
     </div>
   );
@@ -166,28 +190,19 @@ function HeroSection() {
 
 function ActDivider({ label }: { label: string }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 20,
-        marginBottom: 64,
-      }}
-    >
-      <div style={{ flex: 1, height: 1, background: "#222" }} />
-      <span
-        style={{
-          fontFamily: MONO,
-          fontSize: 11,
-          color: "#6E7681",
-          letterSpacing: "0.15em",
-          textTransform: "uppercase",
-          whiteSpace: "nowrap",
-        }}
-      >
+    <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 56, marginTop: 24 }}>
+      <div style={{ flex: 1, height: 1, background: "#1e293b" }} />
+      <span style={{
+        fontFamily: MONO,
+        fontSize: 11,
+        color: GOLD,
+        letterSpacing: "0.15em",
+        textTransform: "uppercase",
+        whiteSpace: "nowrap",
+      }}>
         {label}
       </span>
-      <div style={{ flex: 1, height: 1, background: "#222" }} />
+      <div style={{ flex: 1, height: 1, background: "#1e293b" }} />
     </div>
   );
 }
@@ -196,95 +211,89 @@ function ActDivider({ label }: { label: string }) {
 
 function PhaseItem({ phase, isLast }: { phase: Phase; isLast: boolean }) {
   const dotColor = DOT_COLOR[phase.status];
-  const badgeColor = BADGE_COLOR[phase.status];
-  const isActive = phase.status === "ACTIVE";
+  const animClass = DOT_ANIM[phase.status];
 
   return (
     <FadeIn>
-      <div
-        style={{
-          position: "relative",
-          paddingLeft: 52,
-          paddingBottom: isLast ? 0 : 64,
-        }}
-      >
+      <div style={{
+        position: "relative",
+        paddingLeft: 52,
+        paddingBottom: isLast ? 0 : 48,
+      }}>
+        {/* Timeline dot */}
         <div
-          className={isActive ? "roadmap-dot-active" : ""}
+          className={animClass}
           style={{
             position: "absolute",
             left: 14,
-            top: 5,
-            width: 12,
-            height: 12,
+            top: 6,
+            width: 13,
+            height: 13,
             borderRadius: "50%",
             background: dotColor,
             border: `2px solid ${dotColor}`,
             zIndex: 1,
+            boxShadow: phase.status === "ACTIVE" ? `0 0 10px ${dotColor}55` : "none",
           }}
         />
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            marginBottom: 12,
-            flexWrap: "wrap",
-          }}
-        >
-          <span
-            style={{
+        {/* Card */}
+        <div style={{
+          background: CARD_BG[phase.status],
+          border: `1px solid ${CARD_BORDER[phase.status]}`,
+          borderRadius: 10,
+          padding: "20px 24px",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10, flexWrap: "wrap" }}>
+            <span style={{
               fontFamily: MONO,
               fontSize: 11,
               color: dotColor,
               letterSpacing: "0.15em",
               textTransform: "uppercase",
-            }}
-          >
-            {phase.num}
-          </span>
-          <span
-            style={{
+            }}>
+              {phase.num}
+            </span>
+            <span style={{
               fontFamily: MONO,
               fontSize: "0.62rem",
-              color: badgeColor,
-              letterSpacing: "0.12em",
+              color: dotColor,
+              letterSpacing: "0.1em",
               textTransform: "uppercase",
-              padding: "2px 7px",
-              border: `1px solid ${badgeColor}`,
+              padding: "2px 8px",
+              background: BADGE_BG[phase.status],
+              border: `1px solid ${dotColor}40`,
               borderRadius: 3,
-            }}
-          >
-            {phase.status}
-          </span>
-        </div>
+            }}>
+              {phase.status}
+            </span>
+          </div>
 
-        <h3
-          style={{
-            fontFamily: "Inter, sans-serif",
-            fontSize: 24,
+          <h3 style={{
+            fontFamily: SPACE,
+            fontSize: 20,
             fontWeight: 700,
-            color: "#E6EDF3",
-            margin: "0 0 12px",
+            color: "#f8fafc",
+            margin: "0 0 10px",
             lineHeight: 1.25,
-          }}
-        >
-          {phase.title}
-        </h3>
+            textTransform: "uppercase",
+          }}>
+            {phase.title}
+          </h3>
 
-        <p
-          style={{
+          <p style={{
             fontFamily: "Inter, sans-serif",
-            fontSize: 15,
+            fontSize: 14,
             lineHeight: 1.7,
-            color: "#8B949E",
+            color: "#94a3b8",
             margin: 0,
-            maxWidth: 580,
+            maxWidth: 540,
             whiteSpace: "pre-line",
-          }}
-        >
-          {phase.body}
-        </p>
+            fontWeight: 300,
+          }}>
+            {phase.body}
+          </p>
+        </div>
       </div>
     </FadeIn>
   );
@@ -292,30 +301,21 @@ function PhaseItem({ phase, isLast }: { phase: Phase; isLast: boolean }) {
 
 /* ─── Act block ────────────────────────────────────────────────────────────── */
 
-function ActBlock({
-  label,
-  phases,
-  marginTop = 96,
-}: {
-  label: string;
-  phases: Phase[];
-  marginTop?: number;
-}) {
+function ActBlock({ label, phases, marginTop = 96 }: { label: string; phases: Phase[]; marginTop?: number }) {
   return (
     <div style={{ marginTop }}>
       <ActDivider label={label} />
       <div style={{ position: "relative" }}>
-        <div
-          style={{
-            position: "absolute",
-            left: 20,
-            top: 6,
-            bottom: 6,
-            width: 1,
-            background: "#222",
-            zIndex: 0,
-          }}
-        />
+        {/* Vertical timeline line */}
+        <div style={{
+          position: "absolute",
+          left: 20,
+          top: 6,
+          bottom: 6,
+          width: 1,
+          background: "#1e293b",
+          zIndex: 0,
+        }} />
         {phases.map((p, i) => (
           <PhaseItem key={p.num} phase={p} isLast={i === phases.length - 1} />
         ))}
@@ -328,14 +328,8 @@ function ActBlock({
 
 function TimelineSection() {
   return (
-    <section style={{ borderTop: "1px solid #1a1a1a" }}>
-      <div
-        style={{
-          maxWidth: 800,
-          margin: "0 auto",
-          padding: "0 40px 96px",
-        }}
-      >
+    <section style={{ borderTop: "1px solid #1e293b" }}>
+      <div style={{ maxWidth: 760, margin: "0 auto", padding: "56px 40px 96px" }}>
         <ActBlock label="PROOF" phases={ACT1} marginTop={0} />
         <ActBlock label="WHAT'S COMING FOR YOU" phases={ACT2} />
         <ActBlock label="WHAT THIS BECOMES" phases={ACT3} />
@@ -373,68 +367,37 @@ function FundedCtaSection() {
   }
 
   return (
-    <section
-      style={{
-        background: "#0D0D0D",
-        borderTop: "1px solid #222",
-        padding: "80px 24px",
-      }}
-    >
+    <section style={{ background: "#0b1220", borderTop: "1px solid #1e293b", padding: "80px 24px" }}>
       <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
         <FadeIn>
-          <p
-            style={{
-              fontFamily: MONO,
-              fontSize: 11,
-              color: GOLD,
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              margin: "0 0 20px",
-            }}
-          >
+          <p style={{
+            fontFamily: MONO,
+            fontSize: 11,
+            color: GOLD,
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            margin: "0 0 20px",
+          }}>
             On the Horizon
           </p>
-          <h2
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: 64,
-              fontWeight: 800,
-              color: "#E6EDF3",
-              margin: "0 0 28px",
-              lineHeight: 1,
-              letterSpacing: "-0.02em",
-            }}
-          >
+          <h2 style={{
+            fontFamily: SPACE,
+            fontSize: "clamp(2.5rem, 7vw, 4rem)",
+            fontWeight: 800,
+            color: "#f8fafc",
+            margin: "0 0 24px",
+            lineHeight: 1,
+            letterSpacing: "-0.02em",
+          }}>
             Funded.
           </h2>
-          <div
-            style={{
-              maxWidth: 540,
-              margin: "0 auto 40px",
-            }}
-          >
-            <p
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontSize: 18,
-                lineHeight: 1.65,
-                color: "#9CA3AF",
-                margin: "0 0 16px",
-              }}
-            >
+          <div style={{ maxWidth: 540, margin: "0 auto 40px" }}>
+            <p style={{ fontFamily: "Inter, sans-serif", fontSize: 17, lineHeight: 1.65, color: "#94a3b8", margin: "0 0 14px" }}>
               Not by passing a challenge.
               <br />
               By proving you&apos;re already disciplined.
             </p>
-            <p
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontSize: 18,
-                lineHeight: 1.65,
-                color: "#9CA3AF",
-                margin: 0,
-              }}
-            >
+            <p style={{ fontFamily: "Inter, sans-serif", fontSize: 17, lineHeight: 1.65, color: "#94a3b8", margin: 0 }}>
               X-Ray Phase 5 opens a proprietary funded account pathway for
               traders who hold verified discipline certification. Expression of
               interest is open now.
@@ -442,37 +405,19 @@ function FundedCtaSection() {
           </div>
 
           {submitted ? (
-            <div
-              style={{
-                background: "#161B22",
-                border: "1px solid #22C55E",
-                borderRadius: 8,
-                padding: "24px 28px",
-                maxWidth: 480,
-                margin: "0 auto",
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: MONO,
-                  fontSize: "0.72rem",
-                  color: "#22C55E",
-                  letterSpacing: "0.12em",
-                  margin: "0 0 10px",
-                }}
-              >
+            <div style={{
+              background: "#0e1626",
+              border: "1px solid #10b981",
+              borderRadius: 8,
+              padding: "24px 28px",
+              maxWidth: 480,
+              margin: "0 auto",
+            }}>
+              <p style={{ fontFamily: MONO, fontSize: "0.72rem", color: "#10b981", letterSpacing: "0.12em", margin: "0 0 10px" }}>
                 ✓ REGISTERED
               </p>
-              <p
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "0.95rem",
-                  color: "#E6EDF3",
-                  margin: 0,
-                }}
-              >
-                You&apos;re on the list. We&apos;ll be in touch when Phase 5
-                opens.
+              <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.95rem", color: "#f8fafc", margin: 0 }}>
+                You&apos;re on the list. We&apos;ll be in touch when Phase 5 opens.
               </p>
             </div>
           ) : (
@@ -495,6 +440,20 @@ function FundedCtaSection() {
                   placeholder="Your email address"
                   required
                   className="funded-input"
+                  style={{
+                    flex: 1,
+                    minWidth: "220px",
+                    background: "#0e1626",
+                    border: "1px solid #1e293b",
+                    borderRadius: 6,
+                    padding: "12px 16px",
+                    color: "#f8fafc",
+                    fontSize: 15,
+                    fontFamily: "Inter, sans-serif",
+                    outline: "none",
+                  }}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = GOLD }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = "#1e293b" }}
                 />
                 <button
                   type="submit"
@@ -504,26 +463,21 @@ function FundedCtaSection() {
                     border: "none",
                     borderRadius: 6,
                     padding: "12px 24px",
-                    fontFamily: "Inter, sans-serif",
+                    fontFamily: SPACE,
                     fontSize: 15,
                     fontWeight: 700,
                     cursor: "pointer",
                     whiteSpace: "nowrap",
                     flexShrink: 0,
+                    transition: "background 0.15s",
                   }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "#b88d1d" }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = GOLD }}
                 >
                   Register Interest →
                 </button>
               </form>
-              <p
-                style={{
-                  fontFamily: MONO,
-                  fontSize: 11,
-                  color: "#6E7681",
-                  letterSpacing: "0.06em",
-                  margin: 0,
-                }}
-              >
+              <p style={{ fontFamily: MONO, fontSize: 11, color: "#475569", letterSpacing: "0.06em", margin: 0 }}>
                 Limited positions. Certification-gated. No fee to apply.
               </p>
             </>
@@ -538,23 +492,15 @@ function FundedCtaSection() {
 
 function FooterTagline() {
   return (
-    <footer
-      style={{
-        padding: "48px 24px",
-        textAlign: "center",
-        borderTop: "1px solid #1a1a1a",
-      }}
-    >
-      <p
-        style={{
-          fontFamily: "Inter, sans-serif",
-          fontSize: 16,
-          lineHeight: 1.65,
-          color: "#9CA3AF",
-          fontStyle: "italic",
-          margin: 0,
-        }}
-      >
+    <footer style={{ padding: "48px 24px", textAlign: "center", borderTop: "1px solid #1e293b", background: "#050811" }}>
+      <p style={{
+        fontFamily: "Inter, sans-serif",
+        fontSize: 15,
+        lineHeight: 1.65,
+        color: "#475569",
+        fontStyle: "italic",
+        margin: 0,
+      }}>
         We build in sequence.
         <br />
         Each phase funds the next.
@@ -569,13 +515,7 @@ function FooterTagline() {
 
 export default function RoadmapPage() {
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "var(--bg-base)",
-        color: "var(--text-primary)",
-      }}
-    >
+    <main style={{ minHeight: "100vh", background: "#050811", color: "#f8fafc" }}>
       <NavBar />
       <HeroSection />
       <TimelineSection />
