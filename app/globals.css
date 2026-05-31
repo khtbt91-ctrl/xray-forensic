@@ -1,26 +1,86 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "@fontsource/ibm-plex-serif/400-italic.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Design System Variables ─────────────────────────────────────────────── */
 :root {
-  --bg-base: #0D1117;
-  --bg-card: #161B22;
-  --bg-elevated: #21262D;
-  --border-subtle: #30363D;
-  --border-active: #8B949E;
-  --text-primary: #E6EDF3;
-  --text-secondary: #8B949E;
-  --text-muted: #6E7681;
-  --accent-primary: #58A6FF;
-  --accent-hover: #79B8FF;
-  --accent-secondary: #A371F7;
-  --profit: #3FB950;
-  --loss: #F85149;
-  --warning: #D29922;
+  /* New design system */
+  --gold: #e5b83c;
+  --gold-dark: #b88d1d;
+  --bg: #050811;
+  --slate: #0b1220;
+  --card: #0e1626;
+  --card-hover: #141e35;
+  --border: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #475569;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+
+  /* Legacy aliases — kept so un-rebuilt components don't break */
+  --bg-base: #050811;
+  --bg-card: #0e1626;
+  --bg-elevated: #141e35;
+  --border-subtle: #1e293b;
+  --border-active: #94a3b8;
+  --accent-primary: #e5b83c;
+  --accent-hover: #b88d1d;
+  --accent-secondary: #e5b83c;
+  --profit: #10b981;
+  --loss: #ef4444;
 }
 
+/* ─── Circuit grid overlay ─────────────────────────────────────────────────── */
+.circuit-overlay {
+  background-image:
+    linear-gradient(rgba(229, 184, 60, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(229, 184, 60, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ─── Gold glow ────────────────────────────────────────────────────────────── */
+.glow-gold {
+  box-shadow: 0 0 25px rgba(229, 184, 60, 0.15);
+  border-color: rgba(229, 184, 60, 0.45);
+}
+
+.glow-gold-hover:hover {
+  box-shadow: 0 0 35px rgba(229, 184, 60, 0.25);
+  border-color: rgba(229, 184, 60, 0.6);
+}
+
+/* ─── Fade in animation ────────────────────────────────────────────────────── */
+.fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Pulse subtle ─────────────────────────────────────────────────────────── */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+.pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* ─── Custom scrollbar ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #050811; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* ─── Base reset ───────────────────────────────────────────────────────────── */
 * {
   box-sizing: border-box;
 }
@@ -29,14 +89,19 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--bg-base);
+  background-color: var(--bg);
   color: var(--text-primary);
   font-family: Inter, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-align: left;
 }
 
-/* ─── Alignment helpers ──────────────────────────────────────────────────────── */
+/* ─── Font utilities ───────────────────────────────────────────────────────── */
+.font-display {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+}
+
+/* ─── Alignment helpers ────────────────────────────────────────────────────── */
 .section-centered { text-align: center; }
 .eyebrow {
   text-align: center;
@@ -58,14 +123,14 @@ body {
 /* Divider */
 .divider {
   border: none;
-  border-top: 1px solid var(--border-subtle);
+  border-top: 1px solid var(--border);
   margin: 0;
 }
 
 /* Card */
 .card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 8px;
 }
 
@@ -87,56 +152,60 @@ body {
 }
 
 .btn-primary {
-  background: #C9A84C;
+  background: var(--gold);
   color: #000000;
-  border-color: #C9A84C;
+  border-color: var(--gold);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
 }
 
 .btn-primary:hover {
-  background: #d4b06a;
-  border-color: #d4b06a;
+  background: var(--gold-dark);
+  border-color: var(--gold-dark);
 }
 
 .btn-ghost {
-  background: transparent;
+  background: var(--card);
   color: var(--text-secondary);
-  border-color: var(--border-subtle);
+  border-color: var(--border);
 }
 
 .btn-ghost:hover {
-  border-color: var(--border-active);
+  border-color: var(--text-secondary);
   color: var(--text-primary);
 }
 
-/* ─── Nav links ───────────────────────────────────────────────────────────── */
+/* ─── Nav links ────────────────────────────────────────────────────────────── */
 .nav-link {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
+  font-family: "JetBrains Mono", monospace;
   color: var(--text-secondary);
   text-decoration: none;
+  letter-spacing: 0.05em;
   transition: color 0.15s;
 }
 .nav-link:hover {
   color: var(--text-primary);
 }
 
-/* ─── Terminal cursor ─────────────────────────────────────────────────────── */
+/* ─── Terminal cursor ──────────────────────────────────────────────────────── */
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
 
-/* Spinner — used by auth callback / loading states */
+/* Spinner */
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 .terminal-cursor {
   animation: blink 1s step-end infinite;
-  color: var(--profit);
+  color: var(--success);
   font-family: "JetBrains Mono", monospace;
   font-variant-numeric: tabular-nums;
 }
 
-/* ─── Accordion ───────────────────────────────────────────────────────────── */
+/* ─── Accordion ────────────────────────────────────────────────────────────── */
 @keyframes accordionDown {
   from { height: 0; opacity: 0; }
   to { height: var(--radix-accordion-content-height); opacity: 1; }
@@ -172,7 +241,7 @@ body {
   gap: 12px;
 }
 .accordion-trigger:hover {
-  color: var(--accent-primary);
+  color: var(--gold);
 }
 
 .accordion-chevron {
@@ -186,7 +255,7 @@ body {
   transform: rotate(45deg);
 }
 
-/* ─── Responsive grids ────────────────────────────────────────────────────── */
+/* ─── Responsive grids ─────────────────────────────────────────────────────── */
 .ba-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -231,22 +300,21 @@ body {
   }
 }
 
-/* ─── Progress bar ────────────────────────────────────────────────────────── */
-/* Progress bar */
+/* ─── Progress bar ─────────────────────────────────────────────────────────── */
 .progress-bar {
   height: 2px;
-  background: var(--border-subtle);
+  background: var(--border);
   border-radius: 1px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: var(--accent-primary);
+  background: var(--gold);
   transition: width 0.4s ease;
 }
 
-/* ─── Skeleton loading ────────────────────────────────────────────────────── */
+/* ─── Skeleton loading ─────────────────────────────────────────────────────── */
 @keyframes pulse {
   0%, 100% { opacity: 0.35; }
   50% { opacity: 0.7; }
@@ -255,7 +323,7 @@ body {
   animation: pulse 1.5s ease-in-out infinite;
 }
 
-/* ─── Trust bar ───────────────────────────────────────────────────────────── */
+/* ─── Trust bar ────────────────────────────────────────────────────────────── */
 .trust-bar-row {
   display: flex;
   justify-content: center;
@@ -275,7 +343,7 @@ body {
   }
 }
 
-/* ─── Framework principles ──────────────────────────────────────────────── */
+/* ─── Framework principles ─────────────────────────────────────────────────── */
 .framework-principles {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -287,7 +355,7 @@ body {
   }
 }
 
-/* ─── Metric bar ────────────────────────────────────────────────────────── */
+/* ─── Metric bar ───────────────────────────────────────────────────────────── */
 .metric-bar {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -300,7 +368,7 @@ body {
   }
 }
 
-/* ─── Who cards ─────────────────────────────────────────────────────────── */
+/* ─── Who cards ────────────────────────────────────────────────────────────── */
 .who-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -312,7 +380,7 @@ body {
   }
 }
 
-/* ─── Protocols grid ─────────────────────────────────────────────────────── */
+/* ─── Protocols grid ───────────────────────────────────────────────────────── */
 .protocols-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -325,7 +393,7 @@ body {
   }
 }
 
-/* ─── One-time products ─────────────────────────────────────────────────── */
+/* ─── One-time products ────────────────────────────────────────────────────── */
 .one-time-products {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -338,9 +406,10 @@ body {
   }
 }
 
-/* ─── Nav responsive ─────────────────────────────────────────────────────── */
+/* ─── Nav responsive ───────────────────────────────────────────────────────── */
 .nav-logo-text {
   white-space: nowrap;
+  font-family: 'Space Grotesk', sans-serif;
 }
 
 .nav-hamburger {
@@ -371,7 +440,7 @@ body {
     padding: 0 20px !important;
   }
   .nav-logo-text {
-    font-size: 1.25rem !important;
+    font-size: 1.1rem !important;
   }
   .nav-descriptor {
     display: none !important;
@@ -390,11 +459,11 @@ body {
   }
 }
 
-/* ─── Mobile menu overlay ─────────────────────────────────────────────────── */
+/* ─── Mobile menu overlay ──────────────────────────────────────────────────── */
 .mobile-menu {
   position: fixed;
   inset: 0;
-  background: rgba(13, 17, 23, 0.98);
+  background: rgba(5, 8, 17, 0.98);
   z-index: 100;
   display: flex;
   flex-direction: column;
@@ -432,17 +501,18 @@ body {
   color: var(--text-primary);
   text-decoration: none;
   font-weight: 500;
+  font-family: 'Space Grotesk', sans-serif;
   transition: color 0.15s;
 }
 
 .mobile-nav-link:hover {
-  color: var(--accent-primary);
+  color: var(--gold);
 }
 
 .mobile-menu-divider {
   width: 100%;
   height: 1px;
-  background: var(--border-subtle);
+  background: var(--border);
   margin: 4px 0;
 }
 
@@ -454,7 +524,7 @@ body {
   justify-content: center !important;
 }
 
-/* ─── Hero mobile ─────────────────────────────────────────────────────────── */
+/* ─── Hero mobile ──────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .hero-section {
     padding: calc(56px + 48px) 20px 80px !important;
@@ -475,7 +545,7 @@ body {
   }
 }
 
-/* ─── Scroll fade-in ─────────────────────────────────────────────────────── */
+/* ─── Scroll fade-in ───────────────────────────────────────────────────────── */
 .fade-in-up {
   opacity: 0;
   transform: translateY(20px);
@@ -486,7 +556,7 @@ body {
   transform: translateY(0);
 }
 
-/* ─── Insight popup animation ─────────────────────────────────────────────── */
+/* ─── Insight popup animation ──────────────────────────────────────────────── */
 @keyframes insightFadeUp {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -495,8 +565,7 @@ body {
   animation: insightFadeUp 0.22s ease-out;
 }
 
-/* ─── About page ─────────────────────────────────────────────────────────── */
-
+/* ─── About page ───────────────────────────────────────────────────────────── */
 .about-fade {
   opacity: 0;
   transform: translateY(20px);
@@ -566,25 +635,23 @@ body {
   }
 }
 
-/* Timeline active dot pulse */
+/* ─── Timeline dots ────────────────────────────────────────────────────────── */
 @keyframes pulsePrimary {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0.5); }
-  50%       { box-shadow: 0 0 0 8px rgba(88, 166, 255, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229, 184, 60, 0.5); }
+  50%       { box-shadow: 0 0 0 8px rgba(229, 184, 60, 0); }
 }
 .timeline-dot-active {
   animation: pulsePrimary 2s ease-in-out infinite;
 }
 
-/* Teaser card status dot pulse */
 @keyframes pulseWarning {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(210, 153, 34, 0.5); }
-  50%       { box-shadow: 0 0 0 8px rgba(210, 153, 34, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229, 184, 60, 0.5); }
+  50%       { box-shadow: 0 0 0 8px rgba(229, 184, 60, 0); }
 }
 .teaser-dot {
   animation: pulseWarning 2s ease-in-out infinite;
 }
 
-/* Roadmap active-phase dot pulse (blue #3B82F6) */
 @keyframes pulseBlue {
   0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5); }
   50%       { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
@@ -593,33 +660,32 @@ body {
   animation: pulseBlue 2s ease-in-out infinite;
 }
 
-/* Funded account CTA email input */
+/* ─── Form inputs ──────────────────────────────────────────────────────────── */
 .funded-input {
   flex: 1;
   min-width: 220px;
-  background: #161B22;
-  border: 1px solid #30363D;
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 12px 16px;
-  color: #E6EDF3;
+  color: var(--text-primary);
   font-size: 15px;
   font-family: Inter, sans-serif;
   outline: none;
   transition: border-color 0.15s;
 }
 .funded-input:focus {
-  border-color: #C9A84C;
+  border-color: var(--gold);
 }
 .funded-input::placeholder {
-  color: #6E7681;
+  color: var(--text-muted);
 }
 
-/* Waitlist form input */
 .waitlist-input {
   flex: 1;
   min-width: 220px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 10px 14px;
   font-family: Inter, sans-serif;
@@ -629,18 +695,17 @@ body {
   transition: border-color 0.15s;
 }
 .waitlist-input:focus {
-  border-color: #C9A84C;
+  border-color: var(--gold);
 }
 .waitlist-input::placeholder {
   color: var(--text-muted);
 }
 
-/* ─── T1: Line height ─────────────────────────────────────────────────────── */
+/* ─── Typography ───────────────────────────────────────────────────────────── */
 p, li, td, th, label, span, div {
   line-height: 1.65;
 }
 
-/* ─── T1: Prose max-width (exceptions: nav, .card, tables) ───────────────── */
 .prose, p, li {
   max-width: 65ch;
 }
@@ -651,13 +716,13 @@ td, th {
   max-width: none;
 }
 
-/* ─── T1: Font weight triad ──────────────────────────────────────────────── */
-h2 { font-weight: 600; }
-h3 { font-weight: 500; }
+h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 800; }
+h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+h3 { font-weight: 600; }
 h4, h5 { font-weight: 500; }
 body, p { font-weight: 400; }
 
-/* ─── T1: Tabular nums on currency elements ──────────────────────────────── */
+/* ─── Currency / tabular nums ──────────────────────────────────────────────── */
 .currency, [data-currency],
 .stat-number, .leak-number,
 .price, .pnl {
@@ -665,7 +730,7 @@ body, p { font-weight: 400; }
   font-feature-settings: "tnum";
 }
 
-/* ─── T2: Button states ──────────────────────────────────────────────────── */
+/* ─── Button states ────────────────────────────────────────────────────────── */
 button, [role="button"] {
   transition: transform 100ms ease, opacity 100ms ease;
 }
@@ -679,10 +744,9 @@ button:disabled {
   transform: none;
 }
 
-/* Center all section labels globally */
+/* ─── Section label centering ──────────────────────────────────────────────── */
 [class*="eyebrow"],
 [class*="section-label"],
-[class*="label"],
 [class*="verdict"],
 [class*="prescription"],
 [class*="tag-line"] {

@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
-const GOLD = '#C9A84C'
-const MONO = 'JetBrains Mono, monospace'
+const GOLD = '#e5b83c'
+const MONO = "'JetBrains Mono', monospace"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -61,15 +61,16 @@ export default function LoginPage() {
 
   const inputStyle: React.CSSProperties = {
     width: '100%',
-    background: '#111111',
-    border: '1px solid #333333',
+    background: '#0a0f1e',
+    border: '1px solid #1e293b',
     borderRadius: 6,
     padding: '14px 16px',
-    color: '#FFFFFF',
-    fontSize: 15,
+    color: '#f8fafc',
+    fontSize: 14,
     outline: 'none',
     boxSizing: 'border-box',
     fontFamily: 'Inter, sans-serif',
+    transition: 'border-color 0.15s',
   }
 
   const labelStyle: React.CSSProperties = {
@@ -77,23 +78,26 @@ export default function LoginPage() {
     fontSize: 11,
     letterSpacing: '0.1em',
     textTransform: 'uppercase' as const,
-    color: '#9CA3AF',
+    color: '#94a3b8',
     marginBottom: 6,
     fontFamily: MONO,
   }
 
   return (
-    <div style={{
-      background: '#0A0A0A',
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '24px',
-    }}>
+    <div
+      className="circuit-overlay"
+      style={{
+        background: '#050811',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '24px',
+      }}
+    >
       <div style={{ maxWidth: 440, width: '100%' }}>
 
-        {/* Brand */}
+        {/* Brand label */}
         <p style={{
           fontFamily: MONO,
           fontSize: 11,
@@ -101,43 +105,47 @@ export default function LoginPage() {
           letterSpacing: '0.15em',
           textTransform: 'uppercase',
           textAlign: 'center',
-          margin: '0 0 32px',
+          margin: '0 0 24px',
         }}>
           X-RAY FORENSIC
         </p>
 
         {/* Card */}
         <div style={{
-          background: '#0D1117',
-          border: '1px solid #21262D',
+          background: '#0e1626',
+          border: '1px solid #1e293b',
           borderRadius: 12,
           padding: 48,
+          boxShadow: '0 0 40px rgba(229,184,60,0.05)',
         }}>
 
           {/* Title */}
           <h1 style={{
+            fontFamily: "'Space Grotesk', sans-serif",
             fontSize: 40,
             fontWeight: 800,
-            color: '#FFFFFF',
+            color: '#f8fafc',
             textAlign: 'center',
             margin: '0 0 8px',
-            letterSpacing: '-0.03em',
+            letterSpacing: '-0.02em',
             lineHeight: 1.1,
           }}>
             {mode === 'signin' ? 'Sign In' : 'Create Account'}
           </h1>
 
           {/* Subtitle */}
-          <p style={{
-            fontSize: 14,
-            color: '#9CA3AF',
-            textAlign: 'center',
-            margin: mode === 'signin' ? '0 0 32px' : '0 0 28px',
-            lineHeight: 1.5,
-            minHeight: 20,
-          }}>
-            {mode === 'signin' ? 'Forensic intelligence for serious traders.' : ''}
-          </p>
+          {mode === 'signin' && (
+            <p style={{
+              fontSize: 14,
+              color: '#94a3b8',
+              textAlign: 'center',
+              margin: '0 0 32px',
+              lineHeight: 1.5,
+            }}>
+              Forensic intelligence for serious traders.
+            </p>
+          )}
+          {mode === 'signup' && <div style={{ marginBottom: 28 }} />}
 
           {/* Email */}
           <div style={{ marginBottom: 12 }}>
@@ -146,12 +154,12 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email address"
+              placeholder="you@example.com"
               autoFocus
               onKeyDown={(e) => { if (e.key === 'Enter' && mode === 'signin') handleSignIn() }}
               style={inputStyle}
               onFocus={(e) => { e.currentTarget.style.borderColor = GOLD }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = '#333333' }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = '#1e293b' }}
             />
           </div>
 
@@ -162,29 +170,32 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
+              placeholder="••••••••"
               onKeyDown={(e) => { if (e.key === 'Enter' && mode === 'signin') handleSignIn() }}
               style={inputStyle}
               onFocus={(e) => { e.currentTarget.style.borderColor = GOLD }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = '#333333' }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = '#1e293b' }}
             />
           </div>
 
           {/* Forgot password — sign in only */}
           {mode === 'signin' && (
-            <div style={{ textAlign: 'right', margin: '6px 0 16px' }}>
+            <div style={{ textAlign: 'right', margin: '8px 0 20px' }}>
               <button
                 onClick={handleForgotPassword}
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: '#9CA3AF',
+                  color: '#94a3b8',
                   fontSize: 11,
                   letterSpacing: '0.05em',
                   cursor: 'pointer',
                   padding: 0,
                   fontFamily: MONO,
+                  transition: 'color 0.15s',
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = '#f8fafc' }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = '#94a3b8' }}
               >
                 Forgot password?
               </button>
@@ -199,34 +210,36 @@ export default function LoginPage() {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm password"
+                placeholder="••••••••"
                 onKeyDown={(e) => { if (e.key === 'Enter') handleSignUp() }}
                 style={inputStyle}
                 onFocus={(e) => { e.currentTarget.style.borderColor = GOLD }}
-                onBlur={(e) => { e.currentTarget.style.borderColor = '#333333' }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = '#1e293b' }}
               />
             </div>
           )}
 
-          {/* Primary button */}
+          {/* Submit button */}
           <button
             onClick={mode === 'signin' ? handleSignIn : handleSignUp}
             disabled={loading}
             style={{
               width: '100%',
               padding: '16px',
-              background: loading ? 'rgba(201,168,76,0.55)' : GOLD,
+              background: loading ? 'rgba(229,184,60,0.5)' : GOLD,
               color: '#000000',
               border: 'none',
               borderRadius: 6,
-              fontSize: 14,
+              fontSize: 15,
               fontWeight: 700,
-              letterSpacing: '0.05em',
+              letterSpacing: '0.02em',
               cursor: loading ? 'not-allowed' : 'pointer',
               marginTop: 8,
-              fontFamily: MONO,
+              fontFamily: "'Space Grotesk', sans-serif",
               transition: 'background 0.15s',
             }}
+            onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = '#b88d1d' }}
+            onMouseLeave={(e) => { if (!loading) e.currentTarget.style.background = GOLD }}
           >
             {loading
               ? (mode === 'signin' ? 'Signing in...' : 'Creating account...')
@@ -236,24 +249,25 @@ export default function LoginPage() {
 
           {/* Feedback */}
           {error && (
-            <p style={{ color: '#EF4444', fontSize: 13, marginTop: 8, textAlign: 'center', lineHeight: 1.5 }}>
+            <p style={{ color: '#ef4444', fontSize: 13, marginTop: 10, textAlign: 'center', lineHeight: 1.5 }}>
               {error}
             </p>
           )}
           {success && (
-            <p style={{ color: '#22C55E', fontSize: 13, marginTop: 8, textAlign: 'center', lineHeight: 1.5 }}>
+            <p style={{ color: '#10b981', fontSize: 13, marginTop: 10, textAlign: 'center', lineHeight: 1.5 }}>
               {success}
             </p>
           )}
         </div>
 
         {/* Mode toggle */}
-        <p style={{ textAlign: 'center', color: '#9CA3AF', fontSize: 13, marginTop: 24 }}>
+        <p style={{ textAlign: 'center', color: '#94a3b8', fontSize: 13, marginTop: 24 }}>
           {mode === 'signin' ? (
             <>Don&apos;t have an account?{' '}
               <button onClick={() => switchMode('signup')} style={{
                 background: 'none', border: 'none', color: GOLD,
                 fontSize: 13, cursor: 'pointer', padding: 0,
+                fontFamily: 'inherit',
               }}>
                 Create one
               </button>
@@ -263,6 +277,7 @@ export default function LoginPage() {
               <button onClick={() => switchMode('signin')} style={{
                 background: 'none', border: 'none', color: GOLD,
                 fontSize: 13, cursor: 'pointer', padding: 0,
+                fontFamily: 'inherit',
               }}>
                 Sign in
               </button>

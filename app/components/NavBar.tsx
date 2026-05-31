@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { MONO } from "./shared";
 import { useAuth } from "@/lib/auth-context";
 
 export default function NavBar() {
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -34,7 +33,6 @@ export default function NavBar() {
         window.scrollTo({ top, behavior: "smooth" });
       }
     }
-    // else: href="/#sectionId" navigates normally
   };
 
   return (
@@ -52,15 +50,12 @@ export default function NavBar() {
           justifyContent: "center",
           padding: "0 24px",
           transition: "background 0.2s, border-color 0.2s",
-          background: scrolled ? "rgba(13,17,23,0.88)" : "transparent",
-          backdropFilter: scrolled ? "blur(12px)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
-          borderBottom: scrolled
-            ? "1px solid var(--border-subtle)"
-            : "1px solid transparent",
+          background: scrolled ? "rgba(5,8,17,0.95)" : "rgba(5,8,17,0.7)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          borderBottom: "1px solid var(--border)",
         }}
       >
-        {/* Inner width-constrained wrapper */}
         <div
           style={{
             position: "relative",
@@ -73,45 +68,49 @@ export default function NavBar() {
             padding: "0 32px",
           }}
         >
-          {/* LEFT — Stacked logo */}
+          {/* LEFT — Logo */}
           <Link
             href="/"
             style={{
               textDecoration: "none",
               display: "flex",
-              flexDirection: "column",
-              gap: 3,
-              lineHeight: 1,
+              alignItems: "center",
+              gap: 8,
               flexShrink: 0,
             }}
           >
+            {/* Gold X icon */}
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 28,
+                height: 28,
+                background: "var(--gold)",
+                borderRadius: 4,
+                flexShrink: 0,
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M2 2L14 14M14 2L2 14" stroke="#000" strokeWidth="2.5" strokeLinecap="round"/>
+              </svg>
+            </span>
             <span
               className="nav-logo-text"
               style={{
-                fontFamily: MONO,
-                fontSize: "1.5rem",
-                fontWeight: 800,
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontSize: "1.1rem",
+                fontWeight: 700,
                 color: "var(--text-primary)",
-                letterSpacing: "0.06em",
+                letterSpacing: "0.04em",
               }}
             >
-              X-RAY
-            </span>
-            <span
-              className="nav-descriptor"
-              style={{
-                fontFamily: MONO,
-                fontSize: "0.6rem",
-                color: "var(--text-muted)",
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-              }}
-            >
-              FORENSIC TRADE DIAGNOSTIC
+              X-RAY FORENSIC
             </span>
           </Link>
 
-          {/* CENTER — Absolutely centered nav links */}
+          {/* CENTER — Nav links */}
           <div
             className="nav-center"
             style={{
@@ -119,7 +118,7 @@ export default function NavBar() {
               left: "50%",
               transform: "translateX(-50%)",
               display: "flex",
-              gap: 32,
+              gap: 28,
               alignItems: "center",
             }}
           >
@@ -128,17 +127,17 @@ export default function NavBar() {
               className="nav-link"
               onClick={(e) => handleNavClick(e, "how-it-works")}
             >
-              How It Works
+              HOW IT WORKS
             </Link>
             <Link
               href="/#pricing"
               className="nav-link"
               onClick={(e) => handleNavClick(e, "pricing")}
             >
-              Pricing
+              PRICING
             </Link>
             <Link href="/tools" className="nav-link">
-              Tools
+              TOOLS
             </Link>
             <Link
               href="/#faq"
@@ -148,10 +147,10 @@ export default function NavBar() {
               FAQ
             </Link>
             <Link href="/about" className="nav-link">
-              About
+              ABOUT
             </Link>
             <a href="mailto:support@xrayforensic.com" className="nav-link">
-              Contact
+              CONTACT
             </a>
           </div>
 
@@ -159,28 +158,68 @@ export default function NavBar() {
           <div
             style={{
               display: "flex",
-              gap: 16,
+              gap: 12,
               alignItems: "center",
               marginLeft: "auto",
             }}
           >
-            {!loading &&
-              (user ? (
-                <Link href="/dashboard" className="nav-link nav-sample-link" style={{ textAlign: "center", display: "block", marginLeft: "auto", marginRight: "auto" }}>
-                  Dashboard
-                </Link>
-              ) : (
-                <Link href="/login" className="nav-link nav-sample-link" style={{ textAlign: "center", display: "block", marginLeft: "auto", marginRight: "auto" }}>
-                  Sign In
-                </Link>
-              ))}
+            {!loading && user ? (
+              <Link
+                href="/dashboard"
+                className="nav-sample-link"
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: "0.7rem",
+                  color: "var(--text-secondary)",
+                  textDecoration: "none",
+                  letterSpacing: "0.05em",
+                  background: "var(--card)",
+                  border: "1px solid var(--border)",
+                  borderRadius: 4,
+                  padding: "4px 10px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                }}
+              >
+                <span style={{ color: "var(--gold)" }}>●</span>
+                {profile?.tier_id
+                  ? profile.tier_id.toUpperCase()
+                  : "OPERATOR"}{" "}
+                · {user.email?.split("@")[0]}
+              </Link>
+            ) : !loading ? (
+              <Link
+                href="/login"
+                className="nav-link nav-sample-link"
+                style={{ letterSpacing: "0.05em" }}
+              >
+                SIGN IN
+              </Link>
+            ) : null}
+
             <Link
               href="/new"
-              className="btn btn-primary nav-cta-desktop"
-              style={{ fontSize: "0.85rem", padding: "8px 20px", borderRadius: 6 }}
+              className="nav-cta-desktop"
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 700,
+                fontSize: "0.8rem",
+                background: "var(--gold)",
+                color: "#000",
+                border: "none",
+                borderRadius: 6,
+                padding: "8px 18px",
+                textDecoration: "none",
+                display: "inline-flex",
+                alignItems: "center",
+                letterSpacing: "0.02em",
+                transition: "background 0.15s",
+              }}
             >
               Get Diagnosed
             </Link>
+
             <button
               className="nav-hamburger"
               onClick={() => setMenuOpen(true)}
@@ -206,20 +245,14 @@ export default function NavBar() {
           <Link
             href="/#how-it-works"
             className="mobile-nav-link"
-            onClick={(e) => {
-              handleNavClick(e, "how-it-works");
-              close();
-            }}
+            onClick={(e) => { handleNavClick(e, "how-it-works"); close(); }}
           >
             How It Works
           </Link>
           <Link
             href="/#pricing"
             className="mobile-nav-link"
-            onClick={(e) => {
-              handleNavClick(e, "pricing");
-              close();
-            }}
+            onClick={(e) => { handleNavClick(e, "pricing"); close(); }}
           >
             Pricing
           </Link>
@@ -229,39 +262,27 @@ export default function NavBar() {
           <Link
             href="/#faq"
             className="mobile-nav-link"
-            onClick={(e) => {
-              handleNavClick(e, "faq");
-              close();
-            }}
+            onClick={(e) => { handleNavClick(e, "faq"); close(); }}
           >
             FAQ
           </Link>
           <Link href="/about" className="mobile-nav-link" onClick={close}>
             About
           </Link>
-          <a
-            href="mailto:support@xrayforensic.com"
-            className="mobile-nav-link"
-            onClick={close}
-          >
+          <a href="mailto:support@xrayforensic.com" className="mobile-nav-link" onClick={close}>
             Contact
           </a>
-          {!loading &&
-            (user ? (
-              <Link href="/dashboard" className="mobile-nav-link" onClick={close} style={{ textAlign: "center", display: "block", marginLeft: "auto", marginRight: "auto" }}>
-                Dashboard
-              </Link>
-            ) : (
-              <Link href="/login" className="mobile-nav-link" onClick={close} style={{ textAlign: "center", display: "block", marginLeft: "auto", marginRight: "auto" }}>
-                Sign In
-              </Link>
-            ))}
+          {!loading && (user ? (
+            <Link href="/dashboard" className="mobile-nav-link" onClick={close}>
+              Dashboard
+            </Link>
+          ) : (
+            <Link href="/login" className="mobile-nav-link" onClick={close}>
+              Sign In
+            </Link>
+          ))}
           <div className="mobile-menu-divider" />
-          <Link
-            href="/new"
-            className="btn btn-primary mobile-menu-cta"
-            onClick={close}
-          >
+          <Link href="/new" className="btn btn-primary mobile-menu-cta" onClick={close}>
             Get Diagnosed
           </Link>
         </div>
