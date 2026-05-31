@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 
 const GOLD = "#C9A84C";
 const MONO = "JetBrains Mono, monospace";
@@ -73,29 +74,17 @@ const TIERS = [
 ];
 
 export default function PricingPage() {
-  const [loadingTier, setLoadingTier] = useState<string | null>(null);
+  const router = useRouter();
+  const { user, profile } = useAuth();
 
-  // TODO: Update PRICES in /app/api/stripe/checkout/route.ts — currently only
-  // "basic" ($49) and "pro" ($99) are mapped. Add "forensic", "operator",
-  // "elite" with the correct cent amounts before these CTAs go live. Until
-  // then, checkout calls return 400 and fall back to the support email.
-  const handleUpgrade = async (tierId: string, tierName: string) => {
-    setLoadingTier(tierId);
-    try {
-      const res = await fetch("/api/stripe/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tier: tierId, client_name: "" }),
-      });
-      if (!res.ok) throw new Error("invalid_tier");
-      const { url } = await res.json();
-      if (url) window.location.href = url;
-    } catch {
-      window.location.href = `mailto:support@xrayforensic.com?subject=${encodeURIComponent(`Upgrade to ${tierName}`)}`;
-    } finally {
-      setLoadingTier(null);
-    }
-  };
+  // Route the free CTA based on auth state and remaining quota.
+  // analyses_limit === -1 means unlimited (never treat as reached).
+  const limitReached =
+    !!profile &&
+    profile.analyses_limit !== -1 &&
+    profile.analyses_used >= profile.analyses_limit;
+  const freeCTAHref = !user ? "/login" : limitReached ? "/dashboard" : "/new";
+  const freeCTALabel = limitReached ? "View Dashboard" : "Get Started";
 
   return (
     <main style={{ minHeight: "100vh", background: "#0A0A0A", color: "var(--text-primary)" }}>
@@ -313,7 +302,7 @@ export default function PricingPage() {
               {/* CTA */}
               {tier.free ? (
                 <Link
-                  href="/new"
+                  href={freeCTAHref}
                   style={{
                     display: "block",
                     textAlign: "center",
@@ -327,12 +316,11 @@ export default function PricingPage() {
                     textDecoration: "none",
                   }}
                 >
-                  {tier.cta}
+                  {freeCTALabel}
                 </Link>
               ) : (
                 <button
-                  onClick={() => handleUpgrade(tier.id, tier.name)}
-                  disabled={loadingTier === tier.id}
+                  onClick={() => router.push(`/payment?tier=${tier.id}&amount=${tier.price ?? ""}`)}
                   style={{
                     padding: "12px 20px",
                     background: tier.popular ? GOLD : "transparent",
@@ -342,13 +330,12 @@ export default function PricingPage() {
                     fontFamily: MONO,
                     fontSize: 13,
                     fontWeight: tier.popular ? 700 : 500,
-                    cursor: loadingTier === tier.id ? "not-allowed" : "pointer",
-                    opacity: loadingTier === tier.id ? 0.6 : 1,
+                    cursor: "pointer",
                     width: "100%",
                     transition: "all 0.15s",
                   }}
                 >
-                  {loadingTier === tier.id ? "Redirecting…" : tier.cta}
+                  {tier.cta}
                 </button>
               )}
             </div>
