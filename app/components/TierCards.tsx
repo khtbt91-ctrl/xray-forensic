@@ -6,80 +6,70 @@ import { MONO, FadeInUp } from "./shared";
 
 type Feature = { text: string; included: boolean };
 
-const TIERS: {
+type Tier = {
   name: string;
   price: string;
   tagline: string;
+  hook: string; // the subscription value sentence
   features: Feature[];
   cta: string;
   href: string;
   highlight: boolean;
   popular: boolean;
   accent: string;
-}[] = [
+};
+
+const TIERS: Tier[] = [
   {
     name: "SIGNAL",
     price: "Free",
-    tagline: "One diagnosis. Real evidence.",
+    tagline: "See your leaks once.",
+    hook: "Start here. No credit card.",
     features: [
-      { text: "1 analysis per month", included: true },
-      { text: "Basic 7-dimension report", included: true },
+      { text: "1 full analysis per month", included: true },
+      { text: "7-dimension score breakdown", included: true },
+      { text: "Top 3 behavioral flags", included: true },
       { text: "Prescriptions", included: false },
-      { text: "Compliance tracking", included: false },
+      { text: "Progress vs last upload", included: false },
     ],
-    cta: "Get Started",
-    href: "/pricing",
+    cta: "Get Diagnosed",
+    href: "/new",
     highlight: false,
     popular: false,
     accent: "var(--text-secondary)",
   },
   {
-    name: "FORENSIC",
+    name: "AUDIT",
     price: "$29/mo",
-    tagline: "Full forensic read. Your first real mirror.",
+    tagline: "Track whether you're actually improving.",
+    hook: "Every upload compares to your last. Your scores move. The leaks shrink — or they don't. The data decides.",
     features: [
-      { text: "4 analyses per month", included: true },
-      { text: "Full AI diagnostic report", included: true },
-      { text: "5 ranked prescriptions", included: true },
-      { text: "What-If engine (2/mo)", included: true },
-      { text: "Compliance tracking", included: true },
+      { text: "3 analyses per month", included: true },
+      { text: "Full report — all flags, all dimensions", included: true },
+      { text: "5 ranked prescriptions with dollar targets", included: true },
+      { text: "Score delta vs previous upload", included: true },
+      { text: "Progress history", included: true },
     ],
-    cta: "Start with Forensic",
-    href: "/pricing",
-    highlight: false,
-    popular: false,
-    accent: "var(--accent-primary)",
-  },
-  {
-    name: "OPERATOR",
-    price: "$79/mo",
-    tagline: "Institutional-grade behavioral intelligence.",
-    features: [
-      { text: "Unlimited analyses", included: true },
-      { text: "Everything in Forensic", included: true },
-      { text: "Trader DNA profile", included: true },
-      { text: "Anonymous benchmarking", included: true },
-      { text: "Broker connection (Phase 2)", included: true },
-    ],
-    cta: "Go Operator",
-    href: "/pricing",
+    cta: "Start Audit",
+    href: "/new?tier=audit",
     highlight: true,
     popular: true,
-    accent: "var(--accent-primary)",
+    accent: "#C9A84C",
   },
   {
-    name: "ELITE",
-    price: "$149/mo",
-    tagline: "The risk desk you never had.",
+    name: "FORENSIC",
+    price: "$79/mo",
+    tagline: "Institutional-grade behavioral intelligence.",
+    hook: "10 analyses per month. Weekly uploads show weekly change. Monthly uploads build the arc.",
     features: [
-      { text: "Everything in Operator", included: true },
-      { text: "Real-time behavioral alerts", included: true },
-      { text: "Discipline certification", included: true },
-      { text: "5 broker connections", included: true },
-      { text: "Priority diagnosis", included: true },
+      { text: "10 analyses per month", included: true },
+      { text: "Everything in Audit", included: true },
+      { text: "AI narrative diagnosis", included: true },
+      { text: "Trader DNA profile — coming Phase 2", included: true },
+      { text: "Anonymous benchmarking — coming Phase 2", included: true },
     ],
-    cta: "Go Elite",
-    href: "/pricing",
+    cta: "Go Forensic",
+    href: "/new?tier=forensic",
     highlight: false,
     popular: false,
     accent: "var(--accent-primary)",
@@ -95,19 +85,15 @@ export default function TierCards() {
         <p
           style={{
             fontFamily: MONO,
-            fontSize: "0.85rem",
-            letterSpacing: "0.2em",
+            fontSize: 11,
+            letterSpacing: "0.15em",
             textTransform: "uppercase",
-            color: "var(--text-muted)",
+            color: "#C9A84C",
             textAlign: "center",
-            marginBottom: 12,
-            width: "100%",
-            display: "block",
-            marginLeft: "auto",
-            marginRight: "auto",
+            marginBottom: 16,
           }}
         >
-          CLEARANCE LEVELS
+          Diagnostic Depth
         </p>
         <h2
           style={{
@@ -115,11 +101,22 @@ export default function TierCards() {
             fontWeight: 700,
             textAlign: "center",
             letterSpacing: "-0.02em",
-            margin: "0 0 48px",
+            margin: "0 0 12px",
           }}
         >
-          Choose your diagnostic depth.
+          One report changes the picture.
+          <br />
+          Every report changes the trader.
         </h2>
+        <p style={{ fontSize: 15, color: "var(--text-muted)", margin: "0 0 8px" }}>
+          Each upload is compared to your last. Your scores move. Your leaks shrink — or they don&apos;t. The data decides.
+        </p>
+        <Link
+          href="/sample"
+          style={{ fontFamily: MONO, fontSize: 11, color: "var(--accent-primary)", letterSpacing: "0.08em", textDecoration: "none", display: "inline-block", marginBottom: 40 }}
+        >
+          View sample report →
+        </Link>
       </FadeInUp>
 
       <FadeInUp delay={0.1}>
@@ -180,19 +177,19 @@ export default function TierCards() {
                       top: -16,
                       left: "50%",
                       transform: "translateX(-50%)",
-                      background: "var(--accent-primary)",
-                      color: "var(--bg-base)",
+                      background: "#C9A84C",
+                      color: "#000",
                       padding: "4px 16px",
                       borderRadius: 4,
                       fontSize: "0.65rem",
                       fontFamily: MONO,
-                      fontWeight: 600,
+                      fontWeight: 700,
                       letterSpacing: "0.1em",
                       whiteSpace: "nowrap",
                       zIndex: 10,
                     }}
                   >
-                    MOST POPULAR
+                    MOST CHOSEN
                   </div>
                 )}
 
@@ -203,8 +200,11 @@ export default function TierCards() {
                 <p style={{ fontFamily: MONO, fontSize: 28, fontWeight: 500, margin: "0 0 8px", color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}>
                   {tier.price}
                 </p>
-                <p style={{ fontSize: 11, color: "var(--text-muted)", margin: "0 0 20px", lineHeight: 1.45 }}>
+                <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", margin: "0 0 8px", lineHeight: 1.3 }}>
                   {tier.tagline}
+                </p>
+                <p style={{ fontSize: 11, color: "var(--text-muted)", margin: "0 0 20px", lineHeight: 1.6, fontStyle: "italic" }}>
+                  {tier.hook}
                 </p>
 
                 <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -223,8 +223,20 @@ export default function TierCards() {
                 <div style={{ marginTop: "auto", paddingTop: 20 }}>
                   <Link
                     href={tier.href}
-                    className={tier.highlight ? "btn btn-primary" : "btn btn-ghost"}
-                    style={{ width: "100%", fontSize: 13, display: "inline-flex", justifyContent: "center" }}
+                    style={{
+                      width: "100%",
+                      fontSize: 13,
+                      display: "inline-flex",
+                      justifyContent: "center",
+                      padding: "11px 20px",
+                      borderRadius: 6,
+                      fontWeight: 700,
+                      textDecoration: "none",
+                      background: tier.highlight ? "#C9A84C" : "transparent",
+                      color: tier.highlight ? "#000" : "var(--text-primary)",
+                      border: tier.highlight ? "none" : "1px solid var(--border-subtle)",
+                      transition: "opacity 150ms ease",
+                    }}
                   >
                     {tier.cta}
                   </Link>

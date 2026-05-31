@@ -2,24 +2,19 @@ import Link from "next/link";
 import NavBar from "./components/NavBar";
 import HeroSection from "./components/HeroSection";
 import HowItWorks from "./components/HowItWorks";
-import TrustBar from "./components/TrustBar";
 import PainWall from "./components/PainWall";
+import PreChallengeSection from "./components/PreChallengeSection";
 import RadarSection from "./components/RadarSection";
 import FrameworkSection from "./components/FrameworkSection";
-import MetricBar from "./components/MetricBar";
 import HonestyGradient from "./components/HonestyGradient";
 import CaseStudies from "./components/CaseStudies";
-import PreChallengeSection from "./components/PreChallengeSection";
+import TestimonialsSection from "./components/TestimonialsSection";
 import AudienceSection from "./components/AudienceSection";
-import ProtocolsSection from "./components/ProtocolsSection";
+import LeakCalculator from "./components/LeakCalculator";
 import TierCards from "./components/TierCards";
 import OneTimeProducts from "./components/OneTimeProducts";
-import LeakCalculator from "./components/LeakCalculator";
-import SamplePreview from "./components/SamplePreview";
 import FaqSection from "./components/FaqSection";
-import ComparisonSection from "./components/ComparisonSection";
 import FinalCta from "./components/FinalCta";
-import TestimonialsSection from "./components/TestimonialsSection";
 
 const MONO = "JetBrains Mono, monospace";
 
@@ -29,22 +24,17 @@ export default function LandingPage() {
       <NavBar />
       <HeroSection />
       <HowItWorks />
-      <TrustBar />
       <PainWall />
       <PreChallengeSection />
       <RadarSection />
       <FrameworkSection />
-      <MetricBar />
       <HonestyGradient />
       <CaseStudies />
       <TestimonialsSection />
       <AudienceSection />
-      <ProtocolsSection />
       <LeakCalculator />
       <TierCards />
       <OneTimeProducts />
-      <SamplePreview />
-      <ComparisonSection />
       <FaqSection />
       <FinalCta />
       <footer style={{ borderTop: "1px solid var(--border-subtle)" }}>
