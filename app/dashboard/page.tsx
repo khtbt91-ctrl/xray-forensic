@@ -389,8 +389,8 @@ function DashboardContent() {
                 Analysis History
               </span>
               {!loadingData && (
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#475569', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                  Showing {analyses.length} Logs
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#475569', letterSpacing: '0.06em' }}>
+                  Showing {analyses.length} {analyses.length === 1 ? 'log' : 'logs'}
                 </span>
               )}
             </div>
