@@ -1,6 +1,7 @@
 import Link from "next/link";
 import NavBar from "./components/NavBar";
 import HeroSection from "./components/HeroSection";
+import LiveTicker from "./components/LiveTicker";
 import HowItWorks from "./components/HowItWorks";
 import PainWall from "./components/PainWall";
 import PreChallengeSection from "./components/PreChallengeSection";
@@ -23,6 +24,7 @@ export default function LandingPage() {
     <main style={{ minHeight: "100vh", background: "var(--bg-base)", color: "var(--text-primary)" }}>
       <NavBar />
       <HeroSection />
+      <LiveTicker />
       <HowItWorks />
       <PainWall />
       <PreChallengeSection />
