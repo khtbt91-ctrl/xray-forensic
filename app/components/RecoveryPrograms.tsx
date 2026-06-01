@@ -2,7 +2,8 @@
 
 /**
  * X-Ray Forensic — "After the Diagnosis" recovery programs section.
- * Recolored to live tokens. Wire into app/page.tsx (e.g. after OneTimeProducts, before FaqSection).
+ * Recolored to live tokens. Tier labels: Forensic ($29) / Operator ($79) / Elite ($149).
+ * Wire into app/page.tsx (after OneTimeProducts, before FaqSection).
  */
 
 const MONO = "'JetBrains Mono', monospace";
@@ -15,7 +16,7 @@ const MUTED = "#94a3b8";
 
 const PROGRAMS = [
   {
-    tag: "30 DAYS · pairs with Audit",
+    tag: "30 DAYS · pairs with Forensic",
     title: "Stabilize",
     sub: "The bleeding-stops protocol. One prescription, measured daily.",
     points: [
@@ -26,7 +27,7 @@ const PROGRAMS = [
     exit: "Behavioral Control ≥ 60 for 30 days → Bronze discipline mark.",
   },
   {
-    tag: "90 DAYS · pairs with Forensic",
+    tag: "90 DAYS · pairs with Operator",
     title: "Rebuild",
     sub: "Full 7-dimension rehab with the prescription engine.",
     points: [
@@ -37,7 +38,7 @@ const PROGRAMS = [
     exit: "≥ 70 across all dimensions for 90 days → Silver.",
   },
   {
-    tag: "180 DAYS · pairs with Guardian / Sovereign",
+    tag: "180 DAYS · pairs with Elite",
     title: "Certify",
     sub: "Prove it to a prop firm. A verified, public discipline credential.",
     points: [

@@ -13,6 +13,7 @@ import TestimonialsSection from "./components/TestimonialsSection";
 import AudienceSection from "./components/AudienceSection";
 import TierCards from "./components/TierCards";
 import OneTimeProducts from "./components/OneTimeProducts";
+import RecoveryPrograms from "./components/RecoveryPrograms";
 import FaqSection from "./components/FaqSection";
 import FinalCta from "./components/FinalCta";
 
@@ -36,6 +37,7 @@ export default function LandingPage() {
       <AudienceSection />
       <TierCards />
       <OneTimeProducts />
+      <RecoveryPrograms />
       <FaqSection />
       <FinalCta />
       <footer style={{ borderTop: "1px solid #1e293b", background: "#050811" }}>
