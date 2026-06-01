@@ -15,6 +15,15 @@ const FINDINGS = [
   { instrument: "NAS100",  flag: "Streak tilt detected",         leak: "-$5,440",  session: "NY open",   ago: "2d ago" },
   { instrument: "GBPUSD",  flag: "Kill zone: 22% compliance",    leak: "-$3,105",  session: "London",    ago: "2d ago" },
   { instrument: "XAUUSD",  flag: "Profit factor: 0.71",          leak: "-$8,230",  session: "All",       ago: "3d ago" },
+  { instrument: "GBPJPY",  flag: "Daily-loss breach: day 22",    leak: "-$5,010",  session: "London",    ago: "3d ago" },
+  { instrument: "EURUSD",  flag: "Risk 2.4% vs survivors 0.8%",  leak: "-$3,880",  session: "NY",        ago: "4d ago" },
+  { instrument: "NAS100",  flag: "6.8 trades/day — overtrading", leak: "-$4,210",  session: "NY open",   ago: "4d ago" },
+  { instrument: "XAUUSD",  flag: "Stop moved on 19 of 22 losers",leak: "-$2,970",  session: "London",    ago: "5d ago" },
+  { instrument: "GBPUSD",  flag: "58% win rate — net negative",  leak: "-$430",    session: "NY",        ago: "5d ago" },
+  { instrument: "EURJPY",  flag: "41 entries outside kill zone", leak: "-$1,204",  session: "Asian",     ago: "6d ago" },
+  { instrument: "NAS100",  flag: "Pre-challenge pass odds: 9%",  leak: "-$6,640",  session: "NY open",   ago: "6d ago" },
+  { instrument: "XAUUSD",  flag: "Demo profitable, live bleeding",leak: "-$1,120",  session: "London",    ago: "1w ago" },
+  { instrument: "GBPUSD",  flag: "Oversized 11x after a loss",   leak: "-$2,180",  session: "London",    ago: "1w ago" },
 ];
 
 // Duplicate for seamless loop
