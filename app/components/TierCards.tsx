@@ -10,19 +10,6 @@ type Tier = {
   name: string;
   price: string;
   tagline: string;
-  hook: string; // the subscription value sentence
-  features: Feature[];
-  cta: string;
-  href: string;
-  highlight: boolean;
-  popular: boolean;
-  accent: string;
-};
-
-type Tier = {
-  name: string;
-  price: string;
-  tagline: string;
   hook: string;
   features: Feature[];
   cta: string;
