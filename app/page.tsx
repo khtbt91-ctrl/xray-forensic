@@ -11,7 +11,6 @@ import HonestyGradient from "./components/HonestyGradient";
 import CaseStudies from "./components/CaseStudies";
 import TestimonialsSection from "./components/TestimonialsSection";
 import AudienceSection from "./components/AudienceSection";
-import LeakCalculator from "./components/LeakCalculator";
 import TierCards from "./components/TierCards";
 import OneTimeProducts from "./components/OneTimeProducts";
 import FaqSection from "./components/FaqSection";
@@ -35,7 +34,6 @@ export default function LandingPage() {
       <CaseStudies />
       <TestimonialsSection />
       <AudienceSection />
-      <LeakCalculator />
       <TierCards />
       <OneTimeProducts />
       <FaqSection />

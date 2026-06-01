@@ -19,6 +19,21 @@ type Tier = {
   accent: string;
 };
 
+type Tier = {
+  name: string;
+  price: string;
+  tagline: string;
+  hook: string;
+  features: Feature[];
+  cta: string;
+  href: string;
+  highlight: boolean;
+  popular: boolean;
+  accent: string;
+  disabled?: boolean;
+  badge?: string;
+};
+
 const TIERS: Tier[] = [
   {
     name: "SIGNAL",
@@ -65,14 +80,54 @@ const TIERS: Tier[] = [
       { text: "10 analyses per month", included: true },
       { text: "Everything in Audit", included: true },
       { text: "AI narrative diagnosis", included: true },
-      { text: "Trader DNA profile — coming Phase 2", included: true },
-      { text: "Anonymous benchmarking — coming Phase 2", included: true },
+      { text: "Trader DNA profile", included: true },
+      { text: "Anonymous benchmarking", included: true },
     ],
     cta: "Go Forensic",
     href: "/new?tier=forensic",
     highlight: false,
     popular: false,
     accent: "var(--accent-primary)",
+  },
+  {
+    name: "GUARDIAN",
+    price: "$149/mo",
+    tagline: "The risk desk you never had.",
+    hook: "Unlimited analyses. Real-time behavioral alerts before you pull the trigger — not after.",
+    features: [
+      { text: "Unlimited analyses", included: true },
+      { text: "Everything in Forensic", included: true },
+      { text: "Real-time behavioral alerts", included: true },
+      { text: "5 broker connections", included: true },
+      { text: "Discipline certification", included: true },
+    ],
+    cta: "Join Waitlist",
+    href: "mailto:support@xrayforensic.com?subject=Guardian%20Waitlist",
+    highlight: false,
+    popular: false,
+    accent: "var(--warning)",
+    disabled: true,
+    badge: "PHASE 3",
+  },
+  {
+    name: "SOVEREIGN",
+    price: "$399/mo",
+    tagline: "Institutional and prop firm layer.",
+    hook: "White-label forensic intelligence for prop firms and trading desks. Behavioral risk at scale.",
+    features: [
+      { text: "Everything in Guardian", included: true },
+      { text: "50 accounts managed", included: true },
+      { text: "Firm-wide trader analytics", included: true },
+      { text: "White-label reports", included: true },
+      { text: "Dedicated support", included: true },
+    ],
+    cta: "Contact Us",
+    href: "mailto:support@xrayforensic.com?subject=Sovereign%20Inquiry",
+    highlight: false,
+    popular: false,
+    accent: "var(--accent-secondary)",
+    disabled: true,
+    badge: "PHASE 3",
   },
 ];
 
@@ -120,54 +175,56 @@ export default function TierCards() {
       </FadeInUp>
 
       <FadeInUp delay={0.1}>
-        <div
-          style={{
-            display: "flex",
-            gap: 16,
-            overflowX: "auto",
-            overflowY: "visible",
-            paddingTop: 20,
-            paddingBottom: 16,
-            paddingLeft: "max(40px, calc((100vw - 1180px) / 2))",
-            paddingRight: "max(40px, calc((100vw - 1180px) / 2))",
-            scrollbarWidth: "thin",
-            scrollbarColor: "var(--border-subtle) transparent",
-          }}
-        >
+        {/* Outer: horizontal scroll container */}
+        <div style={{ overflowX: "auto", overflowY: "visible", paddingBottom: 16, scrollbarWidth: "thin", scrollbarColor: "var(--border-subtle) transparent" }}>
+          {/* Inner: centers cards on wide screens, allows scroll on narrow */}
+          <div
+            style={{
+              display: "flex",
+              gap: 16,
+              justifyContent: "center",
+              padding: "20px 40px 4px",
+              minWidth: "max-content",
+              margin: "0 auto",
+            }}
+          >
           {TIERS.map((tier) => {
             const isHovered = hoveredTier === tier.name;
             const borderColor = tier.highlight
-              ? "var(--accent-primary)"
+              ? "#C9A84C"
+              : tier.disabled
+              ? "var(--border-subtle)"
               : isHovered
               ? "var(--border-active)"
               : "var(--border-subtle)";
             const shadow = tier.highlight
               ? isHovered
-                ? "0 0 30px rgba(88,166,255,0.15)"
-                : "0 0 20px rgba(88,166,255,0.1)"
+                ? "0 0 30px rgba(201,168,76,0.2)"
+                : "0 0 20px rgba(201,168,76,0.1)"
               : "none";
 
             return (
               <div
                 key={tier.name}
-                onMouseEnter={() => setHoveredTier(tier.name)}
+                onMouseEnter={() => !tier.disabled && setHoveredTier(tier.name)}
                 onMouseLeave={() => setHoveredTier(null)}
                 style={{
                   flexShrink: 0,
-                  width: 244,
+                  width: 220,
                   minHeight: 520,
                   display: "flex",
                   flexDirection: "column",
                   background: tier.highlight ? "var(--bg-elevated)" : "var(--bg-card)",
                   border: `1px solid ${borderColor}`,
                   borderRadius: 10,
-                  padding: "28px 24px",
+                  padding: "28px 22px",
                   position: "relative",
                   overflow: "visible",
                   boxShadow: shadow,
+                  opacity: tier.disabled ? 0.6 : 1,
                   willChange: "transform",
                   transition: "transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease",
-                  transform: isHovered ? "translateY(-4px)" : "translateY(0)",
+                  transform: (!tier.disabled && isHovered) ? "translateY(-4px)" : "translateY(0)",
                 }}
               >
                 {tier.popular && (
@@ -192,9 +249,32 @@ export default function TierCards() {
                     MOST CHOSEN
                   </div>
                 )}
+                {tier.badge && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: -14,
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      background: "var(--bg-elevated)",
+                      color: tier.accent,
+                      border: `1px solid ${tier.accent}`,
+                      padding: "3px 12px",
+                      borderRadius: 4,
+                      fontSize: "0.6rem",
+                      fontFamily: MONO,
+                      fontWeight: 600,
+                      letterSpacing: "0.1em",
+                      whiteSpace: "nowrap",
+                      zIndex: 10,
+                    }}
+                  >
+                    {tier.badge}
+                  </div>
+                )}
 
 
-<p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.16em", color: tier.accent, margin: "0 0 8px", marginTop: tier.popular ? 12 : 0 }}>
+<p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.16em", color: tier.accent, margin: `${(tier.popular || tier.badge) ? 12 : 0}px 0 8px` }}>
                   {tier.name}
                 </p>
                 <p style={{ fontFamily: MONO, fontSize: 28, fontWeight: 500, margin: "0 0 8px", color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}>
@@ -244,7 +324,8 @@ export default function TierCards() {
               </div>
             );
           })}
-        </div>
+          </div> {/* inner: flex centering */}
+        </div> {/* outer: horizontal scroll */}
       </FadeInUp>
     </section>
   );
