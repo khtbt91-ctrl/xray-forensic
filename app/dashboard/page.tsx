@@ -3,6 +3,7 @@ import { Component, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import NavBar from '../components/NavBar'
+import FoundationsSection from '../components/foundations/FoundationsSection'
 
 // ── Error boundary ────────────────────────────────────────────────────────────
 
@@ -185,7 +186,7 @@ function StatCard({ label, value, color, icon, sub }: {
 // ── Main content ──────────────────────────────────────────────────────────────
 
 function DashboardContent() {
-  const { user, profile, loading, signOut } = useAuth()
+  const { user, session, profile, loading, signOut } = useAuth()
   const router = useRouter()
   const [analyses, setAnalyses] = useState<any[]>([])
   const [loadingData, setLoadingData] = useState(true)
@@ -209,6 +210,17 @@ function DashboardContent() {
     fetchCompliance()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
+
+  // ── Login ping — updates discipline streak in DB on each dashboard load ──
+  useEffect(() => {
+    if (!user || !session?.access_token) return
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/login-ping`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    })
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null) // silent — streak is non-critical
+  }, [user, session?.access_token])
 
   // ── Data fetching (unchanged logic, added overall_score + archetype) ──
   const fetchAnalyses = async () => {
@@ -333,6 +345,13 @@ function DashboardContent() {
             </button>
           </div>
         </div>
+
+        {/* ── Foundations ── */}
+        <FoundationsSection
+          analyses={analyses}
+          profile={profile}
+          complianceData={complianceData}
+        />
 
         {/* ── 4 KPI Cards ── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '16px', marginBottom: '28px' }}
