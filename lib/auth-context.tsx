@@ -1,6 +1,6 @@
 'use client'
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { supabase, UserProfile } from './supabase'
+import { supabase, setAuthStorageMode, UserProfile } from './supabase'
 import type { User, Session } from '@supabase/supabase-js'
 
 interface AuthContextType {
@@ -8,7 +8,7 @@ interface AuthContextType {
   session: Session | null
   profile: UserProfile | null
   loading: boolean
-  signIn: (email: string) => Promise<void>
+  signIn: (email: string, password: string, rememberMe?: boolean) => Promise<void>
   signInWithGoogle: () => Promise<void>
   signOut: () => Promise<void>
   refreshProfile: () => Promise<void>
@@ -37,25 +37,23 @@ export function AuthProvider({
   const lastFetchedToken = useRef<string | null>(null)
 
   const fetchProfile = useCallback(async (token: string) => {
-    // Skip if we already fetched with this exact token (prevents duplicate calls
-    // from initAuth + onAuthStateChange INITIAL_SESSION firing simultaneously)
+    // Skip duplicate calls (initAuth + onAuthStateChange INITIAL_SESSION fire simultaneously)
     if (lastFetchedToken.current === token) return
     lastFetchedToken.current = token
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/user/profile`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       )
       if (res.ok) {
         const data = await res.json()
         setProfile(data)
       }
+      // Non-ok (404, 500): profile stays null — this is acceptable.
+      // User state is NOT touched — a profile failure never logs the user out.
     } catch (e) {
-      console.error('Failed to fetch profile:', e)
+      // Network error: same — profile stays null, user remains authenticated.
+      console.error('[Auth] Profile fetch failed:', e)
     }
   }, [])
 
@@ -63,14 +61,21 @@ export function AuthProvider({
     let mounted = true
 
     const initAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (mounted) {
-        setSession(session)
-        setUser(session?.user ?? null)
-        if (session?.access_token) {
-          await fetchProfile(session.access_token)
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (mounted) {
+          setSession(session)
+          setUser(session?.user ?? null)
+          if (session?.access_token) {
+            await fetchProfile(session.access_token)
+          }
         }
-        setLoading(false)
+      } catch (e) {
+        console.error('[Auth] initAuth error:', e)
+        // Do not set user — if getSession() fails, we don't know state.
+        // Loading will clear in finally so the app doesn't hang.
+      } finally {
+        if (mounted) setLoading(false)
       }
     }
 
@@ -79,14 +84,20 @@ export function AuthProvider({
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return
-        setSession(session)
-        setUser(session?.user ?? null)
-        if (session?.access_token) {
-          await fetchProfile(session.access_token)
-        } else {
-          setProfile(null)
+        try {
+          setSession(session)
+          setUser(session?.user ?? null)
+          if (session?.access_token) {
+            await fetchProfile(session.access_token)
+          } else {
+            // Explicit sign-out or expired session — clear profile
+            setProfile(null)
+          }
+        } catch (e) {
+          console.error('[Auth] onAuthStateChange error:', e)
+        } finally {
+          if (mounted) setLoading(false)
         }
-        setLoading(false)
       }
     )
 
@@ -96,13 +107,11 @@ export function AuthProvider({
     }
   }, [fetchProfile])
 
-  const signIn = async (email: string) => {
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    })
+  // Unified sign-in via password. Storage mode is set before signInWithPassword
+  // so Supabase writes the token to the correct storage (localStorage vs sessionStorage).
+  const signIn = async (email: string, password: string, rememberMe = true) => {
+    setAuthStorageMode(rememberMe)
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
   }
 

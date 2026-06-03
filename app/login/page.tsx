@@ -2,16 +2,20 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/lib/auth-context'
 
 const GOLD = '#e5b83c'
 const MONO = "'JetBrains Mono', monospace"
 
 export default function LoginPage() {
   const router = useRouter()
+  const { signIn } = useAuth()
+
   const [mode, setMode] = useState<'signin' | 'signup'>('signin')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [rememberMe, setRememberMe] = useState(true)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -29,10 +33,14 @@ export default function LoginPage() {
     clearMessages()
     if (!email || !password) { setError('Please enter your email and password.'); return }
     setLoading(true)
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    setLoading(false)
-    if (error) { setError('Invalid email or password.'); return }
-    router.push('/dashboard')
+    try {
+      await signIn(email, password, rememberMe)
+      router.push('/dashboard')
+    } catch {
+      setError('Invalid email or password.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleSignUp = async () => {
@@ -164,7 +172,7 @@ export default function LoginPage() {
           </div>
 
           {/* Password */}
-          <div style={{ marginBottom: mode === 'signin' ? 0 : 12 }}>
+          <div style={{ marginBottom: 0 }}>
             <label style={labelStyle}>Password</label>
             <input
               type="password"
@@ -178,9 +186,55 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Forgot password — sign in only */}
+          {/* Remember me + Forgot password — sign in only */}
           {mode === 'signin' && (
-            <div style={{ textAlign: 'right', margin: '8px 0 20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '12px 0 20px' }}>
+
+              {/* Remember this device checkbox */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                <div
+                  onClick={() => setRememberMe(v => !v)}
+                  role="checkbox"
+                  aria-checked={rememberMe}
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') setRememberMe(v => !v) }}
+                  style={{
+                    width: 15,
+                    height: 15,
+                    border: `2px solid ${rememberMe ? GOLD : '#334155'}`,
+                    borderRadius: 3,
+                    background: rememberMe ? GOLD : 'transparent',
+                    cursor: 'pointer',
+                    flexShrink: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.15s',
+                    outline: 'none',
+                  }}
+                >
+                  {rememberMe && (
+                    <svg width="9" height="9" viewBox="0 0 12 12" fill="none">
+                      <polyline points="2,6 5,9 10,3" stroke="#000" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </div>
+                <span
+                  onClick={() => setRememberMe(v => !v)}
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 11,
+                    color: '#64748b',
+                    letterSpacing: '0.08em',
+                    cursor: 'pointer',
+                    userSelect: 'none',
+                  }}
+                >
+                  REMEMBER THIS DEVICE
+                </span>
+              </div>
+
+              {/* Forgot password */}
               <button
                 onClick={handleForgotPassword}
                 style={{
@@ -204,7 +258,7 @@ export default function LoginPage() {
 
           {/* Confirm password — sign up only */}
           {mode === 'signup' && (
-            <div style={{ marginBottom: 12 }}>
+            <div style={{ marginBottom: 12, marginTop: 12 }}>
               <label style={labelStyle}>Confirm password</label>
               <input
                 type="password"
@@ -234,7 +288,7 @@ export default function LoginPage() {
               fontWeight: 700,
               letterSpacing: '0.02em',
               cursor: loading ? 'not-allowed' : 'pointer',
-              marginTop: 8,
+              marginTop: mode === 'signup' ? 8 : 0,
               fontFamily: "'Space Grotesk', sans-serif",
               transition: 'background 0.15s',
             }}
