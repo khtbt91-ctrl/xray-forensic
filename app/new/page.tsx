@@ -30,7 +30,7 @@ interface ContextProfile {
   email: string;
 }
 
-type TierName = "SIGNAL" | "FORENSIC" | "GUARDIAN" | "SOVEREIGN";
+type TierName = "SIGNAL" | "FORENSIC" | "OPERATOR" | "GUARDIAN" | "SOVEREIGN";
 type OneTime = "spot" | "pre-challenge" | null;
 
 const TIERS: {
@@ -61,7 +61,7 @@ const TIERS: {
     accent: "var(--accent-primary)",
   },
   {
-    name: "FORENSIC",
+    name: "OPERATOR",
     price: "$79/mo",
     tagline: "Institutional-grade behavioral intelligence.",
     features: ["10 analyses/month", "Forensic AI narrative — full behavioral read", "Prop firm mode", "DNA profile", "Pre-mortem"],
