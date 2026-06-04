@@ -15,14 +15,14 @@ const TIERS = [
     id: "signal",
     name: "SIGNAL",
     price: null as string | null,
-    tagline: "One diagnosis. Real evidence.",
+    tagline: "See your leaks once.",
     features: [
       { text: "1 analysis per month", included: true },
-      { text: "Basic 7-dimension report", included: true },
-      { text: "Prescriptions", included: false },
-      { text: "Compliance tracking", included: false },
+      { text: "7-dimension score breakdown", included: true },
+      { text: "Top 2 prescriptions", included: true },
+      { text: "Basic behavioral flags", included: true },
     ],
-    cta: "Get Started",
+    cta: "Get Diagnosed",
     popular: false,
     free: true,
   },
@@ -30,16 +30,16 @@ const TIERS = [
     id: "forensic",
     name: "FORENSIC",
     price: "29" as string | null,
-    tagline: "Full forensic read. Your first real mirror.",
+    tagline: "Track whether you're actually improving.",
     features: [
       { text: "4 analyses per month", included: true },
-      { text: "Full AI diagnostic report", included: true },
-      { text: "5 ranked prescriptions", included: true },
-      { text: "What-If engine (2/mo)", included: true },
-      { text: "Compliance tracking", included: true },
+      { text: "Full report — all flags, all dimensions", included: true },
+      { text: "5 ranked prescriptions with dollar targets", included: true },
+      { text: "Score delta vs previous upload", included: true },
+      { text: "Progress history", included: true },
     ],
-    cta: "Upgrade to Forensic",
-    popular: false,
+    cta: "Start Forensic",
+    popular: true,
     free: false,
   },
   {
@@ -50,27 +50,27 @@ const TIERS = [
     features: [
       { text: "Unlimited analyses", included: true },
       { text: "Everything in Forensic", included: true },
+      { text: "AI narrative diagnosis", included: true },
       { text: "Trader DNA profile", included: true },
       { text: "Anonymous benchmarking", included: true },
-      { text: "Broker connection (Phase 2)", included: true },
+      { text: "Compliance tracker", included: true },
     ],
-    cta: "Upgrade to Operator",
-    popular: true,
+    cta: "Go Operator",
+    popular: false,
     free: false,
   },
   {
     id: "elite",
     name: "ELITE",
     price: "149" as string | null,
-    tagline: "The risk desk you never had.",
+    tagline: "The complete system.",
     features: [
       { text: "Everything in Operator", included: true },
-      { text: "Real-time behavioral alerts", included: true },
-      { text: "Discipline certification", included: true },
-      { text: "5 broker connections", included: true },
-      { text: "Priority diagnosis", included: true },
+      { text: "Prop firm Monte Carlo simulation", included: true },
+      { text: "Priority support", included: true },
+      { text: "Early access to new features", included: true },
     ],
-    cta: "Upgrade to Elite",
+    cta: "Go Elite",
     popular: false,
     free: false,
   },
@@ -100,7 +100,7 @@ function PricingPageInner() {
     profile.analyses_limit !== -1 &&
     profile.analyses_used >= profile.analyses_limit;
   const freeCTAHref = !user ? "/login" : limitReached ? "/dashboard" : "/new";
-  const freeCTALabel = limitReached ? "View Dashboard" : "Get Started";
+  const freeCTALabel = limitReached ? "View Dashboard" : "Get Diagnosed";
 
   return (
     <main style={{ minHeight: "100vh", background: "#050811", color: "#f8fafc" }}>
@@ -243,7 +243,7 @@ function PricingPageInner() {
                   transformOrigin: "center",
                   whiteSpace: "nowrap",
                 }}>
-                  Most Popular
+                  MOST CHOSEN
                 </div>
               )}
 
@@ -402,64 +402,22 @@ function PricingPageInner() {
         </div>
       </div>
 
-      {/* Phase 3 waitlist */}
-      <div style={{ maxWidth: 760, margin: "0 auto 96px", padding: "0 24px" }}>
-        <div
-          className="glow-gold"
-          style={{
-            background: "#0e1626",
-            border: "1px solid rgba(229,184,60,0.45)",
-            borderRadius: 12,
-            padding: "48px 40px",
-            textAlign: "center",
-          }}
-        >
-          <p style={{
-            fontFamily: MONO,
-            fontSize: 11,
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            color: GOLD,
-            margin: "0 0 16px",
-          }}>
-            PHASE 3: INSTITUTIONAL INFRASTRUCTURE WAITLIST
-          </p>
-          <h2 style={{
-            fontFamily: SPACE,
-            fontSize: "clamp(1.25rem, 2.5vw, 1.75rem)",
-            fontWeight: 700,
-            color: "#f8fafc",
-            margin: "0 0 12px",
-          }}>
-            Trading desk infrastructure coming.
-          </h2>
-          <p style={{
-            fontSize: 15,
-            color: "#94a3b8",
-            lineHeight: 1.7,
-            maxWidth: 480,
-            margin: "0 auto 32px",
-          }}>
-            Multi-account visibility. Automated risk protocols.
-            Real-time behavioral intervention at scale.
-          </p>
+      {/* Partnership line */}
+      <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px 64px", textAlign: "center" }}>
+        <p style={{
+          fontFamily: MONO,
+          fontSize: 12,
+          color: "#475569",
+          letterSpacing: "0.04em",
+        }}>
+          Institutional and prop firm partnerships →{" "}
           <a
-            href="mailto:admin@xrayforensic.com?subject=SOVEREIGN%20waitlist"
-            style={{
-              display: "inline-block",
-              padding: "12px 32px",
-              background: GOLD,
-              color: "#000",
-              fontFamily: SPACE,
-              fontWeight: 700,
-              fontSize: 14,
-              borderRadius: 6,
-              textDecoration: "none",
-            }}
+            href="mailto:admin@xrayforensic.com"
+            style={{ color: "#94a3b8", textDecoration: "none" }}
           >
-            Join Waitlist →
+            admin@xrayforensic.com
           </a>
-        </div>
+        </p>
       </div>
 
       {/* Bottom CTA */}

@@ -28,11 +28,10 @@ const TIERS: Tier[] = [
     tagline: "See your leaks once.",
     hook: "Start here. No credit card.",
     features: [
-      { text: "1 full analysis per month", included: true },
+      { text: "1 analysis per month", included: true },
       { text: "7-dimension score breakdown", included: true },
-      { text: "Top 3 behavioral flags", included: true },
-      { text: "Prescriptions", included: false },
-      { text: "Progress vs last upload", included: false },
+      { text: "Top 2 prescriptions", included: true },
+      { text: "Basic behavioral flags", included: true },
     ],
     cta: "Get Diagnosed",
     href: "/new",
@@ -46,14 +45,14 @@ const TIERS: Tier[] = [
     tagline: "Track whether you're actually improving.",
     hook: "Every upload compares to your last. Your scores move. The leaks shrink — or they don't. The data decides.",
     features: [
-      { text: "3 analyses per month", included: true },
+      { text: "4 analyses per month", included: true },
       { text: "Full report — all flags, all dimensions", included: true },
       { text: "5 ranked prescriptions with dollar targets", included: true },
       { text: "Score delta vs previous upload", included: true },
       { text: "Progress history", included: true },
     ],
     cta: "Start Forensic",
-    href: "/new?tier=forensic",
+    href: "/payment?tier=forensic",
     highlight: true,
     popular: true,
     accent: "#C9A84C",
@@ -62,59 +61,37 @@ const TIERS: Tier[] = [
     name: "OPERATOR",
     price: "$79/mo",
     tagline: "Institutional-grade behavioral intelligence.",
-    hook: "10 analyses per month. Weekly uploads show weekly change. Monthly uploads build the arc.",
+    hook: "Unlimited analyses. Weekly uploads show weekly change. Monthly uploads build the arc.",
     features: [
-      { text: "10 analyses per month", included: true },
+      { text: "Unlimited analyses", included: true },
       { text: "Everything in Forensic", included: true },
       { text: "AI narrative diagnosis", included: true },
       { text: "Trader DNA profile", included: true },
       { text: "Anonymous benchmarking", included: true },
+      { text: "Compliance tracker", included: true },
     ],
     cta: "Go Operator",
-    href: "/new?tier=operator",
+    href: "/payment?tier=operator",
     highlight: false,
     popular: false,
     accent: "var(--accent-primary)",
   },
   {
-    name: "GUARDIAN",
+    name: "ELITE",
     price: "$149/mo",
-    tagline: "The risk desk you never had.",
-    hook: "Unlimited analyses. Real-time behavioral alerts before you pull the trigger — not after.",
+    tagline: "The complete system.",
+    hook: "Every tool. Every edge. Built for traders who treat performance as infrastructure.",
     features: [
-      { text: "Unlimited analyses", included: true },
-      { text: "Everything in Forensic", included: true },
-      { text: "Real-time behavioral alerts", included: true },
-      { text: "5 broker connections", included: true },
-      { text: "Discipline certification", included: true },
+      { text: "Everything in Operator", included: true },
+      { text: "Prop firm Monte Carlo simulation", included: true },
+      { text: "Priority support", included: true },
+      { text: "Early access to new features", included: true },
     ],
-    cta: "Join Waitlist",
-    href: "mailto:admin@xrayforensic.com?subject=Guardian%20Waitlist",
+    cta: "Go Elite",
+    href: "/payment?tier=elite",
     highlight: false,
     popular: false,
     accent: "var(--warning)",
-    disabled: true,
-    badge: "PHASE 3",
-  },
-  {
-    name: "SOVEREIGN",
-    price: "$399/mo",
-    tagline: "Institutional and prop firm layer.",
-    hook: "White-label forensic intelligence for prop firms and trading desks. Behavioral risk at scale.",
-    features: [
-      { text: "Everything in Guardian", included: true },
-      { text: "50 accounts managed", included: true },
-      { text: "Firm-wide trader analytics", included: true },
-      { text: "White-label reports", included: true },
-      { text: "Dedicated support", included: true },
-    ],
-    cta: "Contact Us",
-    href: "mailto:admin@xrayforensic.com?subject=Sovereign%20Inquiry",
-    highlight: false,
-    popular: false,
-    accent: "var(--accent-secondary)",
-    disabled: true,
-    badge: "PHASE 3",
   },
 ];
 
@@ -193,6 +170,7 @@ export default function TierCards() {
             return (
               <div
                 key={tier.name}
+                id={`tier-${tier.name.toLowerCase()}`}
                 onMouseEnter={() => !tier.disabled && setHoveredTier(tier.name)}
                 onMouseLeave={() => setHoveredTier(null)}
                 style={{
@@ -313,6 +291,24 @@ export default function TierCards() {
           })}
           </div> {/* inner: flex centering */}
         </div> {/* outer: horizontal scroll */}
+
+        {/* Partnership line */}
+        <p style={{
+          textAlign: "center",
+          fontFamily: MONO,
+          fontSize: 11,
+          color: "var(--text-muted)",
+          marginTop: 28,
+          letterSpacing: "0.04em",
+        }}>
+          Institutional and prop firm partnerships →{" "}
+          <a
+            href="mailto:admin@xrayforensic.com"
+            style={{ color: "var(--text-secondary)", textDecoration: "none" }}
+          >
+            admin@xrayforensic.com
+          </a>
+        </p>
       </FadeInUp>
     </section>
   );
