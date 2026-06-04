@@ -97,17 +97,6 @@ export default function NavBar() {
                 FORENSIC
               </span>
             </span>
-            <span
-              className="animate-pulse-subtle"
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                color: "#e5b83c",
-                fontSize: "0.875rem",
-                fontWeight: 700,
-              }}
-            >
-              &gt;_
-            </span>
           </button>
 
           {/* ── Center nav — desktop ── */}

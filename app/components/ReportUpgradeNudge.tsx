@@ -54,7 +54,7 @@ export default function ReportUpgradeNudge({
           margin: '0 auto 32px',
         }}
       >
-        The AUDIT report adds priority actions ranked by dollar impact, 5
+        The FORENSIC report adds priority actions ranked by dollar impact, 5
         prescriptions with measurable targets, and triggered protocols. Here&apos;s
         what other traders found when they upgraded.
       </p>
@@ -76,7 +76,7 @@ export default function ReportUpgradeNudge({
 
       <div style={{ textAlign: 'center' }}>
         <a
-          href="/new?tier=audit"
+          href="/new?tier=forensic"
           style={{
             display: 'inline-block',
             padding: '13px 32px',
@@ -88,17 +88,25 @@ export default function ReportUpgradeNudge({
             fontWeight: 600,
           }}
         >
-          Get Full AUDIT Report — $29/mo
+          Get Full FORENSIC Report — $29/mo
         </a>
-        <p
+        <a
+          href="/payment?tier=forensic&amount=49&type=one-time"
           style={{
-            color: 'var(--text-muted)',
+            display: 'block',
+            color: '#94a3b8',
             fontSize: '0.72rem',
             marginTop: '8px',
+            fontFamily: 'JetBrains Mono, monospace',
+            textDecoration: 'none',
+            cursor: 'pointer',
+            transition: 'color 0.15s',
           }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = '#e5b83c'; (e.currentTarget as HTMLAnchorElement).style.textDecoration = 'underline'; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = '#94a3b8'; (e.currentTarget as HTMLAnchorElement).style.textDecoration = 'none'; }}
         >
           Or $49 one-time · No commitment
-        </p>
+        </a>
       </div>
     </div>
   )

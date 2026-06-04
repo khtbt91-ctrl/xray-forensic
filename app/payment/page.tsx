@@ -41,6 +41,8 @@ function PaymentContent() {
 
   const searchParams = useSearchParams();
   const tierParam = (searchParams.get("tier") ?? "").toLowerCase();
+  const typeParam = searchParams.get("type") ?? "";
+  const amountParam = searchParams.get("amount");
   const tier = TIER_MAP[tierParam];
   const [copied, setCopied] = useState<string | null>(null);
 
@@ -80,7 +82,9 @@ function PaymentContent() {
     );
   }
 
-  const { name, amount } = tier;
+  const { name } = tier;
+  const amount = amountParam ? parseInt(amountParam, 10) : tier.amount;
+  const isOneTime = typeParam === "one-time";
 
   const mailtoSubject = encodeURIComponent(`Payment sent — ${name} upgrade`);
   const mailtoBody = encodeURIComponent(
@@ -146,7 +150,7 @@ function PaymentContent() {
             letterSpacing: "0.08em",
             margin: 0,
           }}>
-            {name.toUpperCase()} TIER — ${amount}/month
+            {name.toUpperCase()} TIER — ${amount}{isOneTime ? " · One-time payment — no subscription" : "/month"}
           </p>
         </div>
 
