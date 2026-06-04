@@ -601,9 +601,10 @@ function Step3({
       !name.endsWith(".htm") &&
       !name.endsWith(".html") &&
       !name.endsWith(".xml") &&
-      !name.endsWith(".xlsx")
+      !name.endsWith(".xlsx") &&
+      !name.endsWith(".xls")
     ) {
-      setFileError("⚠️ We need a .csv, .htm, .html, .xml, or .xlsx file from MT5. Try the export steps above.");
+      setFileError("⚠️ We need a .csv, .htm, .html, .xml, .xlsx, or .xls file from MT5. Try the export steps above.");
       setSelectedFile(null);
       return;
     }
@@ -1128,7 +1129,7 @@ function Step3({
         <input
           ref={fileRef}
           type="file"
-          accept={assetClass === "crypto" ? ".csv" : ".csv,.htm,.html,.xml,.xlsx"}
+          accept={assetClass === "crypto" ? ".csv" : ".csv,.htm,.html,.xml,.xlsx,.xls"}
           style={{ display: "none" }}
           onChange={(e) => validateAndSetFile(e.target.files?.[0] || null)}
         />
