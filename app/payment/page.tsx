@@ -359,12 +359,12 @@ function PaymentContent() {
           <p style={{ fontFamily: MONO, fontSize: 12, color: "#94a3b8", lineHeight: 1.75, margin: 0 }}>
             Send exactly{" "}
             <span style={{ color: GOLD }}>${amount} USDT</span>
-            {" "}to either address. Then paste your transaction hash below and click the button to notify us.
-            We verify and activate your tier within 24 hours.
+            {" "}to either address above. Copy an address to select your wallet, then notify us below.
           </p>
         </div>
 
-        {/* TX hash input */}
+        {/* TX hash input — shown after wallet selected */}
+        {selectedNetwork && (
         <div style={{ marginBottom: 32 }}>
           <label style={{
             display: "block",
@@ -373,15 +373,18 @@ function PaymentContent() {
             letterSpacing: "0.15em",
             textTransform: "uppercase",
             color: "#94a3b8",
-            marginBottom: 10,
+            marginBottom: 4,
           }}>
-            Transaction Hash
+            TRANSACTION ID
           </label>
+          <p style={{ fontFamily: MONO, fontSize: 10, color: "#475569", margin: "0 0 10px" }}>
+            Optional — speeds up activation
+          </p>
           <input
             type="text"
             value={txHash}
             onChange={(e) => setTxHash(e.target.value)}
-            placeholder="Paste your TX hash here after sending…"
+            placeholder="Paste your transaction ID here (optional)"
             style={{
               width: "100%",
               padding: "12px 14px",
@@ -396,10 +399,13 @@ function PaymentContent() {
               transition: "border-color 0.15s",
             }}
           />
-          <p style={{ fontFamily: MONO, fontSize: 10, color: "#334155", margin: "8px 0 0" }}>
-            Found in your wallet app → Transaction History → copy the hash/ID
+          <p style={{ fontFamily: MONO, fontSize: 10, color: "#334155", margin: "8px 0 0", lineHeight: 1.8 }}>
+            Find in your wallet → Transaction History → tap the transaction → copy the ID<br />
+            Without it: activated within 24h<br />
+            With it: activated within 1–2h
           </p>
         </div>
+        )}
 
         {/* Error state */}
         {submitError && (
@@ -426,30 +432,30 @@ function PaymentContent() {
         <div style={{ textAlign: "center" }}>
           <button
             onClick={() => setModalOpen(true)}
-            disabled={!txHash.trim()}
+            disabled={!selectedNetwork}
             style={{
               display: "block",
               width: "100%",
               padding: "16px 32px",
-              background: txHash.trim() ? GOLD : "#1e293b",
-              color: txHash.trim() ? "#000000" : "#475569",
+              background: selectedNetwork ? GOLD : "#1e293b",
+              color: selectedNetwork ? "#000000" : "#475569",
               fontFamily: SPACE,
               fontSize: 15,
               fontWeight: 700,
               borderRadius: 6,
               border: "none",
-              cursor: txHash.trim() ? "pointer" : "not-allowed",
+              cursor: selectedNetwork ? "pointer" : "not-allowed",
               marginBottom: 16,
               transition: "background 0.15s, color 0.15s",
             }}
-            onMouseEnter={(e) => { if (txHash.trim()) e.currentTarget.style.background = "#b88d1d" }}
-            onMouseLeave={(e) => { if (txHash.trim()) e.currentTarget.style.background = GOLD }}
+            onMouseEnter={(e) => { if (selectedNetwork) e.currentTarget.style.background = "#b88d1d" }}
+            onMouseLeave={(e) => { if (selectedNetwork) e.currentTarget.style.background = GOLD }}
           >
-            I&apos;ve Sent Payment — Notify Team →
+            I&apos;ve Paid — Notify Team →
           </button>
-          {!txHash.trim() && (
+          {!selectedNetwork && (
             <p style={{ fontFamily: MONO, fontSize: 11, color: "#334155", margin: 0 }}>
-              Paste your transaction hash above to continue
+              Copy a wallet address above to continue
             </p>
           )}
         </div>

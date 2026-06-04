@@ -1560,12 +1560,12 @@ function StepPayment({
           <span style={{ color: "var(--text-primary)", fontFamily: MONO }}>
             ${tierAmount} USDT
           </span>
-          {" "}to either address. Then paste your transaction hash below and click the button to notify us.
-          We verify and activate your tier within 24 hours.
+          {" "}to either address. Copy the address to select your wallet, then notify us below.
         </p>
       </div>
 
-      {/* TX hash input */}
+      {/* TX hash input — shown after wallet selected */}
+      {selectedWallet && (
       <div style={{ marginBottom: 28 }}>
         <label style={{
           display: "block",
@@ -1574,15 +1574,18 @@ function StepPayment({
           letterSpacing: "0.15em",
           textTransform: "uppercase",
           color: "var(--text-muted)",
-          marginBottom: 10,
+          marginBottom: 4,
         }}>
-          TRANSACTION HASH
+          TRANSACTION ID
         </label>
+        <p style={{ fontFamily: MONO, fontSize: 10, color: "var(--text-muted)", margin: "0 0 10px" }}>
+          Optional — speeds up activation
+        </p>
         <input
           type="text"
           value={txHash}
           onChange={(e) => setTxHash(e.target.value)}
-          placeholder="Paste your transaction ID here"
+          placeholder="Paste your transaction ID here (optional)"
           style={{
             width: "100%",
             padding: "12px 14px",
@@ -1597,10 +1600,13 @@ function StepPayment({
             transition: "border-color 0.15s",
           }}
         />
-        <p style={{ fontFamily: MONO, fontSize: 10, color: "var(--text-muted)", margin: "8px 0 0" }}>
-          Find this in your Trust Wallet transaction history after sending.
+        <p style={{ fontFamily: MONO, fontSize: 10, color: "var(--text-muted)", margin: "8px 0 0", lineHeight: 1.8 }}>
+          Find in your wallet → Transaction History → tap the transaction → copy the ID<br />
+          Without it: activated within 24h<br />
+          With it: activated within 1–2h
         </p>
       </div>
+      )}
 
       {/* Error state */}
       {submitError && (
@@ -1626,18 +1632,18 @@ function StepPayment({
       {/* CTA */}
       <button
         onClick={() => setModalOpen(true)}
-        disabled={!txHash.trim()}
+        disabled={!selectedWallet}
         style={{
           display: "block",
           width: "100%",
           padding: "14px",
-          background: txHash.trim() ? GOLD : "var(--bg-elevated)",
-          color: txHash.trim() ? "#000000" : "var(--text-muted)",
+          background: selectedWallet ? GOLD : "var(--bg-elevated)",
+          color: selectedWallet ? "#000000" : "var(--text-muted)",
           border: "none",
           borderRadius: 6,
           fontSize: "0.9rem",
           fontWeight: 700,
-          cursor: txHash.trim() ? "pointer" : "not-allowed",
+          cursor: selectedWallet ? "pointer" : "not-allowed",
           fontFamily: MONO,
           letterSpacing: "0.05em",
           marginBottom: 16,
@@ -1645,12 +1651,12 @@ function StepPayment({
           boxSizing: "border-box",
         }}
       >
-        I&apos;ve Sent Payment — Notify Support →
+        I&apos;ve Paid — Notify Team →
       </button>
 
-      {!txHash.trim() && (
+      {!selectedWallet && (
         <p style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", margin: "0 0 16px", textAlign: "center" }}>
-          Paste your transaction hash above to continue
+          Copy a wallet address above to continue
         </p>
       )}
 
