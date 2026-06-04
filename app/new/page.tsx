@@ -561,10 +561,16 @@ function Step3({
   profile,
   selectedTier,
   accessToken,
+  lastContextRestored,
+  authProfile,
+  onEditContext,
 }: {
   profile: ContextProfile;
   selectedTier: string | null;
   accessToken?: string;
+  lastContextRestored?: boolean;
+  authProfile?: { tier_id?: string } | null;
+  onEditContext?: () => void;
 }) {
   const router = useRouter();
   const { user } = useAuth();
@@ -840,6 +846,40 @@ function Step3({
 
   return (
     <div>
+      {/* Rule 1 — Previous context banner: shown when context was restored from localStorage */}
+      {lastContextRestored && onEditContext && (
+        <div style={{
+          background: "var(--bg-elevated)",
+          borderLeft: `3px solid ${GOLD}`,
+          borderRadius: 6,
+          padding: "10px 16px",
+          marginBottom: 20,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}>
+          <span style={{ fontFamily: MONO, fontSize: 12, color: "var(--text-secondary)" }}>
+            Continuing as: {profile.accountType} · {(authProfile?.tier_id ?? "signal").toUpperCase()} · {profile.email}
+          </span>
+          <button
+            onClick={onEditContext}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: GOLD,
+              fontFamily: MONO,
+              fontSize: 11,
+              cursor: "pointer",
+              padding: 0,
+              whiteSpace: "nowrap",
+              marginLeft: 12,
+            }}
+          >
+            Edit context →
+          </button>
+        </div>
+      )}
+
       <div style={{ marginBottom: 28 }}>
         <Disclaimer />
       </div>
@@ -1517,6 +1557,8 @@ function NewPageInner() {
   const [tierResolved, setTierResolved] = useState(false);
   const [selectedOneTime, setSelectedOneTime] = useState<OneTime>(null);
   const [currentStepKey, setCurrentStepKey] = useState("context");
+  const [lastContextRestored, setLastContextRestored] = useState(false);
+  const hasInitialized = useRef(false);
 
   useEffect(() => {
     const tier = searchParams.get("tier");
@@ -1539,61 +1581,86 @@ function NewPageInner() {
     }
   }, [user, authLoading, router]);
 
-  const isFree = selectedTier?.toLowerCase() === "signal";
-  const isPaid = selectedTier !== null && selectedTier.toLowerCase() !== "signal";
+  // Rule 4 — Pre-fill email + name from auth session as soon as auth resolves.
+  useEffect(() => {
+    if (authLoading || !user) return;
+    setProfile(prev => ({
+      ...prev,
+      email: prev.email || user.email || "",
+      clientName: prev.clientName || (user.user_metadata?.full_name as string) || "",
+    }));
+  }, [authLoading, user]);
 
-  // Dynamic step array — recomputed on every render
-  const steps = (() => {
-    if (tierLocked && isFree) {
-      return [
+  // Smart routing — runs once when auth + profile are both resolved.
+  useEffect(() => {
+    if (authLoading || !user || !authProfile || !tierResolved) return;
+    if (hasInitialized.current) return;
+    hasInitialized.current = true;
+
+    // Rule 2 — Auto-set tier from profile (skip if URL param already locked it).
+    if (!tierLocked && authProfile.tier_id) {
+      setSelectedTier(authProfile.tier_id);
+    }
+
+    // Rule 1 — Skip context step for returning users that have a saved context.
+    const isReturning = (authProfile.analyses_used ?? 0) > 0;
+    if (isReturning) {
+      try {
+        const saved = localStorage.getItem("xray_last_context");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          setProfile(prev => ({
+            ...prev,
+            ...parsed,
+            // Always override email from live session — never trust cached email.
+            email: user.email || prev.email || "",
+          }));
+          setLastContextRestored(true);
+          setCurrentStepKey("upload");
+        }
+      } catch {}
+    }
+  }, [authLoading, user, authProfile, tierResolved, tierLocked]);
+
+  // Redirect to /pricing when monthly limit is exhausted (Rule 3 fallback).
+  useEffect(() => {
+    if (authLoading || !authProfile) return;
+    if (!authProfile.can_analyze) {
+      router.push("/pricing?reason=limit_reached");
+    }
+  }, [authLoading, authProfile, router]);
+
+  // Dynamic step array — logged-in users never see Tier or Payment steps.
+  // Returning users with saved context skip directly to Upload.
+  const steps = lastContextRestored
+    ? [{ label: "Upload", key: "upload" }]
+    : [
         { label: "Context", key: "context" },
         { label: "Upload", key: "upload" },
       ];
-    }
-    if (tierLocked && isPaid) {
-      return [
-        { label: "Context", key: "context" },
-        { label: "Payment", key: "payment" },
-        { label: "Upload", key: "upload" },
-      ];
-    }
-    // Unguided: user selected SIGNAL in Step 2 → no payment needed
-    if (!tierLocked && isFree && selectedTier !== null) {
-      return [
-        { label: "Context", key: "context" },
-        { label: "Tier", key: "tier" },
-        { label: "Upload", key: "upload" },
-      ];
-    }
-    // Unguided: paid selection or no tier yet → full 4-step
-    return [
-      { label: "Context", key: "context" },
-      { label: "Tier", key: "tier" },
-      { label: "Payment", key: "payment" },
-      { label: "Upload", key: "upload" },
-    ];
-  })();
 
   const goToNextStep = () => {
+    // Save context profile to localStorage whenever leaving the context step
+    // so returning users can skip it on their next visit.
+    if (currentStepKey === "context") {
+      try {
+        localStorage.setItem("xray_last_context", JSON.stringify({
+          accountType: profile.accountType,
+          firm: profile.firm,
+          challengeBalance: profile.challengeBalance,
+          dailyDdLimit: profile.dailyDdLimit,
+          maxDdLimit: profile.maxDdLimit,
+          profitTarget: profile.profitTarget,
+          minTradingDays: profile.minTradingDays,
+          daysRemaining: profile.daysRemaining,
+          accountBalance: profile.accountBalance,
+          clientName: profile.clientName,
+        }));
+      } catch {}
+    }
     const currentIndex = steps.findIndex((s) => s.key === currentStepKey);
     if (currentIndex < steps.length - 1) {
-      const nextStep = steps[currentIndex + 1];
-      // Safety net: skip payment if free tier
-      if (nextStep.key === "payment" && isFree) {
-        const afterPayment = steps[currentIndex + 2];
-        if (afterPayment) {
-          setCurrentStepKey(afterPayment.key);
-          return;
-        }
-      }
-      setCurrentStepKey(nextStep.key);
-    }
-  };
-
-  const goToPrevStep = () => {
-    const currentIndex = steps.findIndex((s) => s.key === currentStepKey);
-    if (currentIndex > 0) {
-      setCurrentStepKey(steps[currentIndex - 1].key);
+      setCurrentStepKey(steps[currentIndex + 1].key);
     }
   };
 
@@ -1615,35 +1682,10 @@ function NewPageInner() {
     );
   }
 
-  // Monthly limit reached — block new analyses until the user upgrades.
+  // Monthly limit reached — redirect to /pricing with upgrade prompt.
+  // The useEffect above fires router.push; return null to avoid a flash.
   if (authProfile && !authProfile.can_analyze) {
-    return (
-      <main style={{ minHeight: "100vh", background: "var(--bg-base)", color: "var(--text-primary)" }}>
-        <nav style={{ borderBottom: "1px solid var(--border-subtle)", padding: "16px 40px", display: "flex", alignItems: "center" }}>
-          <Link href="/" style={{ fontFamily: MONO, fontSize: 12, color: "var(--text-muted)", textDecoration: "none" }}>
-            ← X-Ray
-          </Link>
-        </nav>
-        <div style={{ maxWidth: 480, margin: "0 auto", padding: "120px 24px", textAlign: "center" }}>
-          <h2 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 12px", letterSpacing: "-0.02em" }}>
-            Monthly limit reached
-          </h2>
-          <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: "0 0 28px" }}>
-            You&apos;ve used {authProfile.analyses_used}/
-            {authProfile.analyses_limit === -1 ? "∞" : authProfile.analyses_limit} analyses this
-            month on the {authProfile.tier_id.toUpperCase()} tier.
-          </p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
-            <Link href="/pricing" className="btn btn-primary" style={{ padding: "12px 24px" }}>
-              Upgrade your tier →
-            </Link>
-            <Link href="/dashboard" className="btn btn-ghost" style={{ padding: "12px 24px" }}>
-              Dashboard
-            </Link>
-          </div>
-        </div>
-      </main>
-    );
+    return null;
   }
 
   return (
@@ -1676,12 +1718,11 @@ function NewPageInner() {
             <button
               onClick={() => {
                 setTierLocked(false);
-                setSelectedTier(null);
-                setCurrentStepKey("tier");
+                setSelectedTier(authProfile?.tier_id ?? null);
               }}
               style={{ background: "transparent", border: "1px solid var(--border-active)", color: "var(--text-secondary)", padding: "4px 12px", borderRadius: 4, cursor: "pointer", fontSize: "0.75rem" }}
             >
-              Change
+              Remove
             </button>
           </div>
         )}
@@ -1689,20 +1730,18 @@ function NewPageInner() {
         {currentStepKey === "context" && (
           <Step1 profile={profile} setProfile={setProfile} onNext={goToNextStep} />
         )}
-        {currentStepKey === "tier" && (
-          <Step2
-            selectedTier={selectedTier}
-            setSelectedTier={setSelectedTier}
-            selectedOneTime={selectedOneTime}
-            setSelectedOneTime={setSelectedOneTime}
-            onNext={goToNextStep}
-          />
-        )}
-        {currentStepKey === "payment" && (
-          <StepPayment selectedTier={selectedTier} profile={profile} goNext={goToNextStep} />
-        )}
         {currentStepKey === "upload" && (
-          <Step3 profile={profile} selectedTier={selectedTier} accessToken={session?.access_token} />
+          <Step3
+            profile={profile}
+            selectedTier={selectedTier}
+            accessToken={session?.access_token}
+            lastContextRestored={lastContextRestored}
+            authProfile={authProfile}
+            onEditContext={() => {
+              setLastContextRestored(false);
+              setCurrentStepKey("context");
+            }}
+          />
         )}
       </div>
     </main>

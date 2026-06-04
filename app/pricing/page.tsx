@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import NavBar from "../components/NavBar";
 
@@ -75,9 +76,13 @@ const TIERS = [
   },
 ];
 
-export default function PricingPage() {
+function PricingPageInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, profile } = useAuth();
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+
+  const showLimitBanner = searchParams.get("reason") === "limit_reached" && !bannerDismissed;
 
   const limitReached =
     !!profile &&
@@ -105,8 +110,55 @@ export default function PricingPage() {
 
       <NavBar />
 
+      {/* Limit-reached upgrade prompt — shown when redirected from /new */}
+      {showLimitBanner && (
+        <div style={{
+          maxWidth: 960,
+          margin: "0 auto",
+          padding: "calc(64px + 24px) 24px 0",
+        }}>
+          <div style={{
+            background: "rgba(229,184,60,0.06)",
+            border: `1px solid ${GOLD}`,
+            borderRadius: 8,
+            padding: "14px 20px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 16,
+          }}>
+            <p style={{
+              fontFamily: MONO,
+              fontSize: 13,
+              color: GOLD,
+              margin: 0,
+              lineHeight: 1.5,
+            }}>
+              You&apos;ve used your free analysis this month. Upgrade to run more.
+            </p>
+            <button
+              onClick={() => setBannerDismissed(true)}
+              style={{
+                background: "transparent",
+                border: "none",
+                color: GOLD,
+                fontFamily: MONO,
+                fontSize: 16,
+                cursor: "pointer",
+                padding: "0 4px",
+                flexShrink: 0,
+                lineHeight: 1,
+              }}
+              aria-label="Dismiss"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
-      <div style={{ maxWidth: 960, margin: "0 auto", padding: "calc(64px + 80px) 24px 64px", textAlign: "center" }}>
+      <div style={{ maxWidth: 960, margin: "0 auto", padding: showLimitBanner ? "40px 24px 64px" : "calc(64px + 80px) 24px 64px", textAlign: "center" }}>
         <p style={{
           fontFamily: MONO,
           fontSize: 12,
@@ -445,5 +497,13 @@ export default function PricingPage() {
         </Link>
       </div>
     </main>
+  );
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense>
+      <PricingPageInner />
+    </Suspense>
   );
 }
