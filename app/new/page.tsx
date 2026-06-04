@@ -9,6 +9,7 @@ import Disclaimer from "../../components/Disclaimer";
 import { tierData } from "@/lib/tiers";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/lib/supabase";
+import { QRCodeSVG } from "qrcode.react";
 
 const MONO = "'JetBrains Mono', monospace";
 const SPACE = "'Space Grotesk', sans-serif";
@@ -1255,13 +1256,13 @@ function CryptoAddress({
   label,
   color,
   address,
-  qrSrc,
+  qrValue,
   onCopied,
 }: {
   label: string;
   color: string;
   address: string;
-  qrSrc: string;
+  qrValue: string;
   onCopied?: () => void;
 }) {
   const [copied, setCopied] = React.useState(false);
@@ -1314,7 +1315,7 @@ function CryptoAddress({
           borderRadius: 6,
           lineHeight: 0,
         }}>
-          <img src={qrSrc} width={120} height={120} alt="QR code" />
+          <QRCodeSVG value={qrValue} size={160} bgColor="#ffffff" fgColor="#000000" level="M" />
         </div>
         <p style={{
           fontFamily: MONO,
@@ -1394,11 +1395,9 @@ function StepPayment({
         method: "POST",
         headers,
         body: JSON.stringify({
-          tx_hash: txHash.trim(),
+          tx_hash: txHash.trim() || "pending",
           email: user?.email ?? profile.email ?? "",
           tier_id: (selectedTier ?? "").toLowerCase(),
-          amount: parseInt(tierAmount, 10) || 0,
-          wallet: selectedWallet ?? "unknown",
         }),
       });
       if (!res.ok) {
@@ -1527,14 +1526,14 @@ function StepPayment({
           label: "USDT · BEP20 (BNB Chain)",
           color: "var(--warning)",
           address: "0x620869b71e673bFfeAc79420a7141fE8853ba67e",
-          qrSrc: "/qr-bep20.png",
+          qrValue: "bnb:0x620869b71e673bFfeAc79420a7141fE8853ba67e",
         },
         {
           network: "TRC20",
           label: "USDT · TRC20 (Tron)",
           color: "var(--accent-secondary)",
           address: "TYoZG5HUq8gVh2cgiarCDXV2rbdnetaZhs",
-          qrSrc: "/qr-trc20.png",
+          qrValue: "tron:TYoZG5HUq8gVh2cgiarCDXV2rbdnetaZhs",
         },
       ].map((w) => (
         <CryptoAddress
@@ -1542,7 +1541,7 @@ function StepPayment({
           label={w.label}
           color={w.color}
           address={w.address}
-          qrSrc={w.qrSrc}
+          qrValue={w.qrValue}
           onCopied={() => setSelectedWallet(w.network)}
         />
       ))}

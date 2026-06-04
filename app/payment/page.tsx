@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import NavBar from "../components/NavBar";
+import { QRCodeSVG } from "qrcode.react";
 
 const GOLD = "#e5b83c";
 const MONO = "'JetBrains Mono', monospace";
@@ -22,13 +23,13 @@ const CRYPTO_ADDRESSES = [
     network: "BEP20",
     chain:   "BNB Smart Chain",
     address: "0x620869b71e673bFfeAc79420a7141fE8853ba67e",
-    qrSrc:   "/qr-bep20.png",
+    qrValue: "bnb:0x620869b71e673bFfeAc79420a7141fE8853ba67e",
   },
   {
     network: "TRC20",
     chain:   "Tron",
     address: "TYoZG5HUq8gVh2cgiarCDXV2rbdnetaZhs",
-    qrSrc:   "/qr-trc20.png",
+    qrValue: "tron:TYoZG5HUq8gVh2cgiarCDXV2rbdnetaZhs",
   },
 ];
 
@@ -80,11 +81,9 @@ function PaymentContent() {
         method: "POST",
         headers,
         body: JSON.stringify({
-          tx_hash: txHash.trim(),
+          tx_hash: txHash.trim() || "pending",
           email: user?.email ?? "",
           tier_id: tierParam,
-          amount: amount,
-          wallet: selectedNetwork ?? "unknown",
         }),
       });
       if (!res.ok) {
@@ -254,7 +253,7 @@ function PaymentContent() {
 
         {/* Crypto address cards */}
         <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 28 }}>
-          {CRYPTO_ADDRESSES.map(({ network, chain, address, qrSrc }) => (
+          {CRYPTO_ADDRESSES.map(({ network, chain, address, qrValue }) => (
             <div
               key={network}
               style={{
@@ -311,7 +310,7 @@ function PaymentContent() {
                   borderRadius: 6,
                   lineHeight: 0,
                 }}>
-                  <img src={qrSrc} width={120} height={120} alt={`${network} QR`} />
+                  <QRCodeSVG value={qrValue} size={160} bgColor="#ffffff" fgColor="#000000" level="M" />
                 </div>
                 <p style={{
                   fontFamily: MONO,
