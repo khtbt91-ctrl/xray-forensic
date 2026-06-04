@@ -580,6 +580,7 @@ function Step3({
   const [magicFile, setMagicFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [exportHelpOpen, setExportHelpOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [processingStepIndex, setProcessingStepIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -594,13 +595,17 @@ function Step3({
         setSelectedFile(null);
         return;
       }
+    } else if (name.endsWith(".xml")) {
+      setFileError("MT5 XML format is not supported. Please export as CSV or HTML Report from MT5 instead.");
+      setSelectedFile(null);
+      return;
     } else if (
       !name.endsWith(".csv") &&
       !name.endsWith(".htm") &&
       !name.endsWith(".html") &&
-      !name.endsWith(".xml")
+      !name.endsWith(".xlsx")
     ) {
-      setFileError("⚠️ We need a .csv, .htm or .xml file from MT5. Try the export steps above.");
+      setFileError("⚠️ We need a .csv, .htm, .html, or .xlsx file from MT5. Try the export steps above.");
       setSelectedFile(null);
       return;
     }
@@ -971,64 +976,56 @@ function Step3({
         </div>
       )}
 
-      {/* MT5 export guide */}
-      <div style={{
-        background: "var(--bg-elevated)",
-        border: "1px solid var(--border-subtle)",
-        borderRadius: 8,
-        padding: 20,
-        marginBottom: 20,
-      }}>
-        <p style={{
-          fontFamily: MONO,
-          fontSize: "0.85rem",
-          textTransform: "uppercase" as const,
-          color: "var(--text-primary)",
-          letterSpacing: "0.05em",
-          margin: "0 0 20px",
-        }}>
-          📂 How to export from MetaTrader 5
-        </p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
-          {[
-            {
-              n: "01",
-              title: "Open MT5",
-              body: "Launch MetaTrader 5 on your computer. Make sure you're logged into the account you want to diagnose.",
-            },
-            {
-              n: "02",
-              title: "Find your history",
-              body: "Click 'View' in the top menu → 'Terminal' → click the 'Account History' tab at the bottom of the screen.",
-            },
-            {
-              n: "03",
-              title: "Export it",
-              body: "Right-click anywhere in the history → 'Save as Report' → choose the date range (all history recommended) → save as .htm or use 'Save as Detailed Report' for CSV.",
-            },
-          ].map((step) => (
-            <div key={step.n}>
-              <p style={{ fontFamily: MONO, fontSize: "1.6rem", color: "var(--text-muted)", margin: "0 0 8px", lineHeight: 1 }}>
-                {step.n}
-              </p>
-              <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", margin: "0 0 6px" }}>
-                {step.title}
-              </p>
-              <p style={{ fontSize: 12, color: "var(--text-secondary)", margin: 0, lineHeight: 1.5 }}>
-                {step.body}
-              </p>
-            </div>
-          ))}
-        </div>
-        <p style={{
-          fontSize: "0.75rem",
-          color: "var(--text-muted)",
-          fontStyle: "italic",
-          margin: "16px 0 0",
-          lineHeight: 1.5,
-        }}>
-          💬 No MT5? You can also export from cTrader, DXtrade, or any platform that gives you a trade history CSV. Same process, different menu.
-        </p>
+      {/* MT5 export guide — collapsible */}
+      <div style={{ marginBottom: 20 }}>
+        <button
+          onClick={() => setExportHelpOpen(!exportHelpOpen)}
+          style={{
+            background: "transparent",
+            border: "none",
+            color: GOLD,
+            fontFamily: MONO,
+            fontSize: 12,
+            cursor: "pointer",
+            padding: 0,
+            letterSpacing: "0.04em",
+          }}
+        >
+          How to export from MT5 {exportHelpOpen ? "↑" : "→"}
+        </button>
+        {exportHelpOpen && (
+          <div style={{
+            marginTop: 12,
+            padding: "16px 20px",
+            background: "var(--bg-elevated)",
+            border: "1px solid var(--border-subtle)",
+            borderRadius: 8,
+          }}>
+            <p style={{ fontFamily: MONO, fontSize: 12, fontWeight: 600, color: "var(--text-primary)", margin: "0 0 12px" }}>
+              How to export your MT5 history
+            </p>
+            <ol style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 10 }}>
+              {[
+                <>Open MT5 → History tab (bottom panel)</>,
+                <>
+                  Right-click anywhere in the list → <span style={{ color: "var(--text-secondary)" }}>Save as Report</span><br/>
+                  This saves an .htm file — the recommended format.<br/>
+                  <br/>
+                  OR: Right-click → <span style={{ color: "var(--text-secondary)" }}>Report</span> → saves as .xlsx (Excel)<br/>
+                  OR: Right-click → <span style={{ color: "var(--text-secondary)" }}>Detailed Report</span> → saves as .csv
+                </>,
+                <>Upload whichever file you saved here.</>,
+              ].map((item, i) => (
+                <li key={i} style={{ fontFamily: MONO, fontSize: 12, color: "#475569", lineHeight: 1.6 }}>
+                  {item}
+                </li>
+              ))}
+            </ol>
+            <p style={{ fontFamily: MONO, fontSize: 11, color: "#94a3b8", margin: "12px 0 0", lineHeight: 1.5 }}>
+              The .htm Report format is most reliable. If unsure, use that one.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Asset class selector */}
@@ -1042,7 +1039,7 @@ function Step3({
           {
             value: 'forex',
             label: 'MT5 / Forex',
-            sub: 'MT5 .htm, .xml or .csv export',
+            sub: 'MT5 .htm, .html, .xlsx or .csv',
             icon: '📊'
           },
           {
@@ -1126,7 +1123,7 @@ function Step3({
         <input
           ref={fileRef}
           type="file"
-          accept={assetClass === "crypto" ? ".csv" : ".csv,.htm,.html,.xml"}
+          accept={assetClass === "crypto" ? ".csv" : ".csv,.htm,.html,.xlsx"}
           style={{ display: "none" }}
           onChange={(e) => validateAndSetFile(e.target.files?.[0] || null)}
         />
@@ -1155,7 +1152,7 @@ function Step3({
               Drop your MT5 export here
             </p>
             <p style={{ fontFamily: MONO, fontSize: 11, color: "#94a3b8", margin: "0 0 16px", letterSpacing: "0.06em" }}>
-              {assetClass === "crypto" ? ".csv accepted" : ".htm · .csv · .xml accepted"}
+              {assetClass === "crypto" ? ".csv accepted" : ".csv · .htm · .html · .xlsx accepted"}
             </p>
             <span style={{ fontFamily: MONO, fontSize: 12, color: GOLD, cursor: "pointer", borderBottom: `1px solid ${GOLD}40` }}>
               or browse files
@@ -1183,7 +1180,7 @@ function Step3({
           textAlign: 'center',
           margin: '0 0 12px'
         }}>
-          MT5 .htm, .xml or .csv export
+          MT5 .htm, .html, .xlsx or .csv
         </p>
       )}
 
