@@ -9,6 +9,7 @@ import DailyBriefing   from './DailyBriefing'
 import DeskNoteFeed    from './DeskNoteFeed'
 import ActiveProtocols from './ActiveProtocols'
 import OperatorRank    from './OperatorRank'
+import PreSessionBrief from './PreSessionBrief'
 
 // ── Design tokens ──────────────────────────────────────────────────────────────
 const GOLD    = '#e5b83c'
@@ -109,6 +110,7 @@ export default function FoundationsSection({
 
   // Fetch completed protocol IDs once, so we can pass activeProtocol to DailyBriefing
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set())
+  const [calendarEvents, setCalendarEvents] = useState<{ time: string; currency: string; event: string }[]>([])
 
   useEffect(() => {
     if (!user) return
@@ -125,6 +127,13 @@ export default function FoundationsSection({
     }
     load()
   }, [user])
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/calendar/today`)
+      .then(r => r.json())
+      .then(d => setCalendarEvents(d.events || []))
+      .catch(() => {})
+  }, [])
 
   const activeProtocol = getFirstActiveProtocol(analyses.length, completedIds)
 
@@ -195,7 +204,15 @@ export default function FoundationsSection({
           flexDirection: 'column',
           gap: 20,
         }}>
-          {/* 1. Daily Briefing */}
+          {/* 1. Pre-Session Brief */}
+          <PreSessionBrief
+            analyses={analyses}
+            prescriptions={[]}
+            disciplineStreak={(profile as any)?.discipline_streak ?? 0}
+            calendarEvents={calendarEvents}
+          />
+
+          {/* 2. Daily Briefing */}
           <DailyBriefing
             analyses={analyses}
             profile={profile}

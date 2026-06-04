@@ -82,7 +82,7 @@ function SessionCard({ label, session }: { label: string; session: SessionState 
   )
 }
 
-function NewsCard() {
+function CalendarCard({ events }: { events: { time: string; currency: string; event: string }[] }) {
   return (
     <div style={{
       flex: 1, minWidth: 130,
@@ -92,18 +92,29 @@ function NewsCard() {
         fontFamily: MONO, fontSize: 9, color: '#475569',
         letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6,
       }}>
-        HIGH IMPACT NEWS
+        HIGH IMPACT TODAY
       </div>
-      <a
-        href="https://www.forexfactory.com/calendar"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ fontFamily: MONO, fontSize: 11, color: '#64748b', textDecoration: 'none', letterSpacing: '0.04em' }}
-        onMouseEnter={(e) => { e.currentTarget.style.color = GOLD }}
-        onMouseLeave={(e) => { e.currentTarget.style.color = '#64748b' }}
-      >
-        Check calendar →
-      </a>
+      {events.length === 0 ? (
+        <span style={{ fontFamily: MONO, fontSize: 11, color: '#10b981', fontWeight: 700 }}>
+          No high-impact events
+        </span>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          {events.slice(0, 3).map((ev, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ fontFamily: MONO, fontSize: 9, color: '#ef4444', fontWeight: 700 }}>🔴</span>
+              <span style={{ fontFamily: MONO, fontSize: 10, color: '#f8fafc' }}>
+                {ev.time} — {ev.currency} {ev.event}
+              </span>
+            </div>
+          ))}
+          {events.length > 3 && (
+            <span style={{ fontFamily: MONO, fontSize: 9, color: '#475569' }}>
+              +{events.length - 3} more events today
+            </span>
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -112,7 +123,7 @@ function NewsCard() {
 function SessionRowSkeleton() {
   return (
     <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
-      {['LONDON OPEN', 'NEW YORK OPEN', 'HIGH IMPACT NEWS'].map(l => (
+      {['LONDON OPEN', 'NEW YORK OPEN', 'HIGH IMPACT TODAY'].map(l => (
         <div key={l} style={{
           flex: 1, minWidth: 130,
           background: BG_BASE, border: `1px solid ${BORDER}`, borderRadius: 6, padding: '10px 14px',
@@ -147,11 +158,19 @@ export default function DailyBriefing({
   const router = useRouter()
   // null on server — set on mount to avoid SSR/hydration mismatch on dates
   const [now, setNow] = useState<Date | null>(null)
+  const [calendarEvents, setCalendarEvents] = useState<{ time: string; currency: string; event: string }[]>([])
 
   useEffect(() => {
     setNow(new Date())
     const id = setInterval(() => setNow(new Date()), 60_000)
     return () => clearInterval(id)
+  }, [])
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/calendar/today`)
+      .then(r => r.json())
+      .then(data => setCalendarEvents(data.events || []))
+      .catch(() => setCalendarEvents([]))
   }, [])
 
   const hasAnalyses = analyses.length > 0
@@ -186,7 +205,7 @@ export default function DailyBriefing({
     <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
       <SessionCard label={MARKET_SESSIONS.london.label}  session={london!}  />
       <SessionCard label={MARKET_SESSIONS.newYork.label} session={newYork!} />
-      <NewsCard />
+      <CalendarCard events={calendarEvents} />
     </div>
   ) : (
     <SessionRowSkeleton />
