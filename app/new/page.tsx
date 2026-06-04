@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useRef, useState, useEffect, Suspense } from "react";
+import { QRCodeSVG } from "qrcode.react";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -1274,39 +1275,24 @@ function CryptoAddress({
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      gap: '6px',
+      gap: '8px',
       padding: '12px 14px',
       background: 'var(--bg-card)',
       borderRadius: '6px',
       border: '1px solid var(--border-subtle)',
       marginBottom: '8px',
     }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{
-          fontFamily: MONO,
-          fontSize: '0.7rem',
-          color: color,
-          fontWeight: 600,
-        }}>
-          {label}
-        </span>
-        <button
-          onClick={copy}
-          style={{
-            background: copied ? 'rgba(63,185,80,0.15)' : 'var(--bg-elevated)',
-            border: `1px solid ${copied ? 'var(--profit)' : 'var(--border-active)'}`,
-            borderRadius: '4px',
-            color: copied ? 'var(--profit)' : 'var(--text-muted)',
-            padding: '3px 10px',
-            cursor: 'pointer',
-            fontSize: '0.65rem',
-            fontFamily: MONO,
-            transition: 'all 150ms ease',
-          }}
-        >
-          {copied ? 'COPIED ✓' : 'COPY'}
-        </button>
-      </div>
+      {/* Network label */}
+      <span style={{
+        fontFamily: MONO,
+        fontSize: '0.7rem',
+        color: color,
+        fontWeight: 600,
+      }}>
+        {label}
+      </span>
+
+      {/* Address */}
       <span style={{
         fontFamily: MONO,
         fontSize: '0.65rem',
@@ -1316,6 +1302,47 @@ function CryptoAddress({
       }}>
         {address}
       </span>
+
+      {/* QR code */}
+      <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
+        <div style={{
+          display: 'inline-block',
+          padding: 8,
+          background: '#ffffff',
+          borderRadius: 6,
+          lineHeight: 0,
+        }}>
+          <QRCodeSVG value={address} size={120} bgColor="#ffffff" fgColor="#000000" />
+        </div>
+        <p style={{
+          fontFamily: MONO,
+          fontSize: '0.6rem',
+          color: 'var(--text-muted)',
+          margin: '6px 0 0',
+          letterSpacing: '0.05em',
+        }}>
+          Scan with Trust Wallet
+        </p>
+      </div>
+
+      {/* COPY button */}
+      <button
+        onClick={copy}
+        style={{
+          background: copied ? 'rgba(63,185,80,0.15)' : 'var(--bg-elevated)',
+          border: `1px solid ${copied ? 'var(--profit)' : 'var(--border-active)'}`,
+          borderRadius: '4px',
+          color: copied ? 'var(--profit)' : 'var(--text-muted)',
+          padding: '6px 10px',
+          cursor: 'pointer',
+          fontSize: '0.65rem',
+          fontFamily: MONO,
+          transition: 'all 150ms ease',
+          width: '100%',
+        }}
+      >
+        {copied ? 'COPIED ✓' : 'COPY ADDRESS'}
+      </button>
     </div>
   );
 }

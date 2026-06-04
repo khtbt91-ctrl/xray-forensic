@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -263,59 +264,35 @@ function PaymentContent() {
                 transition: "border-color 0.15s",
               }}
             >
-              <div style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 12,
-              }}>
-                <div>
-                  <span style={{
-                    fontFamily: MONO,
-                    fontSize: 12,
-                    fontWeight: 700,
-                    letterSpacing: "0.1em",
-                    color: GOLD,
-                  }}>
-                    {network}
-                  </span>
-                  <span style={{
-                    fontFamily: MONO,
-                    fontSize: 11,
-                    color: "#475569",
-                    marginLeft: 8,
-                  }}>
-                    {chain}
-                  </span>
-                </div>
-                <button
-                  onClick={() => handleCopy(address, network)}
-                  style={{
-                    padding: "5px 14px",
-                    background: copied === address ? "rgba(229,184,60,0.12)" : "transparent",
-                    border: `1px solid ${copied === address ? GOLD : "rgba(229,184,60,0.35)"}`,
-                    borderRadius: 5,
-                    color: GOLD,
-                    fontFamily: MONO,
-                    fontSize: 11,
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    transition: "all 0.15s",
-                    letterSpacing: "0.08em",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {copied === address ? "Copied!" : "COPY"}
-                </button>
+              {/* Network label */}
+              <div style={{ marginBottom: 12 }}>
+                <span style={{
+                  fontFamily: MONO,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  letterSpacing: "0.1em",
+                  color: GOLD,
+                }}>
+                  {network}
+                </span>
+                <span style={{
+                  fontFamily: MONO,
+                  fontSize: 11,
+                  color: "#475569",
+                  marginLeft: 8,
+                }}>
+                  {chain}
+                </span>
               </div>
 
+              {/* Address */}
               <p style={{
                 fontFamily: MONO,
                 fontSize: 12,
                 color: "#94a3b8",
                 wordBreak: "break-all",
                 lineHeight: 1.6,
-                margin: 0,
+                margin: "0 0 14px",
                 padding: "10px 12px",
                 background: "#0b1220",
                 borderRadius: 6,
@@ -323,6 +300,49 @@ function PaymentContent() {
               }}>
                 {address}
               </p>
+
+              {/* QR code */}
+              <div style={{ textAlign: "center", marginBottom: 14 }}>
+                <div style={{
+                  display: "inline-block",
+                  padding: 8,
+                  background: "#ffffff",
+                  borderRadius: 6,
+                  lineHeight: 0,
+                }}>
+                  <QRCodeSVG value={address} size={120} bgColor="#ffffff" fgColor="#000000" />
+                </div>
+                <p style={{
+                  fontFamily: MONO,
+                  fontSize: 10,
+                  color: "#475569",
+                  margin: "6px 0 0",
+                  letterSpacing: "0.05em",
+                }}>
+                  Scan with Trust Wallet
+                </p>
+              </div>
+
+              {/* COPY button */}
+              <button
+                onClick={() => handleCopy(address, network)}
+                style={{
+                  width: "100%",
+                  padding: "8px 14px",
+                  background: copied === address ? "rgba(229,184,60,0.12)" : "transparent",
+                  border: `1px solid ${copied === address ? GOLD : "rgba(229,184,60,0.35)"}`,
+                  borderRadius: 5,
+                  color: GOLD,
+                  fontFamily: MONO,
+                  fontSize: 11,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  transition: "all 0.15s",
+                  letterSpacing: "0.08em",
+                }}
+              >
+                {copied === address ? "✓ Copied!" : "COPY ADDRESS"}
+              </button>
             </div>
           ))}
         </div>
