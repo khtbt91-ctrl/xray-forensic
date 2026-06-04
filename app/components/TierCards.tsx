@@ -11,6 +11,7 @@ type Tier = {
   price: string;
   tagline: string;
   hook: string;
+  monthlyValue: string;
   features: Feature[];
   cta: string;
   href: string;
@@ -26,12 +27,13 @@ const TIERS: Tier[] = [
     name: "SIGNAL",
     price: "Free",
     tagline: "See your leaks once.",
-    hook: "Start here. No credit card.",
+    hook: "One forensic snapshot. No card needed.",
+    monthlyValue: "Good for: seeing if X-Ray is right for you.",
     features: [
       { text: "1 analysis per month", included: true },
-      { text: "7-dimension score breakdown", included: true },
-      { text: "Top 2 prescriptions", included: true },
-      { text: "Basic behavioral flags", included: true },
+      { text: "7-dimension behavioral score", included: true },
+      { text: "Your 2 biggest leaks identified", included: true },
+      { text: "Basic archetype diagnosis", included: true },
     ],
     cta: "Get Diagnosed",
     href: "/new",
@@ -44,14 +46,16 @@ const TIERS: Tier[] = [
     price: "$29/mo",
     tagline: "Track whether you're actually improving.",
     hook: "Every upload compares to your last. Your scores move. The leaks shrink — or they don't. The data decides.",
+    monthlyValue: "Good for: traders serious about fixing one thing at a time.",
     features: [
-      { text: "4 analyses per month", included: true },
-      { text: "Full report — all flags, all dimensions", included: true },
-      { text: "5 ranked prescriptions with dollar targets", included: true },
-      { text: "Score delta vs previous upload", included: true },
-      { text: "Progress history", included: true },
+      { text: "4 analyses per month (upload weekly)", included: true },
+      { text: "Full report — all 7 dimensions", included: true },
+      { text: "5 prescriptions with dollar impact estimates", included: true },
+      { text: "Score delta vs your previous upload", included: true },
+      { text: "Progress history across all uploads", included: true },
+      { text: "Compliance tracker", included: true },
     ],
-    cta: "Start Forensic",
+    cta: "Start Forensic →",
     href: "/payment?tier=forensic",
     highlight: true,
     popular: true,
@@ -60,17 +64,19 @@ const TIERS: Tier[] = [
   {
     name: "OPERATOR",
     price: "$79/mo",
-    tagline: "Institutional-grade behavioral intelligence.",
-    hook: "Unlimited analyses. Weekly uploads show weekly change. Monthly uploads build the arc.",
+    tagline: "Your trading has a permanent diagnostic layer.",
+    hook: "Unlimited uploads. Every week tells a story. Every month shows the arc. This is how professionals track behavioral edge.",
+    monthlyValue: "Good for: funded traders and anyone treating trading as a serious business.",
     features: [
       { text: "Unlimited analyses", included: true },
       { text: "Everything in Forensic", included: true },
-      { text: "AI narrative diagnosis", included: true },
-      { text: "Trader DNA profile", included: true },
-      { text: "Anonymous benchmarking", included: true },
-      { text: "Compliance tracker", included: true },
+      { text: "AI narrative diagnosis (full written verdict)", included: true },
+      { text: "Trader DNA profile (updates every upload)", included: true },
+      { text: "Anonymous benchmarking (vs all platform traders)", included: true },
+      { text: "Compliance tracker with prescription follow-through", included: true },
+      { text: "Priority email support", included: true },
     ],
-    cta: "Go Operator",
+    cta: "Go Operator →",
     href: "/payment?tier=operator",
     highlight: false,
     popular: false,
@@ -80,14 +86,17 @@ const TIERS: Tier[] = [
     name: "ELITE",
     price: "$149/mo",
     tagline: "The complete system.",
-    hook: "Every tool. Every edge. Built for traders who treat performance as infrastructure.",
+    hook: "Everything in Operator plus prop firm tools, Monte Carlo pass probability, and early access to every new feature.",
+    monthlyValue: "Good for: prop firm challengers and funded traders who need to protect their account.",
     features: [
       { text: "Everything in Operator", included: true },
-      { text: "Prop firm Monte Carlo simulation", included: true },
-      { text: "Priority support", included: true },
+      { text: "Prop firm challenge simulation", included: true },
+      { text: "Monte Carlo pass probability", included: true },
+      { text: "Challenge readiness score", included: true },
       { text: "Early access to new features", included: true },
+      { text: "Priority support (same-day response)", included: true },
     ],
-    cta: "Go Elite",
+    cta: "Go Elite →",
     href: "/payment?tier=elite",
     highlight: false,
     popular: false,
@@ -265,7 +274,11 @@ export default function TierCards() {
                   </ul>
                 </div>
 
-                <div style={{ marginTop: "auto", paddingTop: 20 }}>
+                <p style={{ fontSize: 11, color: "var(--text-muted)", fontStyle: "italic", margin: "16px 0 0", lineHeight: 1.5 }}>
+                  {tier.monthlyValue}
+                </p>
+
+                <div style={{ marginTop: "auto", paddingTop: 16 }}>
                   <Link
                     href={tier.href}
                     style={{
@@ -301,7 +314,7 @@ export default function TierCards() {
           marginTop: 28,
           letterSpacing: "0.04em",
         }}>
-          Institutional and prop firm partnerships →{" "}
+          Prop firm and institutional partnerships →{" "}
           <a
             href="mailto:admin@xrayforensic.com"
             style={{ color: "var(--text-secondary)", textDecoration: "none" }}
