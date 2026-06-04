@@ -259,6 +259,10 @@ export default function ReportPage() {
                   reportTier === 'signal'   ? 'FORENSIC ($29/mo)' :
                   reportTier === 'forensic' ? 'OPERATOR ($79/mo)' :
                   'the next tier'
+                const pricingHref =
+                  reportTier === 'signal'   ? '/pricing?highlight=forensic' :
+                  reportTier === 'forensic' ? '/pricing?highlight=operator' :
+                  '/pricing'
                 return (
                   <div key={`locked-${i}`} style={{
                     background: '#0e1626',
@@ -281,7 +285,7 @@ export default function ReportPage() {
                       }}>
                         Upgrade to {nextTier} to unlock this prescription
                       </p>
-                      <a href="/pricing" style={{
+                      <a href={pricingHref} style={{
                         fontFamily: 'JetBrains Mono, monospace', fontSize: '0.65rem',
                         color: '#58A6FF', textDecoration: 'none',
                       }}>

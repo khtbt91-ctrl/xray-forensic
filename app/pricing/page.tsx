@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import NavBar from "../components/NavBar";
 
@@ -83,6 +83,17 @@ function PricingPageInner() {
   const [bannerDismissed, setBannerDismissed] = useState(false);
 
   const showLimitBanner = searchParams.get("reason") === "limit_reached" && !bannerDismissed;
+
+  const highlight = searchParams.get("highlight");
+  useEffect(() => {
+    if (!highlight) return;
+    const el = document.getElementById(`tier-${highlight}`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.style.boxShadow = `0 0 0 2px ${GOLD}`;
+    const timer = setTimeout(() => { el.style.boxShadow = ""; }, 2000);
+    return () => clearTimeout(timer);
+  }, [highlight]);
 
   const limitReached =
     !!profile &&
@@ -199,6 +210,7 @@ function PricingPageInner() {
           {TIERS.map((tier) => (
             <div
               key={tier.id}
+              id={`tier-${tier.id}`}
               className={tier.popular ? "glow-gold" : ""}
               style={{
                 position: "relative",
