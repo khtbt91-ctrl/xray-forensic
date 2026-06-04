@@ -32,27 +32,71 @@ const CRYPTO_ADDRESSES = [
 
 function PaymentContent() {
   const router = useRouter();
-  const { profile } = useAuth();
+  const { profile, user, session } = useAuth();
 
+  // ── All hooks must come before any conditional return ──────────────────────
+  const searchParams = useSearchParams();
+  const [copied, setCopied] = useState<string | null>(null);
+  const [txHash, setTxHash] = useState("");
+  const [selectedNetwork, setSelectedNetwork] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Admin bypass
   if (profile?.subscription_status === "admin") {
     router.push("/dashboard");
     return null;
   }
 
-  const searchParams = useSearchParams();
   const tierParam = (searchParams.get("tier") ?? "").toLowerCase();
   const typeParam = searchParams.get("type") ?? "";
   const amountParam = searchParams.get("amount");
   const tier = TIER_MAP[tierParam];
-  const [copied, setCopied] = useState<string | null>(null);
 
-  const handleCopy = async (address: string) => {
+  const handleCopy = async (address: string, network: string) => {
     try {
       await navigator.clipboard.writeText(address);
       setCopied(address);
+      setSelectedNetwork(network);
       setTimeout(() => setCopied(null), 1800);
     } catch {
       // address is visible for manual copy
+    }
+  };
+
+  const handleSubmitPayment = async () => {
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (session?.access_token) {
+        headers["Authorization"] = `Bearer ${session.access_token}`;
+      }
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/submit`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          tx_hash: txHash.trim(),
+          email: user?.email ?? "",
+          tier_id: tierParam,
+          amount: amount,
+          wallet: selectedNetwork ?? "unknown",
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.detail ?? "Submission failed");
+      }
+      setSubmitted(true);
+      setModalOpen(false);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Submission failed";
+      setSubmitError(msg);
+      setModalOpen(false);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -86,11 +130,43 @@ function PaymentContent() {
   const amount = amountParam ? parseInt(amountParam, 10) : tier.amount;
   const isOneTime = typeParam === "one-time";
 
-  const mailtoSubject = encodeURIComponent(`Payment sent — ${name} upgrade`);
-  const mailtoBody = encodeURIComponent(
-    `Account email: \nTier: ${name}\nAmount: $${amount} USDT\nNetwork used (BEP20 or TRC20): `
-  );
-  const mailtoHref = `mailto:support@xrayforensic.com?subject=${mailtoSubject}&body=${mailtoBody}`;
+  // ── Success state ──────────────────────────────────────────────────────────
+  if (submitted) {
+    return (
+      <main style={{ minHeight: "100vh", background: "#050811", color: "#f8fafc" }}>
+        <NavBar />
+        <div style={{ maxWidth: 480, margin: "0 auto", padding: "calc(64px + 80px) 24px 96px", textAlign: "center" }}>
+          <div style={{ fontSize: 52, color: GOLD, marginBottom: 20, lineHeight: 1 }}>✓</div>
+          <p style={{
+            fontFamily: MONO,
+            fontSize: 10,
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            color: GOLD,
+            margin: "0 0 16px",
+          }}>
+            PAYMENT NOTIFICATION SENT
+          </p>
+          <h2 style={{
+            fontFamily: SPACE,
+            fontSize: "clamp(1.5rem, 4vw, 2rem)",
+            fontWeight: 700,
+            color: "#f8fafc",
+            margin: "0 0 20px",
+            letterSpacing: "-0.02em",
+          }}>
+            We received your submission.
+          </h2>
+          <p style={{ fontFamily: MONO, fontSize: 13, color: "#94a3b8", lineHeight: 1.75, margin: "0 0 8px" }}>
+            We&apos;ll email <span style={{ color: "#f8fafc" }}>{user?.email}</span> once verified.
+          </p>
+          <p style={{ fontFamily: MONO, fontSize: 13, color: "#475569", margin: 0 }}>
+            Usually within a few hours.
+          </p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main style={{ minHeight: "100vh", background: "#050811", color: "#f8fafc" }}>
@@ -181,9 +257,10 @@ function PaymentContent() {
               key={network}
               style={{
                 background: "#0e1626",
-                border: "1px solid #1e293b",
+                border: `1px solid ${selectedNetwork === network ? GOLD : "#1e293b"}`,
                 borderRadius: 10,
                 padding: "18px 20px",
+                transition: "border-color 0.15s",
               }}
             >
               <div style={{
@@ -212,7 +289,7 @@ function PaymentContent() {
                   </span>
                 </div>
                 <button
-                  onClick={() => handleCopy(address)}
+                  onClick={() => handleCopy(address, network)}
                   style={{
                     padding: "5px 14px",
                     background: copied === address ? "rgba(229,184,60,0.12)" : "transparent",
@@ -256,50 +333,216 @@ function PaymentContent() {
           background: "#0e1626",
           border: "1px solid #1e293b",
           borderRadius: 8,
-          marginBottom: 32,
+          marginBottom: 24,
         }}>
           <p style={{ fontFamily: MONO, fontSize: 12, color: "#94a3b8", lineHeight: 1.75, margin: 0 }}>
             Send exactly{" "}
             <span style={{ color: GOLD }}>${amount} USDT</span>
-            {" "}to either address. Then click the button below to notify us.
+            {" "}to either address. Then paste your transaction hash below and click the button to notify us.
             We verify and activate your tier within 24 hours.
           </p>
         </div>
 
+        {/* TX hash input */}
+        <div style={{ marginBottom: 32 }}>
+          <label style={{
+            display: "block",
+            fontFamily: MONO,
+            fontSize: 10,
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            color: "#94a3b8",
+            marginBottom: 10,
+          }}>
+            Transaction Hash
+          </label>
+          <input
+            type="text"
+            value={txHash}
+            onChange={(e) => setTxHash(e.target.value)}
+            placeholder="Paste your TX hash here after sending…"
+            style={{
+              width: "100%",
+              padding: "12px 14px",
+              background: "#0b1220",
+              border: `1px solid ${txHash.trim() ? GOLD : "#1e293b"}`,
+              borderRadius: 8,
+              color: "#f8fafc",
+              fontFamily: MONO,
+              fontSize: 12,
+              outline: "none",
+              boxSizing: "border-box",
+              transition: "border-color 0.15s",
+            }}
+          />
+          <p style={{ fontFamily: MONO, fontSize: 10, color: "#334155", margin: "8px 0 0" }}>
+            Found in your wallet app → Transaction History → copy the hash/ID
+          </p>
+        </div>
+
+        {/* Error state */}
+        {submitError && (
+          <div style={{
+            background: "rgba(239,68,68,0.08)",
+            border: "1px solid rgba(239,68,68,0.3)",
+            borderRadius: 8,
+            padding: "14px 18px",
+            marginBottom: 20,
+          }}>
+            <p style={{ fontFamily: MONO, fontSize: 12, color: "#ef4444", margin: "0 0 6px" }}>
+              Submission failed. Please contact us directly.
+            </p>
+            <a
+              href="mailto:admin@xrayforensic.com"
+              style={{ fontFamily: MONO, fontSize: 12, color: "#94a3b8", textDecoration: "none" }}
+            >
+              admin@xrayforensic.com →
+            </a>
+          </div>
+        )}
+
         {/* CTA */}
         <div style={{ textAlign: "center" }}>
-          <a
-            href={mailtoHref}
+          <button
+            onClick={() => setModalOpen(true)}
+            disabled={!txHash.trim()}
             style={{
               display: "block",
+              width: "100%",
               padding: "16px 32px",
-              background: GOLD,
-              color: "#000000",
+              background: txHash.trim() ? GOLD : "#1e293b",
+              color: txHash.trim() ? "#000000" : "#475569",
               fontFamily: SPACE,
               fontSize: 15,
               fontWeight: 700,
               borderRadius: 6,
-              textDecoration: "none",
+              border: "none",
+              cursor: txHash.trim() ? "pointer" : "not-allowed",
               marginBottom: 16,
-              transition: "background 0.15s",
+              transition: "background 0.15s, color 0.15s",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#b88d1d" }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = GOLD }}
+            onMouseEnter={(e) => { if (txHash.trim()) e.currentTarget.style.background = "#b88d1d" }}
+            onMouseLeave={(e) => { if (txHash.trim()) e.currentTarget.style.background = GOLD }}
           >
-            I&apos;ve Sent Payment →
-          </a>
-          <p style={{ fontSize: 12, color: "#475569", margin: 0 }}>
-            Or email us:{" "}
-            <a
-              href="mailto:support@xrayforensic.com"
-              style={{ color: "#94a3b8", fontFamily: MONO, textDecoration: "none" }}
-            >
-              support@xrayforensic.com
-            </a>
-          </p>
+            I&apos;ve Sent Payment — Notify Team →
+          </button>
+          {!txHash.trim() && (
+            <p style={{ fontFamily: MONO, fontSize: 11, color: "#334155", margin: 0 }}>
+              Paste your transaction hash above to continue
+            </p>
+          )}
         </div>
 
       </div>
+
+      {/* ── Confirmation modal ────────────────────────────────────────────── */}
+      {modalOpen && (
+        <div
+          onClick={() => setModalOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.80)",
+            zIndex: 200,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "24px",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "#0e1626",
+              border: "1px solid #1e293b",
+              borderRadius: 12,
+              padding: "32px 28px",
+              maxWidth: 440,
+              width: "100%",
+            }}
+          >
+            <p style={{
+              fontFamily: MONO,
+              fontSize: 10,
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              color: GOLD,
+              margin: "0 0 12px",
+            }}>
+              CONFIRM SUBMISSION
+            </p>
+            <h3 style={{
+              fontFamily: SPACE,
+              fontSize: 18,
+              fontWeight: 700,
+              color: "#f8fafc",
+              margin: "0 0 20px",
+              letterSpacing: "-0.01em",
+            }}>
+              Confirm Payment Submission
+            </h3>
+            <p style={{ fontFamily: MONO, fontSize: 12, color: "#94a3b8", margin: "0 0 12px" }}>
+              Please confirm:
+            </p>
+            <ul style={{ margin: "0 0 20px", paddingLeft: 20, display: "flex", flexDirection: "column", gap: 8 }}>
+              {[
+                "You sent the exact amount shown",
+                "To the correct wallet address",
+                "Transaction is complete (not pending)",
+              ].map((item) => (
+                <li key={item} style={{ fontFamily: MONO, fontSize: 12, color: "#94a3b8", lineHeight: 1.5 }}>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p style={{ fontFamily: MONO, fontSize: 11, color: "#475569", margin: "0 0 28px", lineHeight: 1.6 }}>
+              Our team will verify and activate your account within a few hours.
+            </p>
+            <div style={{ display: "flex", gap: 12 }}>
+              <button
+                onClick={() => setModalOpen(false)}
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  background: "transparent",
+                  border: "1px solid #1e293b",
+                  borderRadius: 6,
+                  color: "#94a3b8",
+                  fontFamily: MONO,
+                  fontSize: 12,
+                  cursor: "pointer",
+                  transition: "border-color 0.15s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#334155" }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#1e293b" }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmitPayment}
+                disabled={submitting}
+                style={{
+                  flex: 2,
+                  padding: "12px",
+                  background: submitting ? "#1e293b" : GOLD,
+                  border: "none",
+                  borderRadius: 6,
+                  color: submitting ? "#475569" : "#000000",
+                  fontFamily: MONO,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: submitting ? "not-allowed" : "pointer",
+                  letterSpacing: "0.04em",
+                  transition: "background 0.15s",
+                }}
+              >
+                {submitting ? "Submitting…" : "Yes, I've Paid — Notify Team"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </main>
   );
 }
