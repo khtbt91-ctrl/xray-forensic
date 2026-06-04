@@ -595,17 +595,14 @@ function Step3({
         setSelectedFile(null);
         return;
       }
-    } else if (name.endsWith(".xml")) {
-      setFileError("MT5 XML format is not supported. Please export as CSV or HTML Report from MT5 instead.");
-      setSelectedFile(null);
-      return;
     } else if (
       !name.endsWith(".csv") &&
       !name.endsWith(".htm") &&
       !name.endsWith(".html") &&
+      !name.endsWith(".xml") &&
       !name.endsWith(".xlsx")
     ) {
-      setFileError("⚠️ We need a .csv, .htm, .html, or .xlsx file from MT5. Try the export steps above.");
+      setFileError("⚠️ We need a .csv, .htm, .html, .xml, or .xlsx file from MT5. Try the export steps above.");
       setSelectedFile(null);
       return;
     }
@@ -1004,26 +1001,33 @@ function Step3({
             <p style={{ fontFamily: MONO, fontSize: 12, fontWeight: 600, color: "var(--text-primary)", margin: "0 0 12px" }}>
               How to export your MT5 history
             </p>
-            <ol style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 10 }}>
-              {[
-                <>Open MT5 → History tab (bottom panel)</>,
-                <>
-                  Right-click anywhere in the list → <span style={{ color: "var(--text-secondary)" }}>Save as Report</span><br/>
-                  This saves an .htm file — the recommended format.<br/>
-                  <br/>
-                  OR: Right-click → <span style={{ color: "var(--text-secondary)" }}>Report</span> → saves as .xlsx (Excel)<br/>
-                  OR: Right-click → <span style={{ color: "var(--text-secondary)" }}>Detailed Report</span> → saves as .csv
-                </>,
-                <>Upload whichever file you saved here.</>,
-              ].map((item, i) => (
-                <li key={i} style={{ fontFamily: MONO, fontSize: 12, color: "#475569", lineHeight: 1.6 }}>
-                  {item}
-                </li>
-              ))}
-            </ol>
-            <p style={{ fontFamily: MONO, fontSize: 11, color: "#94a3b8", margin: "12px 0 0", lineHeight: 1.5 }}>
-              The .htm Report format is most reliable. If unsure, use that one.
-            </p>
+            <div style={{ marginBottom: 12 }}>
+              <p style={{ fontFamily: MONO, fontSize: 11, color: GOLD, letterSpacing: "0.08em", textTransform: "uppercase", margin: "0 0 6px" }}>
+                Recommended
+              </p>
+              <p style={{ fontFamily: MONO, fontSize: 12, color: "var(--text-secondary)", margin: 0, lineHeight: 1.7 }}>
+                History tab → right-click → <span style={{ color: "var(--text-primary)" }}>Report</span> → saves as <span style={{ color: "var(--text-primary)" }}>.htm</span> (most reliable)
+              </p>
+            </div>
+            <div>
+              <p style={{ fontFamily: MONO, fontSize: 11, color: "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase", margin: "0 0 6px" }}>
+                Also works
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                {[
+                  <>→ Right-click → <span style={{ color: "var(--text-secondary)" }}>Save as Report</span> → .csv</>,
+                  <>→ Right-click → <span style={{ color: "var(--text-secondary)" }}>Report</span> → change type to .xlsx</>,
+                  <>→ File → <span style={{ color: "var(--text-secondary)" }}>Export</span> → .xml</>,
+                ].map((line, i) => (
+                  <p key={i} style={{ fontFamily: MONO, fontSize: 12, color: "#475569", margin: 0, lineHeight: 1.6 }}>
+                    {line}
+                  </p>
+                ))}
+              </div>
+              <p style={{ fontFamily: MONO, fontSize: 11, color: "#475569", margin: "10px 0 0" }}>
+                All four formats are accepted.
+              </p>
+            </div>
           </div>
         )}
       </div>
@@ -1039,7 +1043,7 @@ function Step3({
           {
             value: 'forex',
             label: 'MT5 / Forex',
-            sub: 'MT5 .htm, .html, .xlsx or .csv',
+            sub: 'MT5 .htm, .html, .xlsx, .xml or .csv',
             icon: '📊'
           },
           {
@@ -1123,7 +1127,7 @@ function Step3({
         <input
           ref={fileRef}
           type="file"
-          accept={assetClass === "crypto" ? ".csv" : ".csv,.htm,.html,.xlsx"}
+          accept={assetClass === "crypto" ? ".csv" : ".csv,.htm,.html,.xml,.xlsx"}
           style={{ display: "none" }}
           onChange={(e) => validateAndSetFile(e.target.files?.[0] || null)}
         />
@@ -1152,7 +1156,7 @@ function Step3({
               Drop your MT5 export here
             </p>
             <p style={{ fontFamily: MONO, fontSize: 11, color: "#94a3b8", margin: "0 0 16px", letterSpacing: "0.06em" }}>
-              {assetClass === "crypto" ? ".csv accepted" : ".csv · .htm · .html · .xlsx accepted"}
+              {assetClass === "crypto" ? ".csv accepted" : ".csv · .htm · .xlsx · .xml accepted"}
             </p>
             <span style={{ fontFamily: MONO, fontSize: 12, color: GOLD, cursor: "pointer", borderBottom: `1px solid ${GOLD}40` }}>
               or browse files
@@ -1180,7 +1184,7 @@ function Step3({
           textAlign: 'center',
           margin: '0 0 12px'
         }}>
-          MT5 .htm, .html, .xlsx or .csv
+          MT5 .htm, .html, .xlsx, .xml or .csv
         </p>
       )}
 
