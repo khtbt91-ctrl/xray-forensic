@@ -432,7 +432,7 @@ function PricingPageInner() {
             Real-time behavioral intervention at scale.
           </p>
           <a
-            href="mailto:support@xrayforensic.com?subject=SOVEREIGN%20waitlist"
+            href="mailto:admin@xrayforensic.com?subject=SOVEREIGN%20waitlist"
             style={{
               display: "inline-block",
               padding: "12px 32px",

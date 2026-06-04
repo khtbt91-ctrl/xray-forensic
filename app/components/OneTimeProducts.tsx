@@ -16,12 +16,12 @@ type Product = {
 
 const products: Product[] = [
   {
-    name: "Spot Audit",
+    name: "Spot Forensic",
     price: "$49",
     tagline: "Single full forensic diagnosis. No subscription.",
-    reportLevel: "AUDIT-level report depth.",
-    cta: "Get Spot Audit",
-    href: "/new?tier=spot-audit",
+    reportLevel: "FORENSIC-level report depth.",
+    cta: "Get Spot Forensic",
+    href: "/new?tier=spot-forensic",
   },
   {
     name: "Pre-Challenge Clearance",
@@ -42,7 +42,7 @@ const products: Product[] = [
   {
     name: "EA Autopsy",
     price: "$99",
-    tagline: "Did your bot blow the account, or did you? Upload your magic export and get a full per-EA forensic audit.",
+    tagline: "Did your bot blow the account, or did you? Upload your magic export and get a full per-EA forensic analysis.",
     reportLevel: "FORENSIC-level report + per-EA verdict.",
     cta: "Get EA Autopsy",
     href: "/new?tier=ea-autopsy",

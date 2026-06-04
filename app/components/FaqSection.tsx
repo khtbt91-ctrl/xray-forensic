@@ -18,11 +18,11 @@ const FAQ = [
   },
   {
     q: "Can I try it free?",
-    a: "Yes. The SIGNAL tier is permanently free — one audit per month with 7 dimension scores and session breakdown.",
+    a: "Yes. The SIGNAL tier is permanently free — one analysis per month with 7 dimension scores and session breakdown.",
   },
   {
     q: "How fast do I get my report?",
-    a: "SIGNAL and AUDIT reports process in under 30 seconds. FORENSIC-tier forensic diagnosis (AI-assisted) completes in under 2 minutes.",
+    a: "SIGNAL and FORENSIC reports process in under 30 seconds. Higher-tier forensic diagnosis (AI-assisted) completes in under 2 minutes.",
   },
   {
     q: "Do you support crypto exchanges?",
@@ -30,7 +30,7 @@ const FAQ = [
   },
   {
     q: "What about EA and automated trading?",
-    a: "X-Ray includes an EA Autopsy product. Download the free Magic Export script from /tools, run it in MT5 to capture magic numbers, then upload both files. X-Ray separates each EA from your manual trades and audits them independently.",
+    a: "X-Ray includes an EA Autopsy product. Download the free Magic Export script from /tools, run it in MT5 to capture magic numbers, then upload both files. X-Ray separates each EA from your manual trades and analyzes them independently.",
   },
   {
     q: "Is my trade data stored or shared?",

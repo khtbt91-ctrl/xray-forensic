@@ -149,7 +149,7 @@ export default function LeakCalculator() {
             </div>
 
             <div style={{ marginTop: 28, padding: "14px 16px", background: "rgba(88,166,255,0.05)", border: "1px solid rgba(88,166,255,0.18)", borderRadius: 6, fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.7 }}>
-              One FORENSIC audit: $79.{" "}
+              One FORENSIC analysis: $79.{" "}
               <br />
               Your leaks:{" "}
               <span style={{ color: "var(--loss)", fontVariantNumeric: "tabular-nums" }}>

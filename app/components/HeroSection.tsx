@@ -82,7 +82,7 @@ export default function HeroSection() {
                 textTransform: "uppercase",
               }}
             >
-              [SYSTEM AUDIT STAGE: ONLINE]
+              [SYSTEM FORENSIC STAGE: ONLINE]
             </span>
           </div>
 

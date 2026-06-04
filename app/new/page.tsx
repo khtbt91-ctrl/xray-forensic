@@ -30,7 +30,7 @@ interface ContextProfile {
   email: string;
 }
 
-type TierName = "SIGNAL" | "AUDIT" | "FORENSIC" | "GUARDIAN" | "SOVEREIGN";
+type TierName = "SIGNAL" | "FORENSIC" | "GUARDIAN" | "SOVEREIGN";
 type OneTime = "spot" | "pre-challenge" | null;
 
 const TIERS: {
@@ -46,16 +46,16 @@ const TIERS: {
     name: "SIGNAL",
     price: "Free",
     tagline: "Start free. One full diagnosis per month.",
-    features: ["1 audit/month", "7 dimension scores", "Session P&L breakdown", "Top 3 behavioral flags"],
+    features: ["1 analysis/month", "7 dimension scores", "Session P&L breakdown", "Top 3 behavioral flags"],
     popular: false,
     disabled: false,
     accent: "var(--text-secondary)",
   },
   {
-    name: "AUDIT",
+    name: "FORENSIC",
     price: "$29/mo",
     tagline: "Full forensic read. Your first real mirror.",
-    features: ["3 audits/month", "Full narrative", "Ranked prescriptions", "Drill-down stats"],
+    features: ["3 analyses/month", "Full narrative", "Ranked prescriptions", "Drill-down stats"],
     popular: false,
     disabled: false,
     accent: "var(--accent-primary)",
@@ -64,7 +64,7 @@ const TIERS: {
     name: "FORENSIC",
     price: "$79/mo",
     tagline: "Institutional-grade behavioral intelligence.",
-    features: ["10 audits/month", "Forensic AI narrative — full behavioral read", "Prop firm mode", "DNA profile", "Pre-mortem"],
+    features: ["10 analyses/month", "Forensic AI narrative — full behavioral read", "Prop firm mode", "DNA profile", "Pre-mortem"],
     popular: true,
     disabled: false,
     accent: "var(--accent-primary)",
@@ -73,7 +73,7 @@ const TIERS: {
     name: "GUARDIAN",
     price: "$149/mo",
     tagline: "The risk desk you never had.",
-    features: ["Unlimited audits", "Live MT5 sync", "Telegram watchdog", "5 accounts", "Certification"],
+    features: ["Unlimited analyses", "Live MT5 sync", "Telegram watchdog", "5 accounts", "Certification"],
     popular: false,
     disabled: false,
     accent: "var(--accent-secondary)",
@@ -464,7 +464,7 @@ function Step2({
               </ul>
               {tier.name === "SOVEREIGN" ? (
                 <a
-                  href="mailto:support@xrayforensic.com"
+                  href="mailto:admin@xrayforensic.com"
                   className="btn btn-ghost"
                   style={{ width: "100%", fontSize: 12, marginTop: 20, display: "inline-flex" }}
                   onClick={(e) => e.stopPropagation()}
@@ -501,7 +501,7 @@ function Step2({
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
           {[
-            { id: "spot" as OneTime, label: "Spot Audit", price: "$49", desc: "Single forensic deep-dive" },
+            { id: "spot" as OneTime, label: "Spot Forensic", price: "$49", desc: "Single forensic deep-dive" },
             { id: "pre-challenge" as OneTime, label: "Pre-Challenge Clearance", price: "$79", desc: "Before your next funded attempt" },
           ].map((opt) => {
             const sel = selectedOneTime === opt.id;
@@ -510,7 +510,7 @@ function Step2({
                 key={opt.id}
                 onClick={() => {
                   setSelectedOneTime(sel ? null : opt.id);
-                  if (!sel) setSelectedTier("AUDIT");
+                  if (!sel) setSelectedTier("FORENSIC");
                 }}
                 style={{
                   background: sel ? "var(--bg-elevated)" : "var(--bg-card)",
@@ -1216,8 +1216,8 @@ function Step3({
           </p>
           <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", marginTop: 8, marginBottom: 0 }}>
             This can happen with unsupported file formats or network issues. Try again or contact{" "}
-            <a href="mailto:support@xrayforensic.com" style={{ color: "var(--accent-primary)" }}>
-              support@xrayforensic.com
+            <a href="mailto:admin@xrayforensic.com" style={{ color: "var(--accent-primary)" }}>
+              admin@xrayforensic.com
             </a>
           </p>
           <button

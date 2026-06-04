@@ -110,7 +110,7 @@ export default function ToolsPage() {
               color: 'var(--text-primary)'
             }}>magic numbers</strong> — allowing
             X-Ray to separate your manual trades
-            from each EA and audit them independently.
+            from each EA and analyze them independently.
           </p>
 
           {/* What it reveals */}

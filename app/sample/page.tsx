@@ -233,7 +233,7 @@ export default function SamplePage() {
         {/* Bottom CTA */}
         <div style={{ textAlign: "center", background: "var(--bg-card)", border: "1px solid var(--border-subtle)", borderRadius: 10, padding: "40px 32px" }}>
           <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.6, margin: "0 0 24px" }}>
-            This is the free tier. The full forensic audit goes deeper.
+            This is the free tier. The full forensic analysis goes deeper.
           </p>
           <Link href="/new" className="btn btn-primary" style={{ fontSize: 15, padding: "14px 32px" }}>
             Get Your X-Ray

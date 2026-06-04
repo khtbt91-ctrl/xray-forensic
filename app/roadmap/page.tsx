@@ -359,7 +359,7 @@ function FundedCtaSection() {
       setSubmitted(true);
     } catch {
       window.open(
-        `mailto:support@xrayforensic.com?subject=Funded%20Account%20Interest&body=${encodeURIComponent(trimmed)}`,
+        `mailto:admin@xrayforensic.com?subject=Funded%20Account%20Interest&body=${encodeURIComponent(trimmed)}`,
         "_blank"
       );
       setSubmitted(true);

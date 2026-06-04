@@ -259,7 +259,7 @@ export default function PrivacyPage() {
           items={[
             "Free tier (SIGNAL): analysis data retained for 30 days, then automatically deleted",
             "Paid tiers: data retained for the duration of your subscription plus 90 days after cancellation",
-            "You may request complete deletion of all your data at any time by contacting support@xrayforensic.com",
+            "You may request complete deletion of all your data at any time by contacting admin@xrayforensic.com",
             "Upon deletion request, all trade data, reports, and profile information are permanently removed within 14 business days",
           ]}
         />
@@ -306,10 +306,10 @@ export default function PrivacyPage() {
         <Body>
           Contact:{" "}
           <a
-            href="mailto:support@xrayforensic.com"
+            href="mailto:admin@xrayforensic.com"
             style={{ color: "var(--accent-primary)", textDecoration: "none" }}
           >
-            support@xrayforensic.com
+            admin@xrayforensic.com
           </a>
         </Body>
 

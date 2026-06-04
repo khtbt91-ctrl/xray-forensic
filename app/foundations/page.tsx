@@ -666,8 +666,8 @@ export default function FoundationsPage() {
             </p>
             <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "#475569", margin: "0 0 8px" }}>
               For prop firms and institutional desks:{" "}
-              <a href="mailto:support@xrayforensic.com" style={{ color: GOLD, textDecoration: "none" }}>
-                support@xrayforensic.com
+              <a href="mailto:admin@xrayforensic.com" style={{ color: GOLD, textDecoration: "none" }}>
+                admin@xrayforensic.com
               </a>
             </p>
             <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "#475569", margin: 0 }}>

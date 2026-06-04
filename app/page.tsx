@@ -91,8 +91,8 @@ export default function LandingPage() {
             </p>
             <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "#475569", margin: "0 0 8px" }}>
               For prop firms and institutional desks:{" "}
-              <a href="mailto:support@xrayforensic.com" style={{ color: "#e5b83c", textDecoration: "none" }}>
-                support@xrayforensic.com
+              <a href="mailto:admin@xrayforensic.com" style={{ color: "#e5b83c", textDecoration: "none" }}>
+                admin@xrayforensic.com
               </a>
             </p>
             <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "#475569", margin: 0 }}>
