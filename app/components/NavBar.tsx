@@ -34,11 +34,12 @@ export default function NavBar() {
   };
 
   const navItems = [
-    { id: "how-it-works", label: "How It Works", href: "/#how-it-works" },
-    { id: "pricing",      label: "Pricing",      href: "/#pricing" },
-    { id: "tools",        label: "Tools",        href: "/tools" },
-    { id: "faq",          label: "FAQ",          href: "/#faq" },
-    { id: "about",        label: "About",        href: "/about" },
+    { id: "how-it-works",  label: "How It Works",  href: "/#how-it-works" },
+    { id: "pricing",       label: "Pricing",        href: "/#pricing" },
+    { id: "tools",         label: "Tools",          href: "/tools" },
+    { id: "foundations",   label: "Foundations",    href: "/foundations" },
+    { id: "faq",           label: "FAQ",            href: "/#faq" },
+    { id: "about",         label: "About",          href: "/about" },
   ];
 
   return (

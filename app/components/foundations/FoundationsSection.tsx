@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
 import type { UserProfile } from '@/lib/supabase'
@@ -131,9 +132,12 @@ export default function FoundationsSection({
     <div style={{ marginBottom: 28 }}>
 
       {/* ── Header bar (always visible) ── */}
-      <button
-        onClick={() => setOpen(v => !v)}
+      <div
+        role="button"
+        tabIndex={0}
         aria-expanded={open}
+        onClick={() => setOpen(v => !v)}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setOpen(v => !v) }}
         style={{
           width: '100%',
           display: 'flex',
@@ -148,7 +152,7 @@ export default function FoundationsSection({
           borderRadius: open ? '0 8px 0 0' : '0 8px 8px 0',
           padding: '14px 20px',
           cursor: 'pointer',
-          textAlign: 'left',
+          userSelect: 'none',
         }}
       >
         {/* Left: label + subtitle */}
@@ -159,17 +163,24 @@ export default function FoundationsSection({
           }}>
             FOUNDATIONS
           </span>
-          <span style={{
-            fontFamily: MONO, fontSize: 11, color: '#475569',
-            letterSpacing: '0.04em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-          }}>
-            New to trading? Start here.
-          </span>
+          <Link
+            href="/foundations"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              fontFamily: MONO, fontSize: 11, color: '#475569',
+              letterSpacing: '0.04em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+              textDecoration: 'none', transition: 'color 0.15s',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = GOLD }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = '#475569' }}
+          >
+            New to trading? Start here. →
+          </Link>
         </div>
 
         {/* Right: chevron */}
         <ChevronIcon open={open} />
-      </button>
+      </div>
 
       {/* ── Expanded body ── */}
       {open && (
