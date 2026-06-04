@@ -44,7 +44,8 @@ export default function ReturnToReportBanner() {
     pathname.startsWith('/roadmap') ||
     pathname.startsWith('/pricing') ||
     pathname.startsWith('/payment') ||
-    pathname.startsWith('/new')
+    pathname.startsWith('/new') ||
+    pathname.startsWith('/admin')
   ) {
     return null
   }
