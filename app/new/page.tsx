@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useCallback, useRef, useState, useEffect, Suspense } from "react";
-import { QRCodeSVG } from "qrcode.react";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -1256,11 +1255,13 @@ function CryptoAddress({
   label,
   color,
   address,
+  qrSrc,
   onCopied,
 }: {
   label: string;
   color: string;
   address: string;
+  qrSrc: string;
   onCopied?: () => void;
 }) {
   const [copied, setCopied] = React.useState(false);
@@ -1313,7 +1314,7 @@ function CryptoAddress({
           borderRadius: 6,
           lineHeight: 0,
         }}>
-          <QRCodeSVG value={address} size={120} bgColor="#ffffff" fgColor="#000000" />
+          <img src={qrSrc} width={120} height={120} alt="QR code" />
         </div>
         <p style={{
           fontFamily: MONO,
@@ -1526,12 +1527,14 @@ function StepPayment({
           label: "USDT · BEP20 (BNB Chain)",
           color: "var(--warning)",
           address: "0x620869b71e673bFfeAc79420a7141fE8853ba67e",
+          qrSrc: "/qr-bep20.png",
         },
         {
           network: "TRC20",
           label: "USDT · TRC20 (Tron)",
           color: "var(--accent-secondary)",
           address: "TYoZG5HUq8gVh2cgiarCDXV2rbdnetaZhs",
+          qrSrc: "/qr-trc20.png",
         },
       ].map((w) => (
         <CryptoAddress
@@ -1539,6 +1542,7 @@ function StepPayment({
           label={w.label}
           color={w.color}
           address={w.address}
+          qrSrc={w.qrSrc}
           onCopied={() => setSelectedWallet(w.network)}
         />
       ))}

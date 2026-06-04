@@ -1,7 +1,6 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import { QRCodeSVG } from "qrcode.react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -23,11 +22,13 @@ const CRYPTO_ADDRESSES = [
     network: "BEP20",
     chain:   "BNB Smart Chain",
     address: "0x620869b71e673bFfeAc79420a7141fE8853ba67e",
+    qrSrc:   "/qr-bep20.png",
   },
   {
     network: "TRC20",
     chain:   "Tron",
     address: "TYoZG5HUq8gVh2cgiarCDXV2rbdnetaZhs",
+    qrSrc:   "/qr-trc20.png",
   },
 ];
 
@@ -253,7 +254,7 @@ function PaymentContent() {
 
         {/* Crypto address cards */}
         <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 28 }}>
-          {CRYPTO_ADDRESSES.map(({ network, chain, address }) => (
+          {CRYPTO_ADDRESSES.map(({ network, chain, address, qrSrc }) => (
             <div
               key={network}
               style={{
@@ -310,7 +311,7 @@ function PaymentContent() {
                   borderRadius: 6,
                   lineHeight: 0,
                 }}>
-                  <QRCodeSVG value={address} size={120} bgColor="#ffffff" fgColor="#000000" />
+                  <img src={qrSrc} width={120} height={120} alt={`${network} QR`} />
                 </div>
                 <p style={{
                   fontFamily: MONO,
