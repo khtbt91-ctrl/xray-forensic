@@ -237,8 +237,13 @@ function AdminContent() {
     if (!token) return
     try {
       const r = await fetch(`${API}/admin/users`, { headers: { Authorization: `Bearer ${token}` } })
-      if (r.ok) setUsers(await r.json())
-    } catch {}
+      if (r.ok) {
+        const data = await r.json()
+        setUsers(Array.isArray(data) ? data : (data.users ?? []))
+      } else {
+        console.error('[admin] users fetch failed:', r.status, await r.text())
+      }
+    } catch (e) { console.error('[admin] users fetch error:', e) }
     setLoadingUsers(false)
   }, [token])
 
@@ -246,8 +251,13 @@ function AdminContent() {
     if (!token) return
     try {
       const r = await fetch(`${API}/admin/recent-analyses`, { headers: { Authorization: `Bearer ${token}` } })
-      if (r.ok) setAnalyses(await r.json())
-    } catch {}
+      if (r.ok) {
+        const data = await r.json()
+        setAnalyses(Array.isArray(data) ? data : [])
+      } else {
+        console.error('[admin] analyses fetch failed:', r.status, await r.text())
+      }
+    } catch (e) { console.error('[admin] analyses fetch error:', e) }
     setLoadingAnalyses(false)
   }, [token])
 
