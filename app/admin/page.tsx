@@ -212,8 +212,11 @@ function AdminContent() {
     if (!token) return
     try {
       const r = await fetch(`${API}/admin/stats`, { headers: { Authorization: `Bearer ${token}` } })
-      if (r.ok) setStats(await r.json())
-      else console.error('[admin] stats fetch failed:', r.status, await r.text())
+      if (r.ok) {
+        const data = await r.json()
+        console.log('[ADMIN] stats response:', data)
+        setStats(data)
+      } else console.error('[admin] stats fetch failed:', r.status, await r.text())
     } catch (e) { console.error('[admin] stats fetch error:', e) }
     setLoadingStats(false)
   }, [token])
@@ -240,6 +243,7 @@ function AdminContent() {
       const r = await fetch(`${API}/admin/users`, { headers: { Authorization: `Bearer ${token}` } })
       if (r.ok) {
         const data = await r.json()
+        console.log('[ADMIN] users response:', data)
         setUsers(Array.isArray(data) ? data : (data.users ?? []))
       } else {
         console.error('[admin] users fetch failed:', r.status, await r.text())
@@ -270,20 +274,21 @@ function AdminContent() {
   }, [])
 
   useEffect(() => {
-    if (!token) return
+    console.log('[ADMIN] session token:', session?.access_token ? 'present' : 'missing')
+    if (!session?.access_token) return
     fetchStats()
     fetchPayments()
     fetchUsers()
     fetchAnalyses()
     checkHealth()
-  }, [token, fetchStats, fetchPayments, fetchUsers, fetchAnalyses, checkHealth])
+  }, [session]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── poll pending payments every 60 s ──
   useEffect(() => {
-    if (!token) return
+    if (!session?.access_token) return
     const id = setInterval(fetchPayments, 60_000)
     return () => clearInterval(id)
-  }, [token, fetchPayments])
+  }, [session]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── actions ──
   const confirmPayment = async (id: string) => {
