@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import type { CSSProperties, ReactNode, FormEvent } from "react";
+import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import NavBar from "../components/NavBar";
 
@@ -655,10 +656,10 @@ function WaitlistSection() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email.trim()) return;
-    // TODO: connect to Supabase waitlist table in Phase 2
+    await supabase.from("waitlist").upsert({ email: email.trim() }, { onConflict: "email" });
     setSubmitted(true);
   };
 
