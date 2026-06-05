@@ -65,7 +65,7 @@ interface AdminUser {
 
 interface RecentAnalysis {
   id: string
-  email: string | null
+  user_email: string | null
   overall_score: number | null
   archetype: string | null
   tier_id: string
@@ -213,7 +213,8 @@ function AdminContent() {
     try {
       const r = await fetch(`${API}/admin/stats`, { headers: { Authorization: `Bearer ${token}` } })
       if (r.ok) setStats(await r.json())
-    } catch {}
+      else console.error('[admin] stats fetch failed:', r.status, await r.text())
+    } catch (e) { console.error('[admin] stats fetch error:', e) }
     setLoadingStats(false)
   }, [token])
 
@@ -253,7 +254,7 @@ function AdminContent() {
       const r = await fetch(`${API}/admin/recent-analyses`, { headers: { Authorization: `Bearer ${token}` } })
       if (r.ok) {
         const data = await r.json()
-        setAnalyses(Array.isArray(data) ? data : [])
+        setAnalyses(Array.isArray(data) ? data : (data.analyses ?? []))
       } else {
         console.error('[admin] analyses fetch failed:', r.status, await r.text())
       }
@@ -650,7 +651,7 @@ function AdminContent() {
                   <tbody>
                     {analyses.map(a => (
                       <tr key={a.id} style={{ borderBottom: `1px solid rgba(30,41,59,0.5)` }}>
-                        <td style={{ padding: '12px 16px', color: '#e2e8f0' }}>{a.email || '—'}</td>
+                        <td style={{ padding: '12px 16px', color: '#e2e8f0' }}>{a.user_email || '—'}</td>
                         <td style={{ padding: '12px 16px', fontWeight: 700, color: scoreColor(a.overall_score), fontFamily: MONO }}>
                           {a.overall_score ?? '—'}
                         </td>
