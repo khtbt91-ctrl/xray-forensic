@@ -209,7 +209,7 @@ function AdminContent() {
 
   // ── fetchers ──
   const fetchStats = useCallback(async () => {
-    if (!token) return
+    if (!token) { setLoadingStats(false); return }
     try {
       const r = await fetch(`${API}/admin/stats`, { headers: { Authorization: `Bearer ${token}` } })
       if (r.ok) {
@@ -222,7 +222,7 @@ function AdminContent() {
   }, [token])
 
   const fetchPayments = useCallback(async () => {
-    if (!token) return
+    if (!token) { setLoadingPayments(false); return }
     try {
       const r = await fetch(`${API}/admin/pending-payments`, { headers: { Authorization: `Bearer ${token}` } })
       if (r.ok) {
@@ -238,7 +238,7 @@ function AdminContent() {
   }, [token])
 
   const fetchUsers = useCallback(async () => {
-    if (!token) return
+    if (!token) { setLoadingUsers(false); return }
     try {
       const r = await fetch(`${API}/admin/users`, { headers: { Authorization: `Bearer ${token}` } })
       if (r.ok) {
@@ -253,7 +253,7 @@ function AdminContent() {
   }, [token])
 
   const fetchAnalyses = useCallback(async () => {
-    if (!token) return
+    if (!token) { setLoadingAnalyses(false); return }
     try {
       const r = await fetch(`${API}/admin/recent-analyses`, { headers: { Authorization: `Bearer ${token}` } })
       if (r.ok) {
@@ -274,21 +274,20 @@ function AdminContent() {
   }, [])
 
   useEffect(() => {
-    console.log('[ADMIN] session token:', session?.access_token ? 'present' : 'missing')
-    if (!session?.access_token) return
+    if (!token) return
     fetchStats()
     fetchPayments()
     fetchUsers()
     fetchAnalyses()
     checkHealth()
-  }, [session]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [token]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── poll pending payments every 60 s ──
   useEffect(() => {
-    if (!session?.access_token) return
+    if (!token) return
     const id = setInterval(fetchPayments, 60_000)
     return () => clearInterval(id)
-  }, [session]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [token]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── actions ──
   const confirmPayment = async (id: string) => {
