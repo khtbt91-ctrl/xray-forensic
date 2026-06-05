@@ -564,7 +564,7 @@ function BottomCta() {
             marginBottom:   40,
           }}>
             <a
-              href="/community"
+              href="mailto:admin@xrayforensic.com?subject=Community"
               style={{
                 display:       "inline-flex",
                 alignItems:    "center",
