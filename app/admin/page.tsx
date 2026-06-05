@@ -6,7 +6,6 @@ import NavBar from '../components/NavBar'
 
 // ── constants ─────────────────────────────────────────────────────────────────
 
-const ADMIN_EMAILS = ['admin@xrayforensic.com', 'kh.tbt91@gmail.com']
 const API = process.env.NEXT_PUBLIC_API_URL || ''
 const BG = '#050811'
 const CARD = '#0e1626'
@@ -181,6 +180,7 @@ function AdminContent() {
   const { toasts, toast } = useToast()
   const paymentsRef = useRef<HTMLDivElement>(null)
 
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null)
   const [stats, setStats] = useState<Stats | null>(null)
   const [payments, setPayments] = useState<PendingPayment[]>([])
   const [users, setUsers] = useState<AdminUser[]>([])
@@ -199,13 +199,21 @@ function AdminContent() {
 
   const token = session?.access_token
 
+  // ── fetch admin status from backend when token is available ──
+  useEffect(() => {
+    if (!token) return
+    fetch(`${API}/user/is-admin`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(d => setIsAdmin(d.is_admin === true))
+      .catch(() => setIsAdmin(false))
+  }, [token])
+
   // ── auth guard — redirect immediately if not admin ──
   useEffect(() => {
     if (loading) return
-    if (!user || !ADMIN_EMAILS.includes(user.email ?? '')) {
-      router.replace('/dashboard')
-    }
-  }, [user, loading, router])
+    if (!user) { router.replace('/dashboard'); return }
+    if (isAdmin === false) router.replace('/dashboard')
+  }, [user, loading, router, isAdmin])
 
   // ── fetchers ──
   const fetchStats = useCallback(async () => {
@@ -383,8 +391,8 @@ function AdminContent() {
   // Do NOT gate on `loading` here — loading waits for /user/profile (Railway),
   // which can be slow or unavailable. user is set immediately when Supabase
   // resolves the session, so we can safely render as soon as user is non-null.
-  if (!user) return <div style={{ background: BG, minHeight: '100vh' }} />
-  if (!ADMIN_EMAILS.includes(user.email ?? '')) return null
+  if (!user || isAdmin === null) return <div style={{ background: BG, minHeight: '100vh' }} />
+  if (isAdmin === false) return null
 
   const filteredUsers = search
     ? users.filter(u => u.email?.toLowerCase().includes(search.toLowerCase()))
