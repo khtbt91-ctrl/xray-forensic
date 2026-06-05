@@ -415,13 +415,13 @@ const PHASES: { phase: string; status: PhaseStatus; title: string; body: string 
     phase: "Phase 1",
     status: "ACTIVE",
     title: "The Platform",
-    body: "Self-serve web application. Upload, pay, diagnose. AI-powered forensic reports. Prop firm context mode. Pre-Challenge Monte Carlo simulation. Live at xrayforensic.com.",
+    body: "Self-serve web application. Upload, pay, diagnose. AI-powered forensic reports. Prop firm context mode. Live at xrayforensic.com.",
   },
   {
     phase: "Phase 2",
     status: "NEXT",
     title: "Intelligence Layer",
-    body: "Trader DNA profiles. Prescription compliance tracking. Pre-session briefing. What-If engine. Anonymous peer benchmarking. Subscription tiers.",
+    body: "Trader DNA profiles. Prescription compliance tracking. Pre-session briefing. What-If engine. Anonymous peer benchmarking.",
   },
   {
     phase: "Phase 3",
