@@ -216,9 +216,14 @@ function AdminContent() {
         const data = await r.json()
         console.log('[ADMIN] stats response:', data)
         setStats(data)
-      } else console.error('[admin] stats fetch failed:', r.status, await r.text())
-    } catch (e) { console.error('[admin] stats fetch error:', e) }
-    setLoadingStats(false)
+      } else {
+        console.error('[admin] stats fetch failed:', r.status, await r.text())
+      }
+    } catch (e) {
+      console.error('[admin] stats fetch error:', e)
+    } finally {
+      setLoadingStats(false)
+    }
   }, [token])
 
   const fetchPayments = useCallback(async () => {
@@ -233,8 +238,11 @@ function AdminContent() {
           return fresh.map(p => ({ ...p, _localStatus: localMap.get(p.id) }))
         })
       }
-    } catch {}
-    setLoadingPayments(false)
+    } catch (e) {
+      console.error('[admin] payments fetch error:', e)
+    } finally {
+      setLoadingPayments(false)
+    }
   }, [token])
 
   const fetchUsers = useCallback(async () => {
@@ -248,8 +256,11 @@ function AdminContent() {
       } else {
         console.error('[admin] users fetch failed:', r.status, await r.text())
       }
-    } catch (e) { console.error('[admin] users fetch error:', e) }
-    setLoadingUsers(false)
+    } catch (e) {
+      console.error('[admin] users fetch error:', e)
+    } finally {
+      setLoadingUsers(false)
+    }
   }, [token])
 
   const fetchAnalyses = useCallback(async () => {
@@ -262,8 +273,11 @@ function AdminContent() {
       } else {
         console.error('[admin] analyses fetch failed:', r.status, await r.text())
       }
-    } catch (e) { console.error('[admin] analyses fetch error:', e) }
-    setLoadingAnalyses(false)
+    } catch (e) {
+      console.error('[admin] analyses fetch error:', e)
+    } finally {
+      setLoadingAnalyses(false)
+    }
   }, [token])
 
   const checkHealth = useCallback(async () => {
@@ -365,8 +379,11 @@ function AdminContent() {
     } catch { toast('Error — try again', 'error') }
   }
 
-  // ── guard: render nothing while loading / redirecting ──
-  if (loading || !user) return <div style={{ background: BG, minHeight: '100vh' }} />
+  // ── guard: render nothing until user is known ──
+  // Do NOT gate on `loading` here — loading waits for /user/profile (Railway),
+  // which can be slow or unavailable. user is set immediately when Supabase
+  // resolves the session, so we can safely render as soon as user is non-null.
+  if (!user) return <div style={{ background: BG, minHeight: '100vh' }} />
   if (!ADMIN_EMAILS.includes(user.email ?? '')) return null
 
   const filteredUsers = search
