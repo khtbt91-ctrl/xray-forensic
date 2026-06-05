@@ -6,7 +6,7 @@ import NavBar from '../components/NavBar'
 
 // ── constants ─────────────────────────────────────────────────────────────────
 
-const ADMIN_EMAILS = ['admin@xrayforensic.com']
+const ADMIN_EMAILS = ['admin@xrayforensic.com', 'kh.tbt91@gmail.com']
 const API = process.env.NEXT_PUBLIC_API_URL || ''
 const BG = '#050811'
 const CARD = '#0e1626'
