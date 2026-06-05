@@ -5,7 +5,7 @@ const MONO = "'JetBrains Mono', monospace";
 // Pre-seeded anonymized findings — replace with API call once real data flows
 // Format reflects real X-Ray output language
 const FINDINGS = [
-  { instrument: "XAUUSD",  flag: "276 revenge re-entries",       leak: "-$4,753",  session: "London",    ago: "2h ago" },
+  { instrument: "XAUUSD",  flag: "276 revenge re-entries (demo)", leak: "-$4,753",  session: "London",    ago: "2h ago" },
   { instrument: "GBPUSD",  flag: "Off-session leak",             leak: "-$2,425",  session: "Asian",     ago: "5h ago" },
   { instrument: "NAS100",  flag: "91% losses: no stop-loss",     leak: "-$6,118",  session: "NY open",   ago: "7h ago" },
   { instrument: "XAUUSD",  flag: "Winning 60% — still negative", leak: "-$1,840",  session: "London",    ago: "11h ago" },

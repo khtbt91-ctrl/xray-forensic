@@ -157,6 +157,21 @@ export default function TestimonialCard({
         </p>
       )}
 
+      {/* Disclaimer */}
+      {!compact && testimonial.disclaimer && (
+        <p
+          style={{
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: '0.6rem',
+            color: 'var(--text-muted)',
+            margin: 0,
+            lineHeight: 1.5,
+          }}
+        >
+          {testimonial.disclaimer}
+        </p>
+      )}
+
       {/* Author */}
       <div
         style={{

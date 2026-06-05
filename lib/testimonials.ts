@@ -8,6 +8,7 @@ export type Testimonial = {
   flag_amount: string
   flag_count?: number
   quote: string
+  disclaimer?: string
   avatar_initials: string
   verified: boolean
   date: string
@@ -54,10 +55,11 @@ export const testimonials: Testimonial[] = [
     location: "Lebanon",
     instrument: "XAUUSD",
     tier: "forensic",
-    flag_label: "No stop-loss losses",
+    flag_label: "No stop-loss losses (demo account)",
     flag_amount: "$4,753",
     flag_count: 48,
-    quote: "I built X-Ray to diagnose my own trading first. 276 revenge trades. 48 positions with no stop. Asian session at 77.8% win rate — I barely traded it. New York at 30.9% — I traded it 475 times. The machine found what I couldn't see in 15 years.",
+    quote: "Built by a trader who ran his own demo account through X-Ray and found $4,753 in stop-loss leaks. X-Ray exists because the data doesn't lie — and most traders never see it.",
+    disclaimer: "Example based on a demonstration account. Individual results vary. Trading involves risk.",
     avatar_initials: "K",
     verified: true,
     date: "2026-05",

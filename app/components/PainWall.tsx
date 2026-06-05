@@ -88,7 +88,7 @@ export default function PainWall() {
             marginBottom: 48,
           }}
         >
-          FROM A REAL TRADER&apos;S EXPORT:
+          FROM A DEMO ACCOUNT EXPORT:
         </p>
       </FadeInUp>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>

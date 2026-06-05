@@ -6,7 +6,7 @@ const cards = [
   {
     accent: "var(--loss)",
     title: "THE LOSING TRADER",
-    body: "You've tried journals. You've tried mentors. None showed you the $4,753 sitting in your no-stop trades. X-Ray doesn't coach you. It exposes the pattern — then gives you the prescription to break it.",
+    body: "You've tried journals. You've tried mentors. None showed you the $4,753 in stop-loss leaks (demo account). X-Ray doesn't coach you. It exposes the pattern — then gives you the prescription to break it.",
     scenarios: null,
   },
   {
