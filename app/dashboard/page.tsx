@@ -205,6 +205,172 @@ function ComplianceTracker({ session }: { session: any }) {
   )
 }
 
+// ── Sparkline ─────────────────────────────────────────────────────────────────
+
+function Sparkline({ scores, width = 80, height = 28 }: { scores: number[], width?: number, height?: number }) {
+  if (scores.length === 0) return <svg width={width} height={height} />
+  const pad = 3
+  const norm = (s: number) => height - pad - (s / 100) * (height - pad * 2)
+  const trend = scores[scores.length - 1] - scores[0]
+  const color = trend > 3 ? '#3FB950' : trend < -3 ? '#F85149' : '#8B949E'
+  if (scores.length === 1) {
+    return <svg width={width} height={height}><circle cx={width / 2} cy={norm(scores[0])} r={2.5} fill={color} /></svg>
+  }
+  const pts = scores.map((s, i) => `${(i / (scores.length - 1)) * width},${norm(s)}`).join(' ')
+  const lx = width, ly = norm(scores[scores.length - 1])
+  return (
+    <svg width={width} height={height}>
+      <polyline points={pts} fill="none" stroke={color} strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" />
+      <circle cx={lx} cy={ly} r={2.5} fill={color} />
+    </svg>
+  )
+}
+
+// ── Trader DNA ────────────────────────────────────────────────────────────────
+
+function TraderDnaSection({ session, tierId }: { session: any, tierId: string }) {
+  const [dna, setDna] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const GOLD = '#e5b83c'
+
+  const DIMS = [
+    'htf_bias', 'liquidity_awareness', 'ote_discipline', 'ob_fvg_confluence',
+    'session_discipline', 'risk_architecture', 'behavioral_control',
+  ]
+  const tc = (trend: string) => trend === 'improving' ? '#3FB950' : trend === 'worsening' ? '#F85149' : '#8B949E'
+  const ts = (trend: string) => trend === 'improving' ? '↑' : trend === 'worsening' ? '↓' : '→'
+
+  useEffect(() => {
+    if (!session?.access_token) return
+    if (!['guardian', 'sovereign'].includes(tierId)) { setLoading(false); return }
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/dna`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    })
+      .then(r => r.ok ? r.json() : null)
+      .then(setDna)
+      .finally(() => setLoading(false))
+  }, [session?.access_token, tierId])
+
+  if (!['forensic', 'guardian', 'sovereign'].includes(tierId)) return null
+
+  if (tierId === 'forensic') return (
+    <div style={{ marginTop: 24, padding: '20px 24px', background: '#0e1626', border: '1px solid #1e293b', borderRadius: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+      <div>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: GOLD, letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 6px' }}>TRADER DNA</p>
+        <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1rem', fontWeight: 700, color: '#E6EDF3', margin: '0 0 4px' }}>Behavioral profile across all uploads</p>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#475569', margin: 0 }}>
+          Upgrade to GUARDIAN to unlock dimension trend charts, archetype evolution, and your trader fingerprint.
+        </p>
+      </div>
+      <a href="/pricing" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: GOLD, border: '1px solid rgba(229,184,60,0.3)', borderRadius: 4, padding: '8px 16px', textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>
+        Upgrade to GUARDIAN →
+      </a>
+    </div>
+  )
+
+  if (loading) return (
+    <div style={{ marginTop: 24, padding: '20px 24px', background: '#0e1626', border: '1px solid #1e293b', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div style={{ width: 16, height: 16, border: '2px solid #1e293b', borderTopColor: GOLD, borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
+      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#475569' }}>Loading Trader DNA...</span>
+    </div>
+  )
+
+  if (!dna || dna.insufficient_data) return (
+    <div style={{ marginTop: 24, padding: '24px', background: '#0e1626', border: '1px solid #1e293b', borderRadius: 8, textAlign: 'center' }}>
+      <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: GOLD, letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 10px' }}>TRADER DNA</p>
+      <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1rem', fontWeight: 700, color: '#E6EDF3', margin: '0 0 6px' }}>Upload again to unlock your Trader DNA profile.</p>
+      <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#475569', margin: 0 }}>
+        Requires 2 or more analyses to detect behavioral patterns.
+      </p>
+    </div>
+  )
+
+  const dims = dna.dimensions || {}
+  const archetypeEvolution = dna.archetype_history?.length > 1 && new Set(dna.archetype_history).size > 1
+
+  return (
+    <div style={{ marginTop: 24, background: '#0e1626', border: '1px solid #1e293b', borderRadius: 8, overflow: 'hidden' }}>
+      {/* Header */}
+      <div style={{ padding: '14px 24px', borderBottom: '1px solid #1e293b', background: 'rgba(11,18,32,0.4)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: GOLD, letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700 }}>TRADER DNA</span>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#475569' }}>
+            {dna.total_analyses} uploads · {dna.date_range}
+          </span>
+        </div>
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#475569' }}>Behavioral fingerprint</span>
+      </div>
+
+      <div style={{ padding: 24, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
+        {/* Left — dimension list */}
+        <div>
+          {DIMS.map(dk => {
+            const d = dims[dk]
+            if (!d) return null
+            const tcolor = tc(d.trend)
+            return (
+              <div key={dk} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '9px 0', borderBottom: '1px solid rgba(30,41,59,0.5)' }}>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: '#8B949E', width: 140, flexShrink: 0, letterSpacing: '0.05em' }}>
+                  {d.label.toUpperCase()}
+                </span>
+                <Sparkline scores={d.scores} width={72} height={26} />
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 700, color: tcolor, width: 26, textAlign: 'right' }}>
+                  {d.latest_score}
+                </span>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: tcolor, minWidth: 30 }}>
+                  {d.delta > 0 ? `+${d.delta}` : String(d.delta)}
+                </span>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: tcolor }}>
+                  {ts(d.trend)}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Right — summary cards */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {([
+            { label: 'BEST DIMENSION',  key: dna.best_dimension,  accent: '#3FB950', val: (d: any) => `${d.average}/100` },
+            { label: 'NEEDS WORK',      key: dna.worst_dimension, accent: '#F85149', val: (d: any) => `${d.average}/100` },
+            { label: 'MOST IMPROVED',   key: dna.most_improved,   accent: GOLD,      val: (d: any) => `+${d.delta}` },
+          ] as const).map(({ label, key, accent, val }) => {
+            const d = dims[key]
+            if (!d) return null
+            return (
+              <div key={label} style={{ background: '#080f1e', borderRadius: 6, padding: '13px 14px', border: `1px solid ${accent}22` }}>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: '#475569', letterSpacing: '0.1em', display: 'block', marginBottom: 5 }}>{label}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 13, fontWeight: 700, color: '#E6EDF3' }}>{d.label}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: accent, fontWeight: 700 }}>{val(d)}</span>
+                </div>
+              </div>
+            )
+          })}
+
+          {/* Archetype */}
+          <div style={{ background: '#080f1e', borderRadius: 6, padding: '13px 14px', border: `1px solid rgba(229,184,60,0.12)`, marginTop: 2 }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: '#475569', letterSpacing: '0.1em', display: 'block', marginBottom: 5 }}>CURRENT ARCHETYPE</span>
+            <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 13, fontWeight: 700, color: GOLD }}>
+              {dna.current_archetype ? dna.current_archetype.replace(/_/g, ' ').toUpperCase() : '—'}
+            </span>
+            {archetypeEvolution && (
+              <div style={{ marginTop: 8, fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#8B949E', lineHeight: 1.7 }}>
+                {(dna.archetype_history as string[]).map((a, i) => (
+                  <span key={i}>
+                    {a.replace(/_/g, ' ')}
+                    {i < dna.archetype_history.length - 1 && <span style={{ color: GOLD, margin: '0 5px' }}>→</span>}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── Stat card ─────────────────────────────────────────────────────────────────
 
 function StatCard({ label, value, color, icon, sub }: {
@@ -566,6 +732,9 @@ function DashboardContent() {
           {/* Compliance Tracker sidebar */}
           <ComplianceTracker session={session} />
         </div>
+
+        {/* ── Trader DNA ── */}
+        <TraderDnaSection session={session} tierId={profile.tier_id} />
 
         {/* ── Next diagnosis prompt ── */}
         {analyses.length > 0 && profile.can_analyze && (
