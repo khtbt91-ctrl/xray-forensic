@@ -50,6 +50,9 @@ export default function ReportPage() {
   const [deltaAvailable, setDeltaAvailable] = useState(false)
   const [whatIfData, setWhatIfData] = useState<any>(null)
   const [whatIfLoading, setWhatIfLoading] = useState(false)
+  const [benchmarkData, setBenchmarkData] = useState<any>(null)
+  const [benchmarkLoading, setBenchmarkLoading] = useState(false)
+  const [percentileData, setPercentileData] = useState<any>(null)
 
   useEffect(() => {
     if (authLoading) return   // wait until auth state is resolved
@@ -89,6 +92,23 @@ export default function ReportPage() {
             .then(json => { if (json) setWhatIfData(json) })
             .catch(() => {})
             .finally(() => setWhatIfLoading(false))
+        }
+
+        // Fetch benchmarks + percentiles in parallel
+        setBenchmarkLoading(true)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/benchmarks`)
+          .then(r => r.ok ? r.json() : null)
+          .then(json => { if (json) setBenchmarkData(json) })
+          .catch(() => {})
+          .finally(() => setBenchmarkLoading(false))
+
+        if (session?.access_token) {
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/percentiles`, {
+            headers: { Authorization: `Bearer ${session.access_token}` },
+          })
+            .then(r => r.ok ? r.json() : null)
+            .then(json => { if (json) setPercentileData(json) })
+            .catch(() => {})
         }
 
         // Fetch HTML content from Supabase Storage
@@ -545,6 +565,90 @@ export default function ReportPage() {
                 </div>
               </>
             ) : null}
+          </div>
+        </div>
+      )}
+
+      {/* ── Anonymous Benchmarking ───────────────────────────────────────── */}
+      {(benchmarkLoading || benchmarkData) && (
+        <div style={{ background: 'var(--bg-base)', padding: '48px 24px 8px' }}>
+          <div style={{ maxWidth: 800, margin: '0 auto' }}>
+            <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.65rem', color: '#C9A84C', letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 6px' }}>
+              ANONYMOUS BENCHMARKING
+            </p>
+            <h2 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.25rem', fontWeight: 700, color: '#E6EDF3', margin: '0 0 4px' }}>
+              How you rank vs all X-Ray traders
+            </h2>
+            <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.7rem', color: '#8B949E', margin: '0 0 24px' }}>
+              Anonymous aggregate — no individual trader data exposed.
+            </p>
+
+            {benchmarkLoading ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '24px 0', color: '#8B949E', fontFamily: 'JetBrains Mono, monospace', fontSize: '0.7rem' }}>
+                <div style={{ width: 16, height: 16, border: '2px solid #1e293b', borderTopColor: '#C9A84C', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
+                Calculating rankings...
+              </div>
+            ) : benchmarkData && benchmarkData.total_traders_analyzed < 10 ? (
+              <div style={{ background: '#0e1626', border: '1px solid #1e293b', borderRadius: 8, padding: '28px', textAlign: 'center' }}>
+                <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.72rem', color: '#E6EDF3', margin: '0 0 8px' }}>
+                  Benchmarking activates when more traders join.
+                </p>
+                <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.65rem', color: '#8B949E', margin: 0 }}>
+                  {benchmarkData.total_traders_analyzed} trader{benchmarkData.total_traders_analyzed !== 1 ? 's' : ''} analyzed so far. Check back soon.
+                </p>
+              </div>
+            ) : benchmarkData && percentileData && !percentileData.insufficient_data ? (() => {
+              const showAllDims = !['signal', 'audit'].includes(reportTier)
+              const BENCH_DIMS = [
+                { key: 'htf_bias',            label: 'HTF BIAS' },
+                { key: 'liquidity_awareness', label: 'LIQUIDITY AWARENESS' },
+                { key: 'ote_discipline',      label: 'OTE DISCIPLINE' },
+                { key: 'ob_fvg_confluence',   label: 'OB / FVG CONFLUENCE' },
+                { key: 'session_discipline',  label: 'SESSION DISCIPLINE' },
+                { key: 'risk_architecture',   label: 'RISK ARCHITECTURE' },
+                { key: 'behavioral_control',  label: 'BEHAVIORAL CONTROL' },
+              ]
+              const renderBar = (label: string, userScore: number, platformAvg: number | null, percentile: number) => (
+                <div key={label} style={{ marginBottom: 20 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.62rem', color: '#8B949E', letterSpacing: '0.1em' }}>{label}</span>
+                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.62rem', color: '#475569' }}>
+                      Your score: <span style={{ color: '#E6EDF3', fontWeight: 700 }}>{userScore}</span>
+                      {platformAvg !== null && <>&nbsp;&nbsp;Platform avg: <span style={{ color: '#8B949E' }}>{platformAvg}</span></>}
+                    </span>
+                  </div>
+                  <div style={{ position: 'relative', width: '100%', height: 6, background: '#1e293b', borderRadius: 100, overflow: 'hidden', marginBottom: 4 }}>
+                    <div style={{ position: 'absolute', height: '100%', width: `${percentile}%`, background: '#C9A84C', borderRadius: 100, transition: 'width 0.8s ease' }} />
+                    {platformAvg !== null && (
+                      <div style={{ position: 'absolute', height: '100%', width: 2, left: `${platformAvg}%`, background: 'rgba(139,148,158,0.5)' }} />
+                    )}
+                  </div>
+                  <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.58rem', color: '#C9A84C' }}>{percentile}th percentile</span>
+                </div>
+              )
+              return (
+                <div style={{ background: '#0e1626', border: '1px solid #1e293b', borderRadius: 8, padding: '24px' }}>
+                  {renderBar('OVERALL SCORE',
+                    percentileData.user_overall_score ?? 0,
+                    percentileData.platform_overall_avg,
+                    percentileData.overall_percentile ?? 0,
+                  )}
+                  {showAllDims && BENCH_DIMS.map(({ key, label }) => {
+                    const d = percentileData.dimensions?.[key]
+                    if (!d) return null
+                    return renderBar(label, d.user_score, d.platform_average, d.percentile)
+                  })}
+                  {!showAllDims && (
+                    <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.62rem', color: '#475569', margin: '16px 0 0', borderTop: '1px solid #1e293b', paddingTop: 16 }}>
+                      Upgrade to FORENSIC to unlock all 7 dimension percentiles.
+                    </p>
+                  )}
+                  <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.6rem', color: '#475569', margin: '16px 0 0' }}>
+                    Based on {benchmarkData.total_traders_analyzed} anonymized trader{benchmarkData.total_traders_analyzed !== 1 ? 's' : ''} on the platform.
+                  </p>
+                </div>
+              )
+            })() : null}
           </div>
         </div>
       )}
