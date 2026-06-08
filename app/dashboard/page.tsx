@@ -40,115 +40,166 @@ function getScoreStyle(score: number) {
 
 // ── Compliance sidebar ────────────────────────────────────────────────────────
 
-function ComplianceTracker({ complianceData }: { complianceData: { latest: any; previous: any } | null }) {
-  // Derive real bars from complianceData.latest if available
-  const latest = complianceData?.latest
+function ComplianceTracker({ session }: { session: any }) {
+  const [prescriptions, setPrescriptions] = useState<any[]>([])
+  const [total, setTotal] = useState(0)
+  const [followed, setFollowed] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [toast, setToast] = useState<string | null>(null)
 
-  // Map Supabase prescription fields to 0-100 bar values
-  const bars = latest ? [
-    {
-      label: 'The 95/5 Discipline',
-      // scores.behavioral_control is 0-10 → normalize to %; fallback: penalise revenge trades
-      value: latest.scores?.behavioral_control != null
-        ? Math.round(latest.scores.behavioral_control * 10)
-        : Math.max(0, Math.min(100, 100 - (latest.revenge_count || 0) * 5)),
-      color: '#e5b83c',
-    },
-    {
-      label: 'Stop-Loss Protocols',
-      value: latest.scores?.risk_discipline != null
-        ? Math.round(latest.scores.risk_discipline * 10)
-        : Math.max(0, Math.min(100, 100 - (latest.no_sl_count || 0) * 3)),
-      color: '#e5b83c',
-    },
-    {
-      label: 'Position Sizing',
-      value: latest.scores?.position_sizing != null
-        ? Math.round(latest.scores.position_sizing * 10)
-        : Math.min(100, Math.round((latest.profit_factor || 0) * 50)),
-      color: '#e5b83c',
-    },
-    {
-      label: 'Emotional Control',
-      value: latest.scores?.emotional_control != null
-        ? Math.round(latest.scores.emotional_control * 10)
-        : Math.round((latest.win_rate || 0) * 100),
-      color: undefined, // set below
-    },
-  ] : null
+  useEffect(() => {
+    if (!session?.access_token) return
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/prescriptions`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    })
+      .then(r => r.ok ? r.json() : null)
+      .then(json => {
+        if (json) {
+          setPrescriptions(json.prescriptions || [])
+          setTotal(json.total || 0)
+          setFollowed(json.followed || 0)
+        }
+      })
+      .finally(() => setLoading(false))
+  }, [session?.access_token])
 
-  if (bars) {
-    // Emotional control amber if below 80
-    bars[3].color = bars[3].value < 80 ? '#f59e0b' : '#e5b83c'
+  const markFollowed = async (id: string) => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/prescriptions/${id}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${session?.access_token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status: 'followed' }),
+    })
+    if (res.ok) {
+      setPrescriptions(prev => prev.map(p => p.id === id ? { ...p, status: 'followed' } : p))
+      const newFollowed = followed + 1
+      setFollowed(newFollowed)
+      setToast('+25 XP')
+      setTimeout(() => setToast(null), 2500)
+    }
   }
 
-  const avgCompliance = bars
-    ? Math.round(bars.reduce((s, b) => s + b.value, 0) / bars.length)
-    : null
+  const complianceRate = total > 0 ? Math.round((followed / total) * 100) : 0
+  const active = prescriptions.filter(p => p.status !== 'followed')
+  const done   = prescriptions.filter(p => p.status === 'followed')
 
   return (
-    <div style={{ background: '#0e1626', border: '1px solid #1e293b', borderRadius: '8px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ background: '#0e1626', border: '1px solid #1e293b', borderRadius: '8px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px', position: 'relative' }}>
+      <style>{`
+        @keyframes xpFade {
+          0%   { opacity:0; transform:translateY(-6px) }
+          15%  { opacity:1; transform:none }
+          75%  { opacity:1 }
+          100% { opacity:0 }
+        }
+      `}</style>
+
+      {/* XP toast */}
+      {toast && (
+        <div style={{
+          position: 'absolute', top: 14, right: 14,
+          background: 'rgba(63,185,80,0.15)', border: '1px solid rgba(63,185,80,0.4)',
+          borderRadius: 6, padding: '5px 10px',
+          fontFamily: "'JetBrains Mono', monospace", fontSize: '12px',
+          color: '#3FB950', fontWeight: 700,
+          animation: 'xpFade 2.5s ease forwards', pointerEvents: 'none',
+        }}>
+          {toast}
+        </div>
+      )}
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #1e293b', paddingBottom: '12px' }}>
         <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 700, color: '#94a3b8' }}>
           Compliance Tracker
         </span>
-        {/* TrendingDown icon */}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e5b83c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
           <polyline points="17 18 23 18 23 12" />
         </svg>
       </div>
 
-      {bars ? (
-        <>
-          {/* Progress bars */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {bars.map((bar) => (
-              <div key={bar.label} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#94a3b8' }}>{bar.label}</span>
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', fontWeight: 700, color: bar.color }}>{bar.value}%</span>
-                </div>
-                <div style={{ width: '100%', height: '8px', background: '#0b1220', borderRadius: '100px', overflow: 'hidden' }}>
-                  <div style={{
-                    height: '100%',
-                    width: `${bar.value}%`,
-                    background: bar.color,
-                    borderRadius: '100px',
-                    boxShadow: bar.color === '#e5b83c' ? '0 0 8px #e5b83c' : undefined,
-                    transition: 'width 0.6s ease',
-                  }} />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* System threshold */}
-          <div style={{ background: '#050811', border: '1px solid #1e293b', borderRadius: '6px', padding: '14px', textAlign: 'center' }}>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#e5b83c', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: '6px' }}>
-              [SYSTEM THRESHOLD]
-            </span>
-            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#94a3b8', lineHeight: 1.6, margin: 0 }}>
-              Average compliance above{' '}
-              <span style={{ color: '#f8fafc', fontWeight: 700 }}>85%</span>
-              {' '}required for Operator eligibility. Current:{' '}
-              <span style={{ color: avgCompliance != null && avgCompliance >= 85 ? '#10b981' : '#f59e0b', fontWeight: 700 }}>
-                {avgCompliance}%
-              </span>
-            </p>
-          </div>
-        </>
-      ) : (
+      {loading ? (
+        <div style={{ padding: '16px 0', textAlign: 'center' }}>
+          <div style={{ width: '18px', height: '18px', border: '2px solid #1e293b', borderTopColor: '#e5b83c', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto' }} />
+        </div>
+      ) : total === 0 ? (
         <div style={{ textAlign: 'center', padding: '24px 0' }}>
-          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#475569', lineHeight: 1.7 }}>
-            Complete your first analysis to unlock compliance tracking.
+          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#475569', lineHeight: 1.7, margin: '0 0 16px' }}>
+            Complete your first analysis to unlock<br />compliance tracking.
           </p>
-          <a href="/new" style={{ display: 'inline-block', marginTop: '16px', fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#e5b83c', textDecoration: 'none', border: '1px solid rgba(229,184,60,0.3)', borderRadius: '4px', padding: '6px 14px' }}>
+          <a href="/new" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#e5b83c', textDecoration: 'none', border: '1px solid rgba(229,184,60,0.3)', borderRadius: '4px', padding: '6px 14px' }}>
             Upload Trade Data →
           </a>
         </div>
+      ) : (
+        <>
+          {/* Rate bar */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#94a3b8' }}>COMPLIANCE RATE</span>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', fontWeight: 700, color: '#e5b83c' }}>{complianceRate}%</span>
+            </div>
+            <div style={{ width: '100%', height: '8px', background: '#0b1220', borderRadius: '100px', overflow: 'hidden' }}>
+              <div style={{ height: '100%', width: `${complianceRate}%`, background: '#e5b83c', borderRadius: '100px', boxShadow: '0 0 8px rgba(229,184,60,0.4)', transition: 'width 0.6s ease' }} />
+            </div>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#475569' }}>
+              {followed}/{total} prescriptions followed
+            </span>
+          </div>
+
+          {/* Active prescriptions */}
+          {active.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#475569', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Active</span>
+              {active.map(p => (
+                <button
+                  key={p.id}
+                  onClick={() => markFollowed(p.id)}
+                  style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', background: 'none', border: '1px solid #1e293b', borderRadius: '6px', padding: '10px 12px', cursor: 'pointer', textAlign: 'left', width: '100%', transition: 'border-color 0.15s' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(229,184,60,0.4)' }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#1e293b' }}
+                >
+                  <div style={{ width: '15px', height: '15px', border: '1.5px solid #475569', borderRadius: '3px', flexShrink: 0, marginTop: '2px' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', minWidth: 0 }}>
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#e2e8f0', lineHeight: 1.5 }}>
+                      {p.prescription_text}
+                    </span>
+                    {p.estimated_impact != null && (
+                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#3FB950' }}>
+                        saves ${Math.round(p.estimated_impact).toLocaleString()}/mo
+                      </span>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Followed prescriptions */}
+          {done.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#475569', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Followed</span>
+              {done.slice(0, 3).map(p => (
+                <div key={p.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', border: '1px solid rgba(63,185,80,0.15)', borderRadius: '6px', padding: '10px 12px' }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3FB950" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: '2px' }}>
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#475569', lineHeight: 1.5, textDecoration: 'line-through' }}>
+                    {p.prescription_text}
+                  </span>
+                </div>
+              ))}
+              {done.length > 3 && (
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#475569', textAlign: 'center' }}>
+                  +{done.length - 3} more followed
+                </span>
+              )}
+            </div>
+          )}
+        </>
       )}
     </div>
   )
@@ -190,7 +241,6 @@ function DashboardContent() {
   const router = useRouter()
   const [analyses, setAnalyses] = useState<any[]>([])
   const [loadingData, setLoadingData] = useState(true)
-  const [complianceData, setComplianceData] = useState<{ latest: any; previous: any } | null>(null)
 
   // ── Auth guards (unchanged) ──
   useEffect(() => {
@@ -207,7 +257,6 @@ function DashboardContent() {
   useEffect(() => {
     if (!user) return
     fetchAnalyses()
-    fetchCompliance()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, session?.access_token])
 
@@ -235,26 +284,6 @@ function DashboardContent() {
       console.error(e)
     } finally {
       setLoadingData(false)
-    }
-  }
-
-  const fetchCompliance = async () => {
-    try {
-      const { supabase } = await import('@/lib/supabase')
-      const { data } = await supabase
-        .from('prescriptions')
-        .select('*')
-        .eq('user_id', user!.id)
-        .order('created_at', { ascending: false })
-        .limit(2)
-      if (data && data.length >= 2) {
-        setComplianceData({ latest: data[0], previous: data[1] })
-      } else if (data && data.length === 1) {
-        // Single snapshot — still populate sidebar, just no comparison
-        setComplianceData({ latest: data[0], previous: data[0] })
-      }
-    } catch (e) {
-      console.error(e)
     }
   }
 
@@ -358,7 +387,6 @@ function DashboardContent() {
         <FoundationsSection
           analyses={analyses}
           profile={profile}
-          complianceData={complianceData}
         />
 
         {/* ── 4 KPI Cards ── */}
@@ -536,7 +564,7 @@ function DashboardContent() {
           </div>
 
           {/* Compliance Tracker sidebar */}
-          <ComplianceTracker complianceData={complianceData} />
+          <ComplianceTracker session={session} />
         </div>
 
         {/* ── Next diagnosis prompt ── */}
