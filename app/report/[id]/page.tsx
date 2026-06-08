@@ -48,6 +48,8 @@ export default function ReportPage() {
   const [dimensionScores, setDimensionScores] = useState<Record<string, number | null> | null>(null)
   const [scoreDelta, setScoreDelta] = useState<Record<string, number | null> | null>(null)
   const [deltaAvailable, setDeltaAvailable] = useState(false)
+  const [whatIfData, setWhatIfData] = useState<any>(null)
+  const [whatIfLoading, setWhatIfLoading] = useState(false)
 
   useEffect(() => {
     if (authLoading) return   // wait until auth state is resolved
@@ -74,6 +76,19 @@ export default function ReportPage() {
         if (data.delta_available) {
           setDeltaAvailable(true)
           setScoreDelta(data.score_delta || null)
+        }
+
+        // Trigger what-if analysis in parallel if enough trades exist
+        if ((data.total_trades || 0) >= 20 && session?.access_token) {
+          setWhatIfLoading(true)
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/analysis/${id}/whatif`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${session.access_token}` },
+          })
+            .then(r => r.ok ? r.json() : null)
+            .then(json => { if (json) setWhatIfData(json) })
+            .catch(() => {})
+            .finally(() => setWhatIfLoading(false))
         }
 
         // Fetch HTML content from Supabase Storage
@@ -426,6 +441,110 @@ export default function ReportPage() {
               })}
 
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── What-If Analysis ─────────────────────────────────────────── */}
+      {(whatIfLoading || whatIfData) && (
+        <div style={{ background: 'var(--bg-base)', padding: '48px 24px 8px' }}>
+          <div style={{ maxWidth: 800, margin: '0 auto' }}>
+            <p style={{
+              fontFamily: 'JetBrains Mono, monospace', fontSize: '0.65rem',
+              color: '#C9A84C', letterSpacing: '0.15em', textTransform: 'uppercase',
+              margin: '0 0 6px',
+            }}>
+              WHAT-IF ANALYSIS
+            </p>
+            <h2 style={{
+              fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.25rem',
+              fontWeight: 700, color: '#E6EDF3', margin: '0 0 4px',
+            }}>
+              What your P&L would have been
+            </h2>
+            <p style={{
+              fontFamily: 'JetBrains Mono, monospace', fontSize: '0.7rem',
+              color: '#8B949E', margin: '0 0 24px',
+            }}>
+              if you had applied these rules to this exact dataset.
+            </p>
+
+            {whatIfLoading ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '24px 0', color: '#8B949E', fontFamily: 'JetBrains Mono, monospace', fontSize: '0.7rem' }}>
+                <div style={{ width: 16, height: 16, border: '2px solid #1e293b', borderTopColor: '#C9A84C', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
+                <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+                Calculating scenarios...
+              </div>
+            ) : whatIfData ? (
+              <>
+                {/* Actual baseline */}
+                <div style={{
+                  display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12,
+                  background: '#0e1626', border: '1px solid #1e293b', borderRadius: 6,
+                  padding: '12px 16px', marginBottom: 16,
+                }}>
+                  {[
+                    { label: 'ACTUAL TRADES', value: String(whatIfData.actual.trades) },
+                    { label: 'WIN RATE', value: `${whatIfData.actual.win_rate}%` },
+                    { label: 'NET P&L', value: `${whatIfData.actual.net_pnl >= 0 ? '+' : ''}$${Math.abs(whatIfData.actual.net_pnl).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, color: whatIfData.actual.net_pnl >= 0 ? '#3FB950' : '#F85149' },
+                  ].map(({ label, value, color }) => (
+                    <div key={label}>
+                      <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.55rem', color: '#475569', letterSpacing: '0.1em', marginBottom: 4 }}>{label}</div>
+                      <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.8rem', fontWeight: 700, color: color || '#E6EDF3' }}>{value}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* 2x2 scenario grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+                  {whatIfData.scenarios.map((s: any) => {
+                    const pos = s.pnl_delta > 0
+                    const neg = s.pnl_delta < 0
+                    const deltaColor = pos ? '#3FB950' : neg ? '#F85149' : '#8B949E'
+                    const fmtPnl = (v: number) => {
+                      const abs = Math.abs(v)
+                      const f = abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                      return `${v >= 0 ? '+' : '-'}$${f}`
+                    }
+                    return (
+                      <div key={s.id} style={{
+                        background: '#0e1626', border: '1px solid #1e293b',
+                        borderRadius: 8, padding: '20px',
+                        display: 'flex', flexDirection: 'column', gap: 12,
+                      }}>
+                        <div>
+                          <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.6rem', color: '#8B949E', letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 4px' }}>
+                            {s.name}
+                          </p>
+                          <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.62rem', color: '#475569', margin: 0 }}>
+                            {s.trades_removed} off-rule trades removed
+                          </p>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                          {[
+                            { label: 'ACTUAL', value: fmtPnl(whatIfData.actual.net_pnl), color: whatIfData.actual.net_pnl >= 0 ? '#3FB950' : '#F85149' },
+                            { label: 'WHAT-IF', value: fmtPnl(s.net_pnl), color: s.net_pnl >= 0 ? '#3FB950' : '#F85149' },
+                          ].map(({ label, value, color }) => (
+                            <div key={label} style={{ background: '#080f1e', borderRadius: 4, padding: '8px 10px' }}>
+                              <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.52rem', color: '#475569', letterSpacing: '0.08em', marginBottom: 3 }}>{label}</div>
+                              <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.82rem', fontWeight: 700, color }}>{value}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{ borderTop: '1px solid #1e293b', paddingTop: 10 }}>
+                          <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.88rem', fontWeight: 700, color: deltaColor, marginBottom: 5 }}>
+                            {s.pnl_delta > 0 ? '+' : ''}{fmtPnl(s.pnl_delta).replace(/^\+|-/, s.pnl_delta >= 0 ? '+$' : '-$').replace('$$', '$')} difference
+                          </div>
+                          <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.65rem', color: '#8B949E', lineHeight: 1.6, margin: 0 }}>
+                            {s.verdict}
+                          </p>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </>
+            ) : null}
           </div>
         </div>
       )}
