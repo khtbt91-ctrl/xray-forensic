@@ -33,9 +33,9 @@ class DashboardErrorBoundary extends Component<
 // ── Score helpers ─────────────────────────────────────────────────────────────
 
 function getScoreStyle(score: number) {
-  if (score >= 8.5) return { color: '#10b981', tier: 'Gold' }
-  if (score >= 7.0) return { color: '#e5b83c', tier: 'Silver' }
-  return { color: '#ef4444', tier: 'Red' }
+  if (score >= 80) return { color: '#10b981', tier: 'GOLD' }
+  if (score >= 60) return { color: '#e5b83c', tier: 'SILVER' }
+  return { color: '#ef4444', tier: 'RED' }
 }
 
 // ── Compliance sidebar ────────────────────────────────────────────────────────
@@ -209,7 +209,7 @@ function DashboardContent() {
     fetchAnalyses()
     fetchCompliance()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user])
+  }, [user, session?.access_token])
 
   // ── Login ping — updates discipline streak in DB on each dashboard load ──
   useEffect(() => {
@@ -225,14 +225,12 @@ function DashboardContent() {
   // ── Data fetching (unchanged logic, added overall_score + archetype) ──
   const fetchAnalyses = async () => {
     try {
-      const { supabase } = await import('@/lib/supabase')
-      const { data } = await supabase
-        .from('analyses')
-        .select('id, created_at, tier_id, net_pnl, total_trades, win_rate, client_name, overall_score, archetype')
-        .eq('user_id', user!.id)
-        .order('created_at', { ascending: false })
-        .limit(20)
-      setAnalyses(data || [])
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/analyses`, {
+        headers: { Authorization: `Bearer ${session?.access_token}` },
+      })
+      if (!res.ok) throw new Error('Fetch failed')
+      const json = await res.json()
+      setAnalyses(json.analyses || [])
     } catch (e) {
       console.error(e)
     } finally {
@@ -308,7 +306,7 @@ function DashboardContent() {
     : null
 
   const biggestLeakArchetype = biggestLeak !== null
-    ? analyses.find(a => a.net_pnl === biggestLeak)?.archetype ?? null
+    ? analyses.find(a => a.net_pnl === biggestLeak)?.archetype_name ?? null
     : null
 
   return (
@@ -443,7 +441,7 @@ function DashboardContent() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: "'JetBrains Mono', monospace", fontSize: '12px' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid #1e293b' }}>
-                      {['Date', 'Trades', 'Score', 'Archetype', 'Action'].map(col => (
+                      {['Date', 'Trades', 'Score', 'Δ', 'Archetype', 'Action'].map(col => (
                         <th key={col} style={{ padding: '12px 16px', textAlign: 'left', fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#475569', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700 }}>
                           {col}
                         </th>
@@ -454,7 +452,7 @@ function DashboardContent() {
                     {analyses.map((analysis) => {
                       const score = analysis.overall_score
                       const scoreStyle = score != null ? getScoreStyle(score) : null
-                      const isGood = analysis.archetype === 'Optimal' || analysis.archetype === 'Disciplined'
+                      const delta = analysis.delta_overall as number | null | undefined
                       return (
                         <tr
                           key={analysis.id}
@@ -472,14 +470,32 @@ function DashboardContent() {
                           <td style={{ padding: '14px 16px' }}>
                             {score != null ? (
                               <span style={{ color: scoreStyle!.color, fontWeight: 700 }}>
-                                {score.toFixed(1)} ({scoreStyle!.tier})
+                                {score}/100
                               </span>
                             ) : (
                               <span style={{ color: '#475569' }}>—</span>
                             )}
                           </td>
                           <td style={{ padding: '14px 16px' }}>
-                            {analysis.archetype ? (
+                            {delta != null ? (
+                              <span style={{
+                                fontFamily: "'JetBrains Mono', monospace",
+                                fontSize: '10px',
+                                fontWeight: 700,
+                                padding: '2px 5px',
+                                borderRadius: 3,
+                                background: delta > 0 ? 'rgba(63,185,80,0.12)' : delta < 0 ? 'rgba(248,81,73,0.12)' : 'rgba(139,148,158,0.12)',
+                                color: delta > 0 ? '#3FB950' : delta < 0 ? '#F85149' : '#8B949E',
+                                border: `1px solid ${delta > 0 ? 'rgba(63,185,80,0.25)' : delta < 0 ? 'rgba(248,81,73,0.25)' : 'rgba(139,148,158,0.25)'}`,
+                              }}>
+                                {delta > 0 ? `+${delta}` : delta === 0 ? '—' : String(delta)}
+                              </span>
+                            ) : (
+                              <span style={{ color: '#475569', fontFamily: "'JetBrains Mono', monospace", fontSize: '10px' }}>—</span>
+                            )}
+                          </td>
+                          <td style={{ padding: '14px 16px' }}>
+                            {analysis.archetype_name ? (
                               <span style={{
                                 display: 'inline-block',
                                 padding: '2px 8px',
@@ -488,11 +504,11 @@ function DashboardContent() {
                                 fontWeight: 700,
                                 letterSpacing: '0.06em',
                                 textTransform: 'uppercase',
-                                background: isGood ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
-                                color: isGood ? '#10b981' : '#ef4444',
-                                border: `1px solid ${isGood ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}`,
+                                background: 'rgba(139,148,158,0.08)',
+                                color: '#8B949E',
+                                border: '1px solid rgba(139,148,158,0.2)',
                               }}>
-                                {analysis.archetype}
+                                {analysis.archetype_name}
                               </span>
                             ) : (
                               <span style={{ color: '#475569' }}>—</span>
