@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
+import { useAuth } from '@/lib/auth-context'
 import ReportUpgradeNudge from '@/app/components/ReportUpgradeNudge'
 
 type RxItem = {
@@ -12,6 +13,17 @@ type RxItem = {
   severity: string
   estimated_monthly_savings: number
 }
+
+const DIMENSIONS = [
+  { key: 'htf_bias',            label: 'HTF BIAS' },
+  { key: 'liquidity_awareness', label: 'LIQUIDITY AWARENESS' },
+  { key: 'ote_discipline',      label: 'OTE DISCIPLINE' },
+  { key: 'ob_fvg_confluence',   label: 'OB / FVG CONFLUENCE' },
+  { key: 'session_discipline',  label: 'SESSION DISCIPLINE' },
+  { key: 'risk_architecture',   label: 'RISK ARCHITECTURE' },
+  { key: 'behavioral_control',  label: 'BEHAVIORAL CONTROL' },
+  { key: 'overall',             label: 'OVERALL SCORE' },
+]
 
 // Persist 24-hour access to the most recently viewed report.
 // Re-saving an existing report refreshes its expiry window.
@@ -26,21 +38,31 @@ const saveReportAccess = (reportId: string) => {
 
 export default function ReportPage() {
   const { id } = useParams()
+  const { session, loading: authLoading } = useAuth()
   const [blobUrl, setBlobUrl] = useState<string|null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string|null>(null)
   const [reportTier, setReportTier] = useState<string>('signal')
   const [rxVisible, setRxVisible] = useState<RxItem[]>([])
   const [rxLockedCount, setRxLockedCount] = useState(0)
+  const [dimensionScores, setDimensionScores] = useState<Record<string, number | null> | null>(null)
+  const [scoreDelta, setScoreDelta] = useState<Record<string, number | null> | null>(null)
+  const [deltaAvailable, setDeltaAvailable] = useState(false)
 
   useEffect(() => {
+    if (authLoading) return   // wait until auth state is resolved
     let objectUrl: string | null = null
 
     async function loadReport() {
       try {
         // Fetch analysis metadata from Railway backend
+        const headers: Record<string, string> = {}
+        if (session?.access_token) {
+          headers['Authorization'] = `Bearer ${session.access_token}`
+        }
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/analysis/${id}`
+          `${process.env.NEXT_PUBLIC_API_URL}/analysis/${id}`,
+          { headers }
         )
         if (!res.ok) throw new Error(`Analysis not found`)
         const data = await res.json()
@@ -48,6 +70,11 @@ export default function ReportPage() {
         setReportTier(data.tier_id || 'signal')
         setRxVisible(data.prescriptions || [])
         setRxLockedCount(data.locked_prescriptions_count || 0)
+        if (data.dimension_scores) setDimensionScores(data.dimension_scores)
+        if (data.delta_available) {
+          setDeltaAvailable(true)
+          setScoreDelta(data.score_delta || null)
+        }
 
         // Fetch HTML content from Supabase Storage
         const htmlRes = await fetch(data.report_url)
@@ -82,7 +109,7 @@ export default function ReportPage() {
     return () => {
       if (objectUrl) URL.revokeObjectURL(objectUrl)
     }
-  }, [id])
+  }, [id, authLoading, session?.access_token])
 
   if (loading) return (
     <div style={{
@@ -185,6 +212,108 @@ export default function ReportPage() {
         title="X-Ray Forensic Report"
         sandbox="allow-scripts allow-same-origin"
       />
+      {/* ── Diagnostic scorecard with delta badges ────────────────────── */}
+      {dimensionScores && (
+        <div style={{ background: 'var(--bg-base)', padding: '32px 24px 0' }}>
+          <div style={{ maxWidth: 800, margin: '0 auto' }}>
+            <div style={{
+              display: 'flex', justifyContent: 'space-between',
+              alignItems: 'baseline', marginBottom: '16px',
+            }}>
+              <p style={{
+                fontFamily: 'JetBrains Mono, monospace', fontSize: '0.65rem',
+                color: '#C9A84C', letterSpacing: '0.15em',
+                textTransform: 'uppercase', margin: 0,
+              }}>
+                DIAGNOSTIC SCORECARD
+              </p>
+              {deltaAvailable && (
+                <span style={{
+                  fontFamily: 'JetBrains Mono, monospace', fontSize: '0.6rem',
+                  color: '#8B949E', letterSpacing: '0.04em',
+                }}>
+                  vs your last upload
+                </span>
+              )}
+            </div>
+
+            <div style={{
+              background: '#0e1626', border: '1px solid #1e293b',
+              borderRadius: 8, overflow: 'hidden',
+            }}>
+              {DIMENSIONS.map(({ key, label }) => {
+                const score = dimensionScores[key]
+                const delta = deltaAvailable && scoreDelta ? scoreDelta[key] : undefined
+                const isOverall = key === 'overall'
+                const deltaColor = delta == null ? '#8B949E'
+                  : delta > 0 ? '#3FB950'
+                  : delta < 0 ? '#F85149'
+                  : '#8B949E'
+                return (
+                  <div key={key} style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 80px 54px',
+                    alignItems: 'center',
+                    gap: 12,
+                    padding: '10px 20px',
+                    background: isOverall ? 'rgba(229,184,60,0.04)' : 'transparent',
+                    borderTop: isOverall
+                      ? '1px solid #1e293b'
+                      : key === 'htf_bias' ? 'none' : '1px solid rgba(30,41,59,0.4)',
+                  }}>
+                    <span style={{
+                      fontFamily: 'JetBrains Mono, monospace',
+                      fontSize: isOverall ? '0.68rem' : '0.62rem',
+                      fontWeight: isOverall ? 700 : 400,
+                      color: isOverall ? '#E6EDF3' : '#8B949E',
+                      letterSpacing: '0.07em',
+                      textTransform: 'uppercase',
+                    }}>
+                      {label}
+                    </span>
+                    <span style={{
+                      fontFamily: 'JetBrains Mono, monospace',
+                      fontSize: isOverall ? '0.85rem' : '0.75rem',
+                      fontWeight: isOverall ? 700 : 500,
+                      color: '#E6EDF3',
+                      textAlign: 'right',
+                    }}>
+                      {score != null ? `${score}/100` : '—'}
+                    </span>
+                    {deltaAvailable ? (
+                      <span style={{
+                        fontFamily: 'JetBrains Mono, monospace',
+                        fontSize: '0.63rem',
+                        fontWeight: 700,
+                        padding: '2px 6px',
+                        borderRadius: 3,
+                        textAlign: 'center',
+                        background: delta == null ? 'transparent'
+                          : delta > 0 ? 'rgba(63,185,80,0.12)'
+                          : delta < 0 ? 'rgba(248,81,73,0.12)'
+                          : 'rgba(139,148,158,0.12)',
+                        color: deltaColor,
+                        border: delta == null ? '1px solid transparent'
+                          : delta > 0 ? '1px solid rgba(63,185,80,0.25)'
+                          : delta < 0 ? '1px solid rgba(248,81,73,0.25)'
+                          : '1px solid rgba(139,148,158,0.25)',
+                      }}>
+                        {delta == null ? '—'
+                          : delta > 0 ? `+${delta}`
+                          : delta === 0 ? '—'
+                          : String(delta)}
+                      </span>
+                    ) : (
+                      <span />
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Tier-gated prescription cards ─────────────────────────────── */}
       {rxVisible.length > 0 && (
         <div style={{ background: 'var(--bg-base)', padding: '48px 24px 8px' }}>

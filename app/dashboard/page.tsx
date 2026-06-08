@@ -293,6 +293,16 @@ function DashboardContent() {
     ? analyses.reduce((s, a) => s + (a.overall_score || 0), 0) / analyses.filter(a => a.overall_score != null).length
     : null
 
+  // Trend: latest analysis score vs previous
+  const scoresTrend = analyses.length >= 2 &&
+    analyses[0].overall_score != null && analyses[1].overall_score != null
+    ? (analyses[0].overall_score as number) - (analyses[1].overall_score as number)
+    : null
+  const trendLabel = scoresTrend === null ? undefined
+    : scoresTrend > 3 ? '↑ improving'
+    : scoresTrend < -3 ? '↓ declining'
+    : '→ stable'
+
   const biggestLeak = analyses.length > 0
     ? analyses.reduce((min, a) => (a.net_pnl || 0) < min ? (a.net_pnl || 0) : min, analyses[0].net_pnl || 0)
     : null
@@ -364,9 +374,10 @@ function DashboardContent() {
           />
           <StatCard
             label="Average Score"
-            value={avgScore != null ? avgScore.toFixed(1) : '—'}
+            value={avgScore != null ? avgScore.toFixed(0) : '—'}
             color="#e5b83c"
             icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>}
+            sub={trendLabel}
           />
           <StatCard
             label="Biggest Leak"
