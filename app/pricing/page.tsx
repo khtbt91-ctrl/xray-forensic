@@ -15,7 +15,7 @@ const TIERS = [
     id: "signal",
     name: "SIGNAL",
     price: null as string | null,
-    tagline: "See your leaks once.",
+    tagline: "Find out what's costing you money.",
     features: [
       { text: "1 analysis per month", included: true },
       { text: "7-dimension score breakdown", included: true },
@@ -30,7 +30,7 @@ const TIERS = [
     id: "forensic",
     name: "FORENSIC",
     price: "29" as string | null,
-    tagline: "Track whether you're actually improving.",
+    tagline: "Fix it. Measure it. See the delta.",
     features: [
       { text: "4 analyses per month", included: true },
       { text: "Full report — all flags, all dimensions", included: true },
@@ -46,11 +46,11 @@ const TIERS = [
     id: "operator",
     name: "OPERATOR",
     price: "79" as string | null,
-    tagline: "Institutional-grade behavioral intelligence.",
+    tagline: "Your trading has a permanent diagnostic layer.",
     features: [
       { text: "Unlimited analyses", included: true },
       { text: "Everything in Forensic", included: true },
-      { text: "AI narrative diagnosis", included: true },
+      { text: "Full behavioral narrative report", included: true },
       { text: "Trader DNA profile", included: true },
       { text: "Anonymous benchmarking", included: true },
       { text: "Compliance tracker", included: true },
@@ -63,10 +63,10 @@ const TIERS = [
     id: "elite",
     name: "ELITE",
     price: "149" as string | null,
-    tagline: "The complete system.",
+    tagline: "Built for funded traders who can't afford mistakes.",
     features: [
       { text: "Everything in Operator", included: true },
-      { text: "Prop firm Monte Carlo simulation", included: true },
+      { text: "Pre-Challenge Clearance — know your pass probability before you fund", included: true },
       { text: "Priority support", included: true },
       { text: "Early access to new features", included: true },
     ],
@@ -99,8 +99,8 @@ function PricingPageInner() {
     !!profile &&
     profile.analyses_limit !== -1 &&
     profile.analyses_used >= profile.analyses_limit;
-  const freeCTAHref = !user ? "/login" : limitReached ? "/dashboard" : "/new";
-  const freeCTALabel = limitReached ? "View Dashboard" : "Get Diagnosed";
+  const freeCTAHref = !user ? "/signup" : "/dashboard";
+  const freeCTALabel = !user ? "Start Free →" : "View Dashboard →";
 
   return (
     <main style={{ minHeight: "100vh", background: "#050811", color: "#f8fafc" }}>
