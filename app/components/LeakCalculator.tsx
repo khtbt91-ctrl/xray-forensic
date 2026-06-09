@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import * as Slider from "@radix-ui/react-slider";
 import { MONO, FadeInUp } from "./shared";
+
+const SPACE = "'Space Grotesk', sans-serif";
 
 function SliderRow({
   label,
@@ -59,103 +61,157 @@ function SliderRow({
 }
 
 export default function LeakCalculator() {
-  const [values, setValues] = useState({
-    balance: 10000,
-    trades: 50,
-    winRate: 42,
-    avgRR: 1.5,
-    revengePct: 20,
-    noSlPct: 10,
-  });
+  const [monthlyVolume, setMonthlyVolume] = useState(25000);
+  const [slippagePips, setSlippagePips] = useState(1.5);
+  const [commissionPerLot, setCommissionPerLot] = useState(7);
 
-  const debounceRef = useRef<NodeJS.Timeout>();
+  // XAUUSD assumed ~$2,000/unit; 0.01 lot = $2,000 notional
+  const tradesPerMonth = monthlyVolume / 2000;
+  const slippageCost = tradesPerMonth * slippagePips * 1.0;
+  const commissionCost = tradesPerMonth * commissionPerLot;
+  const totalLeak = slippageCost + commissionCost;
 
-  const handleSliderChange = (key: string, value: number) => {
-    clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      setValues(prev => ({ ...prev, [key]: value }));
-    }, 300);
+  const fmt = (n: number) => "$" + Math.round(n).toLocaleString();
+
+  const fmtVolume = (v: number) => {
+    if (v >= 1000) return "$" + (v / 1000).toLocaleString() + "K";
+    return "$" + v.toLocaleString();
   };
 
-  const { balance, trades, winRate, avgRR, revengePct, noSlPct } = values;
-
-  const avgRisk = balance * 0.01;
-  const wr = winRate / 100;
-  const rp = revengePct / 100;
-  const nsp = noSlPct / 100;
-
-  const evNormal = avgRisk * (wr * avgRR - (1 - wr));
-  const evRevenge = avgRisk * (wr * 0.5 * (avgRR * 0.8) - (1 - wr * 0.5));
-  const evNoSl = avgRisk * (wr * avgRR - (1 - wr) * 2);
-
-  const recovRevenge = Math.max(0, trades * rp * (evNormal - evRevenge));
-  const recovStops = Math.max(0, trades * nsp * (evNormal - evNoSl));
-  const monthlyLeak = recovRevenge + recovStops;
-
-  const fmt = (n: number) => "$" + Math.abs(Math.round(n)).toLocaleString();
+  const fmtCommission = (v: number) =>
+    "$" + (v % 1 === 0 ? v.toString() : v.toFixed(1)) + "/lot";
 
   return (
     <section style={{ maxWidth: 1100, margin: "0 auto", padding: "0 40px 100px" }}>
       <FadeInUp>
-        <h2
-          style={{
-            fontSize: "clamp(24px, 3.5vw, 40px)",
-            fontWeight: 700,
-            textAlign: "center",
-            letterSpacing: "-0.02em",
-            margin: "0 0 56px",
-          }}
-        >
+        <p style={{
+          fontFamily: MONO, fontSize: 10, color: '#e5b83c',
+          letterSpacing: '0.15em', textTransform: 'uppercase',
+          textAlign: 'center', marginBottom: 16, margin: '0 0 16px',
+        }}>
+          MECHANICAL LEAK ESTIMATOR
+        </p>
+        <h2 style={{
+          fontSize: "clamp(24px, 3.5vw, 40px)",
+          fontWeight: 700,
+          textAlign: "center",
+          letterSpacing: "-0.02em",
+          margin: "0 0 28px",
+        }}>
           How much are your leaks costing you?
         </h2>
       </FadeInUp>
 
+      {/* Explanation */}
+      <FadeInUp delay={0.05}>
+        <div style={{
+          maxWidth: 620,
+          margin: '0 auto 52px',
+          background: 'rgba(30,41,59,0.4)',
+          border: '1px solid #1e293b',
+          borderRadius: 8,
+          padding: '20px 24px',
+        }}>
+          <p style={{
+            fontFamily: SPACE,
+            fontSize: 16,
+            fontWeight: 700,
+            color: '#e5b83c',
+            margin: '0 0 10px',
+          }}>
+            Your Mechanical Leak
+          </p>
+          <p style={{
+            fontFamily: MONO,
+            fontSize: 13,
+            color: '#64748b',
+            lineHeight: 1.7,
+            margin: 0,
+          }}>
+            Before behavioral patterns — before revenge trades, missed stops, or bad entries —
+            your account bleeds from mechanical costs alone. Commission and slippage on every
+            trade, every month, guaranteed. This calculator shows that floor. X-Ray finds what&apos;s above it.
+          </p>
+        </div>
+      </FadeInUp>
+
       <div className="calc-grid" style={{ gap: 28, alignItems: "start" }}>
+        {/* Sliders */}
         <FadeInUp delay={0.1}>
           <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", borderRadius: 10, padding: "32px 36px" }}>
-            <SliderRow label="Account balance" value={balance} min={1000} max={500000} step={1000} onChange={(v) => handleSliderChange('balance', v)} format={(v) => "$" + v.toLocaleString()} />
-            <SliderRow label="Trades / month" value={trades} min={10} max={500} onChange={(v) => handleSliderChange('trades', v)} format={(v) => `${v}`} />
-            <SliderRow label="Win rate" value={winRate} min={20} max={80} onChange={(v) => handleSliderChange('winRate', v)} format={(v) => `${v}%`} />
-            <SliderRow label="Average R:R" value={avgRR} min={0.5} max={5} step={0.1} onChange={(v) => handleSliderChange('avgRR', v)} format={(v) => `${v.toFixed(1)}R`} />
-            <SliderRow label="Revenge trade %" value={revengePct} min={0} max={60} onChange={(v) => handleSliderChange('revengePct', v)} format={(v) => `${v}%`} />
-            <SliderRow label="No-SL trade %" value={noSlPct} min={0} max={50} onChange={(v) => handleSliderChange('noSlPct', v)} format={(v) => `${v}%`} />
+            <SliderRow
+              label="Monthly trading volume"
+              value={monthlyVolume}
+              min={1000}
+              max={500000}
+              step={1000}
+              onChange={setMonthlyVolume}
+              format={fmtVolume}
+            />
+            <SliderRow
+              label="Slippage per trade"
+              value={slippagePips}
+              min={0.1}
+              max={5.0}
+              step={0.1}
+              onChange={setSlippagePips}
+              format={v => v.toFixed(1) + " pips"}
+            />
+            <SliderRow
+              label="Commission per lot"
+              value={commissionPerLot}
+              min={0}
+              max={25}
+              step={0.5}
+              onChange={setCommissionPerLot}
+              format={fmtCommission}
+            />
+            <p style={{ fontFamily: MONO, fontSize: 9, color: '#334155', marginTop: 4, marginBottom: 0, lineHeight: 1.5 }}>
+              XAUUSD assumed at $2,000/unit · 0.01 lot = $2,000 notional
+            </p>
           </div>
         </FadeInUp>
 
+        {/* Results */}
         <FadeInUp delay={0.2}>
           <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", borderRadius: 10, padding: "32px 36px", fontFamily: MONO }}>
             <div style={{ borderBottom: "1px solid var(--border-subtle)", paddingBottom: 24, marginBottom: 24 }}>
               <div style={{ fontSize: 10, letterSpacing: "0.18em", color: "var(--text-muted)", marginBottom: 12 }}>
-                ESTIMATED MONTHLY LEAK
+                TOTAL MECHANICAL LEAK
               </div>
               <div style={{ fontSize: 44, fontWeight: 500, color: "var(--loss)", lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>
-                −{fmt(monthlyLeak)}
+                −{fmt(totalLeak)}
+                <span style={{ fontSize: 16, color: '#64748b', marginLeft: 4 }}>/mo</span>
               </div>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 24 }}>
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
-                <span style={{ color: "var(--text-secondary)" }}>Remove revenge trades</span>
-                <span style={{ color: "var(--profit)", fontVariantNumeric: "tabular-nums" }}>+{fmt(recovRevenge)}/mo</span>
+                <span style={{ color: "var(--text-secondary)" }}>Commission</span>
+                <span style={{ color: "var(--loss)", fontVariantNumeric: "tabular-nums" }}>−{fmt(commissionCost)}/mo</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
-                <span style={{ color: "var(--text-secondary)" }}>Add stops to all trades</span>
-                <span style={{ color: "var(--profit)", fontVariantNumeric: "tabular-nums" }}>+{fmt(recovStops)}/mo</span>
+                <span style={{ color: "var(--text-secondary)" }}>Slippage</span>
+                <span style={{ color: "var(--loss)", fontVariantNumeric: "tabular-nums" }}>−{fmt(slippageCost)}/mo</span>
               </div>
               <div style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: 14, marginTop: 4, display: "flex", justifyContent: "space-between", fontSize: 14, fontWeight: 500 }}>
-                <span style={{ color: "var(--text-primary)" }}>POTENTIAL RECOVERY</span>
-                <span style={{ color: "var(--profit)", fontVariantNumeric: "tabular-nums" }}>{fmt(monthlyLeak)}/mo</span>
+                <span style={{ color: "var(--text-primary)" }}>Total mechanical leak</span>
+                <span style={{ color: "var(--loss)", fontVariantNumeric: "tabular-nums" }}>−{fmt(totalLeak)}/mo</span>
               </div>
             </div>
 
-            <div style={{ marginTop: 28, padding: "14px 16px", background: "rgba(88,166,255,0.05)", border: "1px solid rgba(88,166,255,0.18)", borderRadius: 6, fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.7 }}>
-              One FORENSIC analysis: $79.{" "}
-              <br />
-              Your leaks:{" "}
-              <span style={{ color: "var(--loss)", fontVariantNumeric: "tabular-nums" }}>
-                {fmt(monthlyLeak)}/month.
-              </span>
+            <div style={{ padding: "14px 16px", background: "rgba(88,166,255,0.05)", border: "1px solid rgba(88,166,255,0.18)", borderRadius: 6, marginBottom: 16 }}>
+              <p style={{ fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.7, margin: '0 0 4px' }}>
+                This is before behavioral leaks.
+              </p>
+              <p style={{ fontSize: 12, color: '#e5b83c', margin: 0 }}>
+                Upload your trades to see the real number.
+              </p>
             </div>
+
+            <p style={{ fontFamily: MONO, fontSize: 9, color: '#334155', lineHeight: 1.5, margin: 0 }}>
+              Estimate based on inputs. Actual costs vary by broker and market conditions.
+            </p>
           </div>
         </FadeInUp>
       </div>

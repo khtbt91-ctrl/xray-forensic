@@ -1,8 +1,9 @@
 import Link from "next/link";
 import NavBar from "./components/NavBar";
 import HeroSection from "./components/HeroSection";
-import LiveTicker from "./components/LiveTicker";
+import ActivityCounter from "./components/ActivityCounter";
 import HowItWorks from "./components/HowItWorks";
+import VerdictFeed from "./components/VerdictFeed";
 import PainWall from "./components/PainWall";
 import PreChallengeSection from "./components/PreChallengeSection";
 import RadarSection from "./components/RadarSection";
@@ -25,8 +26,9 @@ export default function LandingPage() {
     <main style={{ minHeight: "100vh", background: "#050811", color: "#f8fafc" }}>
       <NavBar />
       <HeroSection />
-      <LiveTicker />
+      <ActivityCounter />
       <HowItWorks />
+      <VerdictFeed />
       <PainWall />
       <PreChallengeSection />
       <RadarSection />
