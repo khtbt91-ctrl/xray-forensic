@@ -14,6 +14,7 @@ function SliderRow({
   step = 1,
   onChange,
   format,
+  hint,
 }: {
   label: string;
   value: number;
@@ -22,6 +23,7 @@ function SliderRow({
   step?: number;
   onChange: (v: number) => void;
   format: (v: number) => string;
+  hint?: string;
 }) {
   return (
     <div style={{ marginBottom: 24 }}>
@@ -56,22 +58,28 @@ function SliderRow({
           }}
         />
       </Slider.Root>
+      {hint && (
+        <p style={{ fontFamily: MONO, fontSize: 10, color: '#94a3b8', marginTop: 5, marginBottom: 0, lineHeight: 1.5 }}>
+          {hint}
+        </p>
+      )}
     </div>
   );
 }
 
 export default function LeakCalculator() {
   const [monthlyVolume, setMonthlyVolume] = useState(25000);
+  const [tradesPerMonth, setTradesPerMonth] = useState(60);
   const [slippagePips, setSlippagePips] = useState(1.5);
   const [commissionPerLot, setCommissionPerLot] = useState(7);
 
-  // XAUUSD assumed ~$2,000/unit; 0.01 lot = $2,000 notional
-  const tradesPerMonth = monthlyVolume / 2000;
-  const slippageCost = tradesPerMonth * slippagePips * 1.0;
-  const commissionCost = tradesPerMonth * commissionPerLot;
-  const totalLeak = slippageCost + commissionCost;
+  const avgTradeSize = monthlyVolume / tradesPerMonth;
+  const lotsPerTrade = avgTradeSize / 200000;
+  const commissionCost = tradesPerMonth * commissionPerLot * lotsPerTrade * 100;
+  const slippageCost = tradesPerMonth * slippagePips * lotsPerTrade * 10;
+  const totalLeak = commissionCost + slippageCost;
 
-  const fmt = (n: number) => "$" + Math.round(n).toLocaleString();
+  const fmt = (n: number) => "$" + Math.max(1, Math.round(n)).toLocaleString();
 
   const fmtVolume = (v: number) => {
     if (v >= 1000) return "$" + (v / 1000).toLocaleString() + "K";
@@ -123,14 +131,23 @@ export default function LeakCalculator() {
           </p>
           <p style={{
             fontFamily: MONO,
-            fontSize: 13,
+            fontSize: 12,
+            color: '#64748b',
+            lineHeight: 1.7,
+            margin: '0 0 8px',
+          }}>
+            Before behavioral patterns — before revenge trades, missed stops, or bad entries —
+            your account bleeds from mechanical costs alone. Commission and slippage on every
+            trade, every month, guaranteed.
+          </p>
+          <p style={{
+            fontFamily: MONO,
+            fontSize: 12,
             color: '#64748b',
             lineHeight: 1.7,
             margin: 0,
           }}>
-            Before behavioral patterns — before revenge trades, missed stops, or bad entries —
-            your account bleeds from mechanical costs alone. Commission and slippage on every
-            trade, every month, guaranteed. This calculator shows that floor. X-Ray finds what&apos;s above it.
+            This calculator shows that floor. X-Ray finds what&apos;s above it.
           </p>
         </div>
       </FadeInUp>
@@ -149,13 +166,13 @@ export default function LeakCalculator() {
               format={fmtVolume}
             />
             <SliderRow
-              label="Slippage per trade"
-              value={slippagePips}
-              min={0.1}
-              max={5.0}
-              step={0.1}
-              onChange={setSlippagePips}
-              format={v => v.toFixed(1) + " pips"}
+              label="Trades / month"
+              value={tradesPerMonth}
+              min={10}
+              max={500}
+              step={5}
+              onChange={setTradesPerMonth}
+              format={v => v + " trades"}
             />
             <SliderRow
               label="Commission per lot"
@@ -165,10 +182,17 @@ export default function LeakCalculator() {
               step={0.5}
               onChange={setCommissionPerLot}
               format={fmtCommission}
+              hint="(some brokers charge up to $25/lot)"
             />
-            <p style={{ fontFamily: MONO, fontSize: 9, color: '#334155', marginTop: 4, marginBottom: 0, lineHeight: 1.5 }}>
-              XAUUSD assumed at $2,000/unit · 0.01 lot = $2,000 notional
-            </p>
+            <SliderRow
+              label="Slippage per trade"
+              value={slippagePips}
+              min={0.1}
+              max={5.0}
+              step={0.1}
+              onChange={setSlippagePips}
+              format={v => v.toFixed(1) + " pips"}
+            />
           </div>
         </FadeInUp>
 
@@ -195,22 +219,19 @@ export default function LeakCalculator() {
                 <span style={{ color: "var(--loss)", fontVariantNumeric: "tabular-nums" }}>−{fmt(slippageCost)}/mo</span>
               </div>
               <div style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: 14, marginTop: 4, display: "flex", justifyContent: "space-between", fontSize: 14, fontWeight: 500 }}>
-                <span style={{ color: "var(--text-primary)" }}>Total mechanical leak</span>
+                <span style={{ color: "var(--text-primary)" }}>Total leak</span>
                 <span style={{ color: "var(--loss)", fontVariantNumeric: "tabular-nums" }}>−{fmt(totalLeak)}/mo</span>
               </div>
             </div>
 
             <div style={{ padding: "14px 16px", background: "rgba(88,166,255,0.05)", border: "1px solid rgba(88,166,255,0.18)", borderRadius: 6, marginBottom: 16 }}>
-              <p style={{ fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.7, margin: '0 0 4px' }}>
-                This is before behavioral leaks.
-              </p>
-              <p style={{ fontSize: 12, color: '#e5b83c', margin: 0 }}>
-                Upload your trades to see the real number.
+              <p style={{ fontFamily: MONO, fontSize: 11, color: '#64748b', lineHeight: 1.7, margin: 0 }}>
+                This is before behavioral leaks. Upload your trades to see the real number.
               </p>
             </div>
 
-            <p style={{ fontFamily: MONO, fontSize: 9, color: '#334155', lineHeight: 1.5, margin: 0 }}>
-              Estimate based on inputs. Actual costs vary by broker and market conditions.
+            <p style={{ fontFamily: MONO, fontSize: 10, color: '#475569', lineHeight: 1.5, margin: 0 }}>
+              Estimate only. Actual costs vary by broker, pair, and market conditions.
             </p>
           </div>
         </FadeInUp>
