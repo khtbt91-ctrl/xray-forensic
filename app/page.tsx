@@ -26,6 +26,39 @@ export default function LandingPage() {
     <main style={{ minHeight: "100vh", background: "#050811", color: "#f8fafc" }}>
       <NavBar />
       <HeroSection />
+      <div style={{
+        borderTop: '1px solid #1e293b',
+        borderBottom: '1px solid #1e293b',
+        background: '#0a1020',
+        padding: '12px 40px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 32,
+        flexWrap: 'wrap',
+      }}>
+        {[
+          'No card required',
+          'Trade data never stored',
+          'Cancel anytime',
+          'Built by a 15-year institutional trader',
+          'First analysis free',
+        ].map((item) => (
+          <span key={item} style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 11,
+            color: '#475569',
+            letterSpacing: '0.05em',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            whiteSpace: 'nowrap',
+          }}>
+            <span style={{ color: '#10b981' }}>✓</span>
+            {item}
+          </span>
+        ))}
+      </div>
       <ActivityCounter />
       <PainWall />
       <LeakCalculatorGuide />
