@@ -25,6 +25,38 @@ const LEAKS: Record<string, { label: string; multiple: number; hint: string }> =
   movestop: { label: "Moving the stop loss", multiple: 2.0, hint: "Widening the stop on losing trades." },
 };
 
+function Tooltip({ text }: { text: string }) {
+  const [show, setShow] = useState(false);
+  return (
+    <span style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', marginLeft: 5, verticalAlign: 'middle' }}>
+      <span
+        onMouseEnter={() => setShow(true)}
+        onMouseLeave={() => setShow(false)}
+        onClick={() => setShow(!show)}
+        style={{
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          width: 14, height: 14, borderRadius: '50%',
+          border: '1px solid #475569', color: '#64748b',
+          fontSize: 9, fontFamily: "'JetBrains Mono', monospace",
+          cursor: 'help', userSelect: 'none', flexShrink: 0,
+        }}
+      >?</span>
+      {show && (
+        <span style={{
+          position: 'absolute', bottom: '100%', left: '50%',
+          transform: 'translateX(-50%)', marginBottom: 6,
+          background: '#0e1626', border: '1px solid #1e293b', borderRadius: 6,
+          padding: '8px 12px', fontSize: 11, fontFamily: "'JetBrains Mono', monospace",
+          color: '#94a3b8', whiteSpace: 'normal', width: 220, lineHeight: 1.6,
+          zIndex: 100, pointerEvents: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+        }}>
+          {text}
+        </span>
+      )}
+    </span>
+  );
+}
+
 function Step({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
   return (
     <div style={{ display: "flex", gap: 14, marginBottom: 18 }}>
@@ -99,13 +131,13 @@ annual bleed     = leaked/yr × risk$ × (loss_mult − 1)`}
 
         <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 12, padding: 24 }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
-            <div><label style={labelS}>Account ($)</label>
+            <div><label style={labelS}>Account ($) <Tooltip text="Your average trading account size in USD. Use your current balance." /></label>
               <input style={field} type="number" value={account} onChange={(e) => setAccount(+e.target.value)} /></div>
-            <div><label style={labelS}>Risk / trade (%)</label>
+            <div><label style={labelS}>Risk / trade (%) <Tooltip text="The percentage of your account you risk on each trade. Most retail traders use 1-3%. The failing trader average is 2%." /></label>
               <input style={field} type="number" value={riskPct} onChange={(e) => setRiskPct(+e.target.value)} /></div>
-            <div><label style={labelS}>Trades / week</label>
+            <div><label style={labelS}>Trades / week <Tooltip text="How many trades you typically open per week across all sessions." /></label>
               <input style={field} type="number" value={perWeek} onChange={(e) => setPerWeek(+e.target.value)} /></div>
-            <div><label style={labelS}>Leak frequency</label>
+            <div><label style={labelS}>Leak frequency <Tooltip text="How often this behavior happens. '3 in 10' means it occurs in 30% of your trades — 3 out of every 10 positions." /></label>
               <select style={field} value={freq} onChange={(e) => setFreq(+e.target.value)}>
                 <option value={0.1}>1 in 10</option>
                 <option value={0.2}>2 in 10</option>
@@ -113,19 +145,19 @@ annual bleed     = leaked/yr × risk$ × (loss_mult − 1)`}
                 <option value={0.5}>5 in 10</option>
               </select></div>
           </div>
-          <label style={labelS}>The leak</label>
+          <label style={labelS}>The leak <Tooltip text="The specific behavioral pattern you want to measure. Each one has a different loss multiplier based on how it affects your average losing trade." /></label>
           <select style={{ ...field, marginBottom: 6 }} value={leak} onChange={(e) => setLeak(e.target.value)}>
             {Object.entries(LEAKS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
           </select>
           <div style={{ color: MUTED, fontSize: 12, marginBottom: 20 }}>{LEAKS[leak].hint}</div>
 
           <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: 20 }}>
-            <div style={{ color: MUTED, fontSize: 12, fontFamily: MONO }}>ESTIMATED ANNUAL BLEED</div>
+            <div style={{ color: MUTED, fontSize: 12, fontFamily: MONO }}>ESTIMATED ANNUAL BLEED <Tooltip text="The estimated extra money this single behavior costs you per year, on top of what you would lose with clean execution." /></div>
             <div style={{ color: LOSS, fontSize: 40, fontWeight: 800, fontFamily: MONO, lineHeight: 1.2 }}>
               −${Math.abs(annualBleed).toLocaleString()}
             </div>
             <div style={{ color: MUTED, fontSize: 13, marginTop: 8 }}>
-              ~{leakedPerYear} leaked trades/yr · break-even win rate
+              ~{leakedPerYear} leaked trades/yr · break-even win rate <Tooltip text="The win rate you now need just to break even, because the leak increases your average loss size. Higher = harder to be profitable." />
               <span style={{ color: TEXT }}> 50% → </span><span style={{ color: LOSS }}>{beWith}%</span>
             </div>
             <div style={{ color: MUTED, fontSize: 12, marginTop: 14, fontStyle: "italic" }}>
