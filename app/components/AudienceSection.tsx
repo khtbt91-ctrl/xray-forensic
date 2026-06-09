@@ -10,9 +10,9 @@ const cards = [
     scenarios: null,
   },
   {
-    accent: "var(--profit)",
+    accent: "#10b981",
     title: "THE PROFITABLE TRADER",
-    body: "You've been profitable for six months. You don't know if it's skill or variance. X-Ray maps your edge across 7 dimensions — which sessions generate your returns, which behaviors are leaking them, and exactly how fragile your edge is before the market corrects it.",
+    body: "You've been profitable for months. But you don't know if it's skill or variance.\n\nX-Ray maps exactly which sessions generate your returns, which behaviors are quietly eroding them, and how fragile your edge really is.\n\nMost profitable traders have 2-3 hidden leaks that don't show in P/L — until the market regime changes and they do.",
     scenarios: null,
   },
   {
@@ -35,6 +35,12 @@ const cards = [
         text: "You passed. Now you're protecting a real payout. X-Ray maps your behavioral risk: which sessions to avoid, your revenge-trade signature, and the exact daily limit that keeps your account alive.",
       },
     ],
+  },
+  {
+    accent: "#3b82f6",
+    title: "THE BEGINNER",
+    body: "You've just started. Everyone's telling you different things. You don't know what you don't know yet.\n\nX-Ray's FOUNDATIONS layer teaches the institutional framework from zero — then diagnoses your first real trades the moment you have history.\n\nStart right. Not after 6 months of expensive mistakes.",
+    scenarios: null,
   },
 ];
 
@@ -87,7 +93,7 @@ export default function AudienceSection() {
                 {card.title}
               </h3>
               {card.body && (
-                <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.9rem", color: "var(--text-secondary)", margin: 0, lineHeight: 1.7 }}>
+                <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.9rem", color: "var(--text-secondary)", margin: 0, lineHeight: 1.7, whiteSpace: "pre-line" }}>
                   {card.body}
                 </p>
               )}
