@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@/lib/auth-context";
 
 /**
  * X-Ray Forensic — Leak Calculator + "How to use it" guide.
@@ -74,6 +75,7 @@ function Step({ n, title, children }: { n: number; title: string; children: Reac
 }
 
 export default function LeakCalculatorGuide() {
+  const { user } = useAuth();
   const [account, setAccount] = useState(10000);
   const [riskPct, setRiskPct] = useState(2);
   const [perWeek, setPerWeek] = useState(15);
@@ -163,10 +165,13 @@ annual bleed     = leaked/yr × risk$ × (loss_mult − 1)`}
             <div style={{ color: MUTED, fontSize: 12, marginTop: 14, fontStyle: "italic" }}>
               Estimate from your inputs, not your real history. Upload your trades for the exact figure across all 7 dimensions.
             </div>
-            <a href="/new" style={{
+            <div style={{ color: "#64748b", fontSize: 12, fontFamily: MONO, marginTop: 14, lineHeight: 1.6 }}>
+              This is one behavior estimated from your inputs. X-Ray finds all 7 leaks in your actual trade history — with exact dollar amounts from real data.
+            </div>
+            <a href={user ? "/new" : "/signup"} style={{
               display: "inline-block", marginTop: 16, background: GOLD, color: "#000",
               fontWeight: 700, padding: "12px 20px", borderRadius: 6, textDecoration: "none", fontSize: 14, fontFamily: SPACE,
-            }}>Get the exact number →</a>
+            }}>Diagnose All 7 Leaks Free →</a>
           </div>
         </div>
       </div>
