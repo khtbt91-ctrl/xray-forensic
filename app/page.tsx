@@ -10,7 +10,6 @@ import RadarSection from "./components/RadarSection";
 import FrameworkSection from "./components/FrameworkSection";
 import HonestyGradient from "./components/HonestyGradient";
 import CaseStudies from "./components/CaseStudies";
-import TestimonialsSection from "./components/TestimonialsSection";
 import AudienceSection from "./components/AudienceSection";
 import LeakCalculatorGuide from "./components/LeakCalculatorGuide";
 import TierCards from "./components/TierCards";
@@ -28,17 +27,16 @@ export default function LandingPage() {
       <NavBar />
       <HeroSection />
       <ActivityCounter />
+      <PainWall />
+      <LeakCalculatorGuide />
       <HowItWorks />
       <VerdictFeed />
-      <PainWall />
-      <PreChallengeSection />
-      <RadarSection />
       <FrameworkSection />
+      <RadarSection />
+      <PreChallengeSection />
+      <AudienceSection />
       <HonestyGradient />
       <CaseStudies />
-      <TestimonialsSection />
-      <AudienceSection />
-      <LeakCalculatorGuide />
       <TierCards />
       <OneTimeProducts />
       <RecoveryPrograms />
