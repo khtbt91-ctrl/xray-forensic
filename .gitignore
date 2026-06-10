@@ -35,3 +35,8 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Accidentally committed — prevent recurrence
+*.zip
+*Copy*
+XRAY_MASTER_BRIEF.md
