@@ -111,6 +111,11 @@ export default function PreSessionBrief({
   const dayPattern = DAY_PATTERNS[dayOfWeek]
   const hasData    = analyses && analyses.length > 0
   const latest     = hasData ? analyses[0] : null
+  const hasPersonalData = latest && (
+    latest.session_discipline_score !== undefined ||
+    latest.behavioral_control_score !== undefined ||
+    !!latest.biggest_leak
+  )
 
   // Check if already acknowledged today
   useEffect(() => {
@@ -278,7 +283,7 @@ export default function PreSessionBrief({
       )}
 
       {/* Personal Data */}
-      {hasData && latest && (
+      {hasPersonalData && (
         <div style={{
           background: '#050811',
           border: `1px solid ${GOLD}33`,

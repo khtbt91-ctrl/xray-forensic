@@ -94,13 +94,26 @@ interface ProtocolState {
   status: ProtocolStatus
 }
 
+function isDependencyMet(
+  depId: string,
+  analysesCount: number,
+  completedIds: Set<string>,
+): boolean {
+  if (completedIds.has(depId)) return true
+  const dep = PROTOCOLS.find(p => p.id === depId)
+  if (!dep) return false
+  if (dep.checkCondition === 'analyses_count > 0') return analysesCount > 0
+  if (dep.checkCondition === 'analyses_count > 1') return analysesCount > 1
+  return false
+}
+
 function deriveStatus(
   def: ProtocolDef,
   analysesCount: number,
   completedIds: Set<string>,
 ): ProtocolStatus {
-  // Check dependency first
-  if (def.dependsOn && !completedIds.has(def.dependsOn)) return 'locked'
+  // Check dependency — satisfied by DB row OR by auto-condition
+  if (def.dependsOn && !isDependencyMet(def.dependsOn, analysesCount, completedIds)) return 'locked'
 
   // Check auto-completion conditions
   if (def.checkCondition === 'analyses_count > 0' && analysesCount > 0) return 'completed'

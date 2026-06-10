@@ -519,7 +519,11 @@ function DashboardContent() {
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(229,184,60,0.08)', border: '1px solid rgba(229,184,60,0.2)', borderRadius: '4px', padding: '3px 10px', fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#e5b83c', letterSpacing: '0.06em' }}>
                 {/* UserCheck icon */}
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
-                OPERATOR ID: {user.email}
+                OPERATOR: {(
+                  user.user_metadata?.full_name?.split(' ')[0] ||
+                  user.user_metadata?.name?.split(' ')[0] ||
+                  (user.email?.split('@')[0] ?? 'OPERATOR')
+                )}
               </span>
               <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#94a3b8' }}>• Live Forensic Feed</span>
             </div>
@@ -535,11 +539,11 @@ function DashboardContent() {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 New Analysis
               </a>
-            ) : (
+            ) : (['signal', 'forensic'].includes(profile.tier_id) && (
               <a href="/new?upgrade=true" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 18px', background: '#e5b83c', color: '#000', borderRadius: '6px', textDecoration: 'none', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '13px' }}>
                 Upgrade Tier →
               </a>
-            )}
+            ))}
             <button
               onClick={signOut}
               style={{ background: 'transparent', border: '1px solid #1e293b', color: '#475569', padding: '10px 16px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '0.04em' }}
@@ -548,12 +552,6 @@ function DashboardContent() {
             </button>
           </div>
         </div>
-
-        {/* ── Foundations ── */}
-        <FoundationsSection
-          analyses={analyses}
-          profile={profile}
-        />
 
         {/* ── 4 KPI Cards ── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '16px', marginBottom: '28px' }}
@@ -598,6 +596,12 @@ function DashboardContent() {
             </div>
           </div>
         )}
+
+        {/* ── Foundations ── */}
+        <FoundationsSection
+          analyses={analyses}
+          profile={profile}
+        />
 
         {/* ── Main body: 2/3 table + 1/3 sidebar ── */}
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px', alignItems: 'start' }}>

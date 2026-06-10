@@ -99,13 +99,13 @@ export default function FoundationsSection({
 }: FoundationsSectionProps) {
   const { user } = useAuth()
 
-  // Default: expanded for < 3 analyses (still in foundations territory)
-  const defaultOpen = analyses.length < 3
+  // Default: expanded only when user has no analyses yet
+  const defaultOpen = analyses.length === 0
   const [open, setOpen] = useState(defaultOpen)
 
-  // Sync if analyses count crosses the threshold after mount (e.g. after a new upload)
+  // Sync if analyses count changes after mount (e.g. first upload completes)
   useEffect(() => {
-    setOpen(analyses.length < 3)
+    setOpen(analyses.length === 0)
   }, [analyses.length])
 
   // Fetch completed protocol IDs once, so we can pass activeProtocol to DailyBriefing
