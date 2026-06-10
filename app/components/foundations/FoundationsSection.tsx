@@ -5,11 +5,11 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
 import type { UserProfile } from '@/lib/supabase'
-import DailyBriefing   from './DailyBriefing'
-import DeskNoteFeed    from './DeskNoteFeed'
-import ActiveProtocols from './ActiveProtocols'
-import OperatorRank    from './OperatorRank'
-import PreSessionBrief from './PreSessionBrief'
+import DailyBriefing      from './DailyBriefing'
+import DeskNoteFeed       from './DeskNoteFeed'
+import ActiveProtocols    from './ActiveProtocols'
+import OperatorRank       from './OperatorRank'
+import PreFlightClearance from './PreFlightClearance'
 
 // ── Design tokens ──────────────────────────────────────────────────────────────
 const GOLD    = '#e5b83c'
@@ -97,7 +97,7 @@ export default function FoundationsSection({
   profile,
   complianceData,
 }: FoundationsSectionProps) {
-  const { user } = useAuth()
+  const { user, session } = useAuth()
 
   // Default: expanded only when user has no analyses yet
   const defaultOpen = analyses.length === 0
@@ -204,11 +204,9 @@ export default function FoundationsSection({
           flexDirection: 'column',
           gap: 20,
         }}>
-          {/* 1. Pre-Session Brief */}
-          <PreSessionBrief
+          {/* 1. Pre-Flight Clearance */}
+          <PreFlightClearance
             analyses={analyses}
-            prescriptions={[]}
-            disciplineStreak={(profile as any)?.discipline_streak ?? 0}
             calendarEvents={calendarEvents}
           />
 
