@@ -4,32 +4,52 @@ import { useState, useEffect, useRef } from "react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { MONO, FadeInUp } from "./shared";
 
-const RADAR_ACTUAL = [
-  { dim: "Fighting the Trend?", score: 42 },
-  { dim: "Stops in Kill Zones?", score: 38 },
-  { dim: "Chasing Entries?", score: 55 },
-  { dim: "Trading Randomly?", score: 48 },
-  { dim: "Trading When Bored?", score: 31 },
-  { dim: "One Bad Day Away?", score: 45 },
-  { dim: "Revenge Trading?", score: 18 },
-];
+const GOLD = "#C9A84C";
 
-const RADAR_INSIGHTS: Record<string, string> = {
-  "Fighting the Trend?":
-    "You fought the D1 trend on 58% of your trades. That's not bad luck — that's a system failure.",
-  "Stops in Kill Zones?":
-    "62% of your entries run straight into opposing liquidity. You're handing institutions your stop.",
-  "Chasing Entries?":
-    "Only 31% of entries hit the 0.618–0.786 OTE zone. You're paying full price for discounted levels.",
-  "Trading Randomly?":
-    "52% of entries ignore the nearest institutional imbalance. That's not a strategy — that's noise.",
-  "Trading When Bored?":
-    "London drops your win rate 18 pts below Asian baseline. You trade London anyway.",
-  "One Bad Day Away?":
-    "Lot size variance is 3.2× — one bad session at max size ends your account.",
-  "Revenge Trading?":
-    "276 revenge trades. Your lowest score. This is the diagnosis, not the symptom.",
-};
+const DIMENSIONS = [
+  {
+    key: "HTF BIAS",
+    hook: "Fighting the trend?",
+    score: 42,
+    finding: "You fought the D1 trend on 58% of your trades. That's not bad luck — that's a system failure.",
+  },
+  {
+    key: "LIQUIDITY",
+    hook: "Stops where they hunt?",
+    score: 38,
+    finding: "62% of your entries run straight into opposing liquidity. You're handing institutions your stop.",
+  },
+  {
+    key: "OTE DISCIPLINE",
+    hook: "Chasing entries?",
+    score: 55,
+    finding: "Only 31% of entries hit the 0.618–0.786 OTE zone. You're paying full price for discounted levels.",
+  },
+  {
+    key: "OB/FVG CONFLUENCE",
+    hook: "Entering on one reason?",
+    score: 48,
+    finding: "52% of entries ignore the nearest institutional imbalance. That's not a strategy — that's noise.",
+  },
+  {
+    key: "SESSION DISCIPLINE",
+    hook: "Trading dead hours?",
+    score: 31,
+    finding: "Your London win rate runs 18 pts below your Asian baseline — inverted from institutional norms. You're trading the right hours with the wrong process.",
+  },
+  {
+    key: "RISK ARCHITECTURE",
+    hook: "One bad day away?",
+    score: 45,
+    finding: "Lot size variance is 3.2× — one bad session at max size ends your account.",
+  },
+  {
+    key: "BEHAVIORAL CONTROL",
+    hook: "Revenge trading?",
+    score: 18,
+    finding: "276 revenge trades. Your lowest score. This is the diagnosis, not the symptom.",
+  },
+];
 
 export default function RadarSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -57,11 +77,13 @@ export default function RadarSection() {
     return () => obs.disconnect();
   }, [animated]);
 
-  const data = RADAR_ACTUAL.map((d) => ({
-    dim: d.dim,
+  const data = DIMENSIONS.map((d) => ({
+    dim: d.key,
     score: animated ? d.score : 100,
     fullMark: 100,
   }));
+
+  const activeDim = activeInsight ? DIMENSIONS.find((d) => d.key === activeInsight) : null;
 
   return (
     <section ref={ref} style={{ maxWidth: 1100, margin: "0 auto", padding: "0 40px 100px" }}>
@@ -99,44 +121,94 @@ export default function RadarSection() {
       </FadeInUp>
 
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 28 }}>
-        <div style={{ width: "100%", minWidth: 450, height: 500 }}>
+        <div style={{ width: "100%", minWidth: 450, height: 500, position: "relative" }}>
+          <span
+            style={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              fontFamily: MONO,
+              fontSize: 9,
+              color: "var(--text-muted)",
+              border: "1px solid var(--border-subtle)",
+              padding: "2px 8px",
+              letterSpacing: "0.1em",
+              zIndex: 10,
+              pointerEvents: "none",
+            }}
+          >
+            DEMO ACCOUNT DATA
+          </span>
+
           {mounted && (
             <ResponsiveContainer width="100%" height="100%">
-              <RadarChart data={data}>
+              <RadarChart data={data} outerRadius="60%">
                 <PolarGrid stroke="var(--border-subtle)" />
                 <PolarAngleAxis
                   dataKey="dim"
                   tick={(props) => {
-                    const { x, y, payload } = props as { x: number; y: number; payload: { value: string } };
+                    const { x, y, cx, cy, payload } = props as unknown as {
+                      x: number;
+                      y: number;
+                      cx: number;
+                      cy: number;
+                      payload: { value: string };
+                    };
+                    const dim = DIMENSIONS.find((d) => d.key === payload.value);
+                    if (!dim) return <g />;
+
                     const isActive = payload.value === activeInsight;
+                    const isHovered = hoveredDim === payload.value;
+
+                    // Push labels further from center to clear the outermost grid ring
+                    const EXTRA = 22;
+                    const dx = x - (cx ?? 0);
+                    const dy = y - (cy ?? 0);
+                    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                    const scale = (dist + EXTRA) / dist;
+                    const lx = (cx ?? 0) + dx * scale;
+                    const ly = (cy ?? 0) + dy * scale;
+
+                    const nameColor = isActive
+                      ? "var(--accent-primary)"
+                      : isHovered
+                      ? "var(--text-primary)"
+                      : "#E6EDF3";
+
                     return (
                       <g
-                        onClick={() => setActiveInsight(activeInsight === payload.value ? null : payload.value)}
+                        onClick={() =>
+                          setActiveInsight(activeInsight === payload.value ? null : payload.value)
+                        }
                         onMouseEnter={() => setHoveredDim(payload.value)}
                         onMouseLeave={() => setHoveredDim(null)}
                         cursor="pointer"
                       >
                         <text
-                          x={x}
-                          y={y}
+                          x={lx}
+                          y={ly}
                           textAnchor="middle"
-                          dominantBaseline="central"
-                          fill={
-                            isActive
-                              ? "var(--accent-primary)"
-                              : hoveredDim === payload.value
-                              ? "var(--text-primary)"
-                              : "var(--text-secondary)"
-                          }
-                          fontSize={11}
                           fontFamily={MONO}
-                          style={{
-                            cursor: "pointer",
-                            textDecoration: hoveredDim === payload.value ? "underline" : "none",
-                            transition: "fill 150ms ease",
-                          }}
+                          style={{ cursor: "pointer", transition: "fill 150ms ease" }}
                         >
-                          {payload.value}
+                          <tspan
+                            x={lx}
+                            dy="-0.6em"
+                            fontSize={11}
+                            fill={nameColor}
+                            fontWeight={isActive ? 600 : 400}
+                          >
+                            {dim.key}
+                          </tspan>
+                          <tspan
+                            x={lx}
+                            dy="1.4em"
+                            fontSize={9}
+                            fill="#8B949E"
+                            fontStyle="italic"
+                          >
+                            {dim.hook}
+                          </tspan>
                         </text>
                       </g>
                     );
@@ -157,7 +229,7 @@ export default function RadarSection() {
           )}
         </div>
 
-        {activeInsight && (
+        {activeDim && (
           <div
             className="insight-popup"
             style={{
@@ -173,15 +245,28 @@ export default function RadarSection() {
               style={{
                 fontFamily: MONO,
                 fontSize: 10,
-                color: "var(--accent-primary)",
+                color: GOLD,
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
+                display: "block",
               }}
             >
-              {activeInsight}
+              {activeDim.key}
+            </span>
+            <span
+              style={{
+                fontFamily: MONO,
+                fontSize: 10,
+                color: "var(--text-secondary)",
+                fontStyle: "italic",
+                display: "block",
+                marginTop: 3,
+              }}
+            >
+              {activeDim.hook}
             </span>
             <p style={{ margin: "8px 0 0", fontSize: 14, color: "var(--text-primary)", lineHeight: 1.65 }}>
-              {RADAR_INSIGHTS[activeInsight]}
+              {activeDim.finding}
             </p>
           </div>
         )}
