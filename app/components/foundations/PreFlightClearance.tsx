@@ -23,13 +23,13 @@ function Pill({
     <button
       onClick={onClick}
       style={{
-        padding: '7px 16px',
-        borderRadius: 4,
-        border: `1px solid ${selected ? color : '#1e293b'}`,
-        background: selected ? `${color}1a` : 'transparent',
+        padding: '8px 16px',
+        borderRadius: 6,
+        border: `1px solid ${selected ? color : BORDER}`,
+        background: selected ? 'rgba(229,184,60,0.10)' : 'transparent',
         color: selected ? color : '#64748b',
         fontFamily: MONO,
-        fontSize: 11,
+        fontSize: 12,
         letterSpacing: '0.06em',
         fontWeight: selected ? 700 : 400,
         cursor: 'pointer',
@@ -41,25 +41,38 @@ function Pill({
   )
 }
 
-// ── Stat tile ─────────────────────────────────────────────────────────────────
+// ── XP toast ──────────────────────────────────────────────────────────────────
 
-function Tile({ label, value }: { label: string; value: string }) {
+function XpToast() {
   return (
     <div style={{
-      background: BG_BASE, borderRadius: 6,
-      padding: '10px 14px', border: `1px solid ${BORDER}`, flex: 1, minWidth: 72,
+      position: 'absolute',
+      top: -40,
+      right: 0,
+      background: '#0e1626',
+      border: `1px solid ${GOLD}`,
+      borderRadius: 6,
+      padding: '6px 14px',
+      fontFamily: MONO,
+      fontSize: 12,
+      color: GOLD,
+      fontWeight: 700,
+      letterSpacing: '0.08em',
+      animation: 'pfToastIn 0.25s ease, pfToastOut 0.4s ease 2.4s forwards',
+      pointerEvents: 'none',
+      zIndex: 10,
     }}>
-      <div style={{ fontFamily: MONO, fontSize: 9, color: '#475569', letterSpacing: '0.1em', marginBottom: 5 }}>
-        {label}
-      </div>
-      <div style={{ fontFamily: MONO, fontSize: 20, fontWeight: 700, color: '#f8fafc', lineHeight: 1 }}>
-        {value}
-      </div>
+      +15 XP
     </div>
   )
 }
 
 // ── Clearance result card ──────────────────────────────────────────────────────
+
+function formatSession(s: string): string {
+  if (s === 'ny') return 'NY'
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
 
 function ClearanceCard({ result }: { result: any }) {
   const clearance = result.clearance ?? result.clearance_level ?? 'green'
@@ -69,17 +82,22 @@ function ClearanceCard({ result }: { result: any }) {
 
   const borderColor = clearance === 'green' ? GREEN : clearance === 'amber' ? GOLD : RED_C
 
-  const headline = clearance === 'green'
-    ? 'CLEARED FOR OPERATIONS'
+  const statusLabel = clearance === 'green'
+    ? '🟢 CLEARED FOR OPERATIONS'
     : clearance === 'amber'
-    ? 'RESTRICTED OPERATIONS'
-    : 'STAND DOWN ADVISED'
+    ? '🟡 RESTRICTED OPERATIONS'
+    : '🔴 STAND DOWN ADVISED'
 
-  const subline = clearance === 'green'
-    ? 'Normal conditions. Full session authorized.'
-    : clearance === 'amber'
-    ? 'Elevated conditions. Reduced exposure required.'
-    : 'Critical risk level. Stand down recommended.'
+  const statusColor = clearance === 'green' ? GREEN : clearance === 'amber' ? GOLD : RED_C
+
+  const limitsText = (() => {
+    const parts: string[] = []
+    if (limits.max_trades != null)         parts.push(`Max ${limits.max_trades} trades`)
+    if (limits.max_risk_pct != null)       parts.push(`Max ${limits.max_risk_pct}% risk`)
+    if (limits.sessions?.length)           parts.push((limits.sessions as string[]).map(formatSession).join(' · '))
+    if (limits.cooldown_after_loss_min)    parts.push(`${limits.cooldown_after_loss_min}min cooldown after any loss`)
+    return parts.join(' · ')
+  })()
 
   return (
     <div style={{
@@ -90,69 +108,34 @@ function ClearanceCard({ result }: { result: any }) {
       padding: '20px 24px',
       animation: 'pfSlideUp 0.3s ease',
     }}>
-      <style>{`@keyframes pfSlideUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:none } }`}</style>
+      <style>{`
+        @keyframes pfSlideUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:none } }
+        @keyframes pfToastIn  { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:none } }
+        @keyframes pfToastOut { from { opacity:1 } to { opacity:0 } }
+      `}</style>
 
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
-        <div>
-          <div style={{ fontFamily: MONO, fontSize: 9, color: '#475569', letterSpacing: '0.15em', marginBottom: 6 }}>
-            PRE-FLIGHT CLEARANCE
-          </div>
-          <div style={{ fontFamily: DISPLAY, fontSize: 18, fontWeight: 800, color: '#f8fafc', marginBottom: 4 }}>
-            {headline}
-          </div>
-          <div style={{ fontFamily: MONO, fontSize: 11, color: '#64748b' }}>
-            {subline}
-          </div>
-        </div>
-        <div style={{
-          background: `${borderColor}18`, border: `1px solid ${borderColor}44`,
-          borderRadius: 5, padding: '6px 12px',
-          fontFamily: MONO, fontSize: 10, fontWeight: 700,
-          color: borderColor, letterSpacing: '0.12em', flexShrink: 0,
-        }}>
-          {clearance.toUpperCase()}
-        </div>
+      {/* Status label */}
+      <div style={{
+        fontFamily: MONO, fontSize: 11, fontWeight: 700,
+        color: statusColor, letterSpacing: '0.12em', marginBottom: 14,
+      }}>
+        {statusLabel}
       </div>
 
-      {/* Green / Amber — limits grid */}
-      {clearance !== 'red' && (
-        <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
-          <Tile label="MAX TRADES" value={String(limits.max_trades)} />
-          <Tile label="MAX RISK" value={`${limits.max_risk_pct}%`} />
-          {limits.cooldown_after_loss_min && (
-            <Tile label="COOLDOWN" value={`${limits.cooldown_after_loss_min}m`} />
-          )}
-          {limits.sessions && (
-            <Tile
-              label="SESSIONS"
-              value={(limits.sessions as string[])
-                .map((s: string) => s === 'ny' ? 'NY' : s.charAt(0).toUpperCase() + s.slice(1))
-                .join(' · ')}
-            />
-          )}
-        </div>
-      )}
-
-      {/* Red — stand-down message */}
-      {clearance === 'red' && (
+      {/* GREEN / AMBER — limits row */}
+      {clearance !== 'red' && limitsText && (
         <div style={{
-          background: `${RED_C}0d`, border: `1px solid ${RED_C}22`,
-          borderRadius: 6, padding: '12px 16px', marginBottom: 16,
+          fontFamily: MONO, fontSize: 13, color: '#f8fafc',
+          lineHeight: 1.6, marginBottom: reasons.length > 0 ? 12 : 16,
         }}>
-          <p style={{ fontFamily: MONO, fontSize: 12, color: '#94a3b8', lineHeight: 1.7, margin: '0 0 8px' }}>
-            Trading today significantly increases drawdown risk based on your current state.
-          </p>
-          <p style={{ fontFamily: MONO, fontSize: 11, color: RED_C, fontWeight: 600, margin: 0 }}>
-            Standing down protects your streak.
-          </p>
+          {limitsText}
         </div>
       )}
 
-      {/* Amber — risk reasons */}
+      {/* AMBER — reasons */}
       {clearance === 'amber' && reasons.length > 0 && (
         <div style={{ marginBottom: 16, display: 'flex', flexDirection: 'column', gap: 4 }}>
-          {reasons.slice(0, 2).map((r: string, i: number) => (
+          {reasons.map((r: string, i: number) => (
             <div key={i} style={{ fontFamily: MONO, fontSize: 11, color: '#64748b', lineHeight: 1.6 }}>
               → {r}
             </div>
@@ -160,20 +143,50 @@ function ClearanceCard({ result }: { result: any }) {
         </div>
       )}
 
+      {/* RED — stand-down content */}
+      {clearance === 'red' && (
+        <>
+          <div style={{
+            fontFamily: DISPLAY, fontSize: 15, fontWeight: 500,
+            color: '#f8fafc', lineHeight: 1.6, marginBottom: 12,
+          }}>
+            The data says: not today.
+          </div>
+          {reasons.length > 0 && (
+            <div style={{ marginBottom: 12, display: 'flex', flexDirection: 'column', gap: 4 }}>
+              {reasons.map((r: string, i: number) => (
+                <div key={i} style={{ fontFamily: MONO, fontSize: 11, color: '#64748b', lineHeight: 1.6 }}>
+                  → {r}
+                </div>
+              ))}
+            </div>
+          )}
+          <div style={{
+            fontFamily: MONO, fontSize: 11, color: GREEN,
+            lineHeight: 1.6, marginBottom: 16,
+          }}>
+            Standing down today protects your streak. No trades = discipline held.
+          </div>
+        </>
+      )}
+
       {/* One rule */}
       {oneRule && (
-        <div style={{
-          background: `${GOLD}0d`, border: `1px solid ${GOLD}2a`,
-          borderLeft: `2px solid ${GOLD}`,
-          borderRadius: 4, padding: '10px 14px',
-        }}>
-          <div style={{ fontFamily: MONO, fontSize: 9, color: '#475569', letterSpacing: '0.12em', marginBottom: 5 }}>
-            ONE RULE TODAY
+        <>
+          <div style={{ borderTop: `1px solid ${BORDER}`, marginBottom: 14 }} />
+          <div style={{
+            fontFamily: MONO, fontSize: 10, color: GOLD,
+            letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 6,
+          }}>
+            TODAY&apos;S ONE RULE
           </div>
-          <div style={{ fontFamily: MONO, fontSize: 12, color: GOLD, fontWeight: 600, lineHeight: 1.5 }}>
+          <div style={{
+            fontFamily: DISPLAY, fontSize: 15, fontWeight: 700,
+            color: '#f8fafc', lineHeight: 1.5,
+          }}>
             {oneRule}
           </div>
-        </div>
+        </>
       )}
     </div>
   )
@@ -188,13 +201,14 @@ export interface PreFlightClearanceProps {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function PreFlightClearance({ analyses, calendarEvents }: PreFlightClearanceProps) {
+export default function PreFlightClearance({ analyses: _analyses, calendarEvents }: PreFlightClearanceProps) {
   const { session } = useAuth()
   const API = process.env.NEXT_PUBLIC_API_URL
 
   type Stage = 'loading' | 'form' | 'computing' | 'result'
-  const [stage, setStage]         = useState<Stage>('loading')
-  const [result, setResult]       = useState<any>(null)
+  const [stage, setStage]             = useState<Stage>('loading')
+  const [result, setResult]           = useState<any>(null)
+  const [showXpToast, setShowXpToast] = useState(false)
 
   // Form inputs
   const [sleep,     setSleep]     = useState<string | null>(null)
@@ -238,12 +252,14 @@ export default function PreFlightClearance({ analyses, calendarEvents }: PreFlig
       const data = await res.json()
       setResult(data)
       setStage('result')
+      setShowXpToast(true)
+      setTimeout(() => setShowXpToast(false), 3000)
     } catch {
       setStage('form')
     }
   }
 
-  // ── Loading state ──
+  // ── Loading ──
   if (stage === 'loading') return (
     <div style={{
       background: BG_CARD, border: `1px solid ${BORDER}`,
@@ -261,7 +277,7 @@ export default function PreFlightClearance({ analyses, calendarEvents }: PreFlig
     </div>
   )
 
-  // ── Computing state ──
+  // ── Computing ──
   if (stage === 'computing') return (
     <div style={{
       background: BG_CARD, border: `1px solid ${BORDER}`,
@@ -284,21 +300,26 @@ export default function PreFlightClearance({ analyses, calendarEvents }: PreFlig
     </div>
   )
 
-  // ── Result state ──
-  if (stage === 'result' && result) return <ClearanceCard result={result} />
+  // ── Result ──
+  if (stage === 'result' && result) return (
+    <div style={{ position: 'relative' }}>
+      {showXpToast && <XpToast />}
+      <ClearanceCard result={result} />
+    </div>
+  )
 
-  // ── Form state ──
+  // ── Form ──
   const questions = [
     {
-      id: 'sleep', label: 'SLEEP QUALITY', value: sleep, set: setSleep,
+      id: 'sleep', label: 'SLEEP', value: sleep, set: setSleep,
       options: [
         { key: 'good',    display: 'Good' },
         { key: 'average', display: 'Average' },
-        { key: 'poor',    display: 'Poor', color: RED_C },
+        { key: 'poor',    display: 'Poor',    color: RED_C },
       ],
     },
     {
-      id: 'emotion', label: 'EMOTIONAL STATE', value: emotion, set: setEmotion,
+      id: 'emotion', label: 'STATE', value: emotion, set: setEmotion,
       options: [
         { key: 'calm',     display: 'Calm' },
         { key: 'neutral',  display: 'Neutral' },
@@ -307,18 +328,18 @@ export default function PreFlightClearance({ analyses, calendarEvents }: PreFlig
       ],
     },
     {
-      id: 'yesterday', label: "YESTERDAY'S RESULT", value: yesterday, set: setYesterday,
+      id: 'yesterday', label: 'YESTERDAY', value: yesterday, set: setYesterday,
       options: [
-        { key: 'green',    display: 'Green',    color: GREEN },
-        { key: 'red',      display: 'Red',      color: RED_C },
-        { key: 'no_trade', display: 'No Trade' },
+        { key: 'green',    display: 'Green',         color: GREEN },
+        { key: 'red',      display: 'Red',           color: RED_C },
+        { key: 'no_trade', display: "Didn't trade" },
       ],
     },
     {
-      id: 'intent', label: 'SESSION INTENT', value: intent, set: setIntent,
+      id: 'intent', label: 'TODAY FEELS LIKE', value: intent, set: setIntent,
       options: [
-        { key: 'normal',  display: 'Normal' },
-        { key: 'big_day', display: 'Big Day', color: '#f59e0b' },
+        { key: 'normal',  display: 'Normal day' },
+        { key: 'big_day', display: 'Big day',    color: '#f59e0b' },
       ],
     },
   ]
@@ -331,19 +352,16 @@ export default function PreFlightClearance({ analyses, calendarEvents }: PreFlig
     }}>
 
       {/* Header */}
-      <div style={{
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        marginBottom: 20, paddingBottom: 14, borderBottom: `1px solid ${BORDER}`,
-      }}>
-        <div>
-          <div style={{ fontFamily: MONO, fontSize: 9, color: GOLD, letterSpacing: '0.15em', marginBottom: 5 }}>
-            PRE-FLIGHT CLEARANCE
-          </div>
-          <div style={{ fontFamily: DISPLAY, fontSize: 16, fontWeight: 700, color: '#f8fafc' }}>
-            Authorize Today&apos;s Operations
-          </div>
+      <div style={{ marginBottom: 20, paddingBottom: 14, borderBottom: `1px solid ${BORDER}` }}>
+        <div style={{
+          fontFamily: MONO, fontSize: 10, color: GOLD,
+          letterSpacing: '0.15em', marginBottom: 6,
+        }}>
+          PRE-FLIGHT CLEARANCE
         </div>
-        <span style={{ fontFamily: MONO, fontSize: 10, color: '#334155' }}>~15 sec</span>
+        <div style={{ fontFamily: DISPLAY, fontSize: 18, fontWeight: 700, color: '#f8fafc' }}>
+          Before you trade — 15 seconds.
+        </div>
       </div>
 
       {/* Calendar warning */}
@@ -355,7 +373,7 @@ export default function PreFlightClearance({ analyses, calendarEvents }: PreFlig
           display: 'flex', alignItems: 'center', gap: 8,
         }}>
           <span style={{ color: RED_C, fontSize: 11 }}>⚠</span>
-          <span style={{ fontFamily: MONO, fontSize: 11, color: '#ef4444' }}>
+          <span style={{ fontFamily: MONO, fontSize: 11, color: RED_C }}>
             {calendarEvents.length} high-impact event{calendarEvents.length !== 1 ? 's' : ''} today
             {' '}— already factored into your clearance
           </span>
@@ -367,7 +385,7 @@ export default function PreFlightClearance({ analyses, calendarEvents }: PreFlig
         {questions.map(q => (
           <div key={q.id}>
             <div style={{
-              fontFamily: MONO, fontSize: 9, color: '#475569',
+              fontFamily: MONO, fontSize: 11, color: '#64748b',
               letterSpacing: '0.12em', marginBottom: 8,
             }}>
               {q.label}
@@ -402,7 +420,7 @@ export default function PreFlightClearance({ analyses, calendarEvents }: PreFlig
           letterSpacing: '0.02em',
         }}
       >
-        {canSubmit ? 'Authorize Operations →' : 'Answer all questions to continue'}
+        {canSubmit ? 'Request Clearance →' : 'Answer all questions to continue'}
       </button>
     </div>
   )
