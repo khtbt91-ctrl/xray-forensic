@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
@@ -10,6 +10,14 @@ const MONO = "'JetBrains Mono', monospace"
 export default function LoginPage() {
   const router = useRouter()
   const { signIn } = useAuth()
+
+  const [redirectTo, setRedirectTo] = useState('/dashboard')
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const r = params.get('redirect') || params.get('from') || params.get('next')
+    if (r && r.startsWith('/')) setRedirectTo(r)
+  }, [])
 
   const [mode, setMode] = useState<'signin' | 'signup'>('signin')
   const [email, setEmail] = useState('')
@@ -35,7 +43,7 @@ export default function LoginPage() {
     setLoading(true)
     try {
       await signIn(email, password, rememberMe)
-      router.push('/dashboard')
+      router.push(redirectTo)
     } catch {
       setError('Invalid email or password.')
     } finally {

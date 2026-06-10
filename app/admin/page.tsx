@@ -211,7 +211,7 @@ function AdminContent() {
   // ── auth guard — redirect immediately if not admin ──
   useEffect(() => {
     if (loading) return
-    if (!user) { router.replace('/dashboard'); return }
+    if (!user) { router.replace('/login?redirect=/admin'); return }
     if (isAdmin === false) router.replace('/dashboard')
   }, [user, loading, router, isAdmin])
 

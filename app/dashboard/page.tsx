@@ -435,7 +435,7 @@ function DashboardContent() {
 
   // ── Auth guards (unchanged) ──
   useEffect(() => {
-    if (!loading && !user) router.push('/login')
+    if (!loading && !user) router.push('/login?redirect=/dashboard')
   }, [user, loading, router])
 
   useEffect(() => {
