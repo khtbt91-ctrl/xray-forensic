@@ -40,7 +40,15 @@ function getScoreStyle(score: number) {
 
 // ── Compliance sidebar ────────────────────────────────────────────────────────
 
-function ComplianceTracker({ session }: { session: any }) {
+function ComplianceTracker({
+  session,
+  analysesCount,
+  onStats,
+}: {
+  session: any
+  analysesCount: number
+  onStats?: (total: number, followed: number) => void
+}) {
   const [prescriptions, setPrescriptions] = useState<any[]>([])
   const [total, setTotal] = useState(0)
   const [followed, setFollowed] = useState(0)
@@ -55,9 +63,12 @@ function ComplianceTracker({ session }: { session: any }) {
       .then(r => r.ok ? r.json() : null)
       .then(json => {
         if (json) {
+          const t = json.total || 0
+          const f = json.followed || 0
           setPrescriptions(json.prescriptions || [])
-          setTotal(json.total || 0)
-          setFollowed(json.followed || 0)
+          setTotal(t)
+          setFollowed(f)
+          onStats?.(t, f)
         }
       })
       .finally(() => setLoading(false))
@@ -127,12 +138,25 @@ function ComplianceTracker({ session }: { session: any }) {
         </div>
       ) : total === 0 ? (
         <div style={{ textAlign: 'center', padding: '24px 0' }}>
-          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#475569', lineHeight: 1.7, margin: '0 0 16px' }}>
-            Complete your first analysis to unlock<br />compliance tracking.
-          </p>
-          <a href="/new" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#e5b83c', textDecoration: 'none', border: '1px solid rgba(229,184,60,0.3)', borderRadius: '4px', padding: '6px 14px' }}>
-            Upload Trade Data →
-          </a>
+          {analysesCount === 0 ? (
+            <>
+              <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#475569', lineHeight: 1.7, margin: '0 0 16px' }}>
+                Complete your first analysis to unlock<br />compliance tracking.
+              </p>
+              <a href="/new" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#e5b83c', textDecoration: 'none', border: '1px solid rgba(229,184,60,0.3)', borderRadius: '4px', padding: '6px 14px' }}>
+                Upload Trade Data →
+              </a>
+            </>
+          ) : (
+            <>
+              <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#475569', lineHeight: 1.7, margin: '0 0 16px' }}>
+                Your next analysis will generate trackable<br />prescriptions. Upload again to activate<br />compliance tracking.
+              </p>
+              <a href="/new" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#e5b83c', textDecoration: 'none', border: '1px solid rgba(229,184,60,0.3)', borderRadius: '4px', padding: '6px 14px' }}>
+                Run New Analysis →
+              </a>
+            </>
+          )}
         </div>
       ) : (
         <>
@@ -407,6 +431,7 @@ function DashboardContent() {
   const router = useRouter()
   const [analyses, setAnalyses] = useState<any[]>([])
   const [loadingData, setLoadingData] = useState(true)
+  const [rxStats, setRxStats] = useState<{ total: number; followed: number } | null>(null)
 
   // ── Auth guards (unchanged) ──
   useEffect(() => {
@@ -578,10 +603,16 @@ function DashboardContent() {
           />
           <StatCard
             label="Prescriptions Followed"
-            value="—"
+            value={rxStats && rxStats.total > 0 ? `${rxStats.followed}/${rxStats.total}` : '—'}
             color="#10b981"
             icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>}
-            sub="coming soon"
+            sub={
+              analyses.length === 0
+                ? 'run first analysis'
+                : rxStats === null || rxStats.total === 0
+                ? 'activates on next upload'
+                : `${Math.round((rxStats.followed / rxStats.total) * 100)}% follow-through`
+            }
           />
         </div>
 
@@ -734,7 +765,11 @@ function DashboardContent() {
           </div>
 
           {/* Compliance Tracker sidebar */}
-          <ComplianceTracker session={session} />
+          <ComplianceTracker
+            session={session}
+            analysesCount={analyses.length}
+            onStats={(t, f) => setRxStats({ total: t, followed: f })}
+          />
         </div>
 
         {/* ── Trader DNA ── */}
