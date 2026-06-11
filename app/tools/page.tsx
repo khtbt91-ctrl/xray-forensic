@@ -46,6 +46,89 @@ export default function ToolsPage() {
           from your trading platform.
         </p>
 
+        {/* Algo Autopsy Card */}
+        <div style={{
+          background: 'var(--bg-card)',
+          border: '1px solid rgba(201,168,76,0.45)',
+          borderRadius: '8px',
+          padding: '32px',
+          marginBottom: '24px'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            marginBottom: '16px'
+          }}>
+            <div>
+              <p style={{
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '0.7rem',
+                color: '#C9A84C',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                marginBottom: '8px'
+              }}>
+                EA DIAGNOSTIC
+              </p>
+              <h2 style={{
+                fontSize: '1.25rem',
+                fontWeight: 600,
+                color: 'var(--text-primary)',
+                marginBottom: '4px'
+              }}>
+                Algo Autopsy
+              </h2>
+              <p style={{
+                fontSize: '0.8rem',
+                color: 'var(--text-muted)'
+              }}>
+                From $79 · One-time
+              </p>
+            </div>
+            <span style={{
+              background: 'rgba(201,168,76,0.12)',
+              color: '#C9A84C',
+              padding: '4px 12px',
+              borderRadius: '4px',
+              fontSize: '0.7rem',
+              fontFamily: 'monospace'
+            }}>
+              NEW
+            </span>
+          </div>
+
+          <p style={{
+            color: 'var(--text-secondary)',
+            fontSize: '0.9rem',
+            lineHeight: 1.7,
+            marginBottom: '24px'
+          }}>
+            Forensic analysis of Expert Advisor behavior. Detects martingale
+            patterns, calculates account ruin probability, and identifies
+            which market regimes your EA actually works in.
+          </p>
+
+          <a
+            href="/new?type=ea"
+            style={{
+              display: 'block',
+              width: '100%',
+              padding: '14px',
+              background: '#C9A84C',
+              color: '#000000',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              fontWeight: 700,
+              fontSize: '0.9rem',
+              textAlign: 'center',
+              boxSizing: 'border-box'
+            }}
+          >
+            Diagnose Your EA →
+          </a>
+        </div>
+
         {/* MQL5 Tool Card */}
         <div style={{
           background: 'var(--bg-card)',

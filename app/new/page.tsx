@@ -248,6 +248,81 @@ function NumberField({
   );
 }
 
+// ── Step 0: Diagnosis Type ────────────────────────────────────────────────────
+
+type DiagnosisType = "manual" | "ea" | "backtest";
+
+function StepType({
+  diagnosisType,
+  setDiagnosisType,
+  onNext,
+}: {
+  diagnosisType: DiagnosisType;
+  setDiagnosisType: (t: DiagnosisType) => void;
+  onNext: () => void;
+}) {
+  const OPTIONS: { type: DiagnosisType; icon: string; label: string; desc: string; disabled?: boolean }[] = [
+    { type: "manual", icon: "📊", label: "My Trading",
+      desc: "Diagnose my manual trade history" },
+    { type: "ea", icon: "🤖", label: "My Expert Advisor",
+      desc: "Diagnose my EA's behavioral patterns and calculate ruin probability" },
+    { type: "backtest", icon: "🔬", label: "A Backtest",
+      desc: "Screen a Strategy Tester report for curve-fitting before going live", disabled: true },
+  ];
+  return (
+    <div>
+      <h2 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+        What are you diagnosing?
+      </h2>
+      <p style={{ fontSize: 14, color: "var(--text-secondary)", margin: "0 0 36px" }}>
+        The forensic engine adapts to the subject.
+      </p>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 40 }}>
+        {OPTIONS.map((o) => {
+          const sel = diagnosisType === o.type;
+          return (
+            <button key={o.type}
+              onClick={() => !o.disabled && setDiagnosisType(o.type)}
+              disabled={o.disabled}
+              style={{
+                display: "flex", gap: 16, alignItems: "flex-start",
+                background: sel ? "var(--bg-elevated)" : "var(--bg-card)",
+                border: sel ? `1px solid ${GOLD}` : "1px solid var(--border-subtle)",
+                borderRadius: 8, padding: "20px 18px", textAlign: "left",
+                cursor: o.disabled ? "default" : "pointer",
+                opacity: o.disabled ? 0.45 : 1, transition: "border-color 0.15s",
+              }}>
+              <span style={{ fontSize: 22, flexShrink: 0 }}>{o.icon}</span>
+              <span>
+                <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: sel ? GOLD : "var(--text-primary)" }}>
+                    {o.label}
+                  </span>
+                  {o.disabled && (
+                    <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.1em",
+                      color: "var(--text-muted)", border: "1px solid var(--border-subtle)",
+                      padding: "2px 8px", borderRadius: 4 }}>
+                      COMING SOON
+                    </span>
+                  )}
+                </span>
+                <span style={{ display: "block", fontSize: 12, color: "var(--text-muted)", marginTop: 5, lineHeight: 1.5 }}>
+                  {o.desc}
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <button onClick={onNext} className="btn btn-primary" style={{ padding: "12px 28px" }}>
+          Next →
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ── Step 1: Context Profile ───────────────────────────────────────────────────
 
 function Step1({
@@ -558,6 +633,14 @@ const PROCESSING_STEPS = [
   { title: "Report ready.", sub: "Brace yourself." },
 ];
 
+const EA_PROCESSING_STEPS = [
+  { title: "Parsing EA trade history...", sub: "Reading every entry, exit, lot size, and magic number." },
+  { title: "Scanning for escalation patterns...", sub: "Lot sizing after losses. The martingale fingerprint hides here." },
+  { title: "Running 10,000 ruin simulations...", sub: "Monte Carlo projection at your EA's actual win rate." },
+  { title: "Classifying market regimes...", sub: "Trending, ranging, high-vol — where the edge actually lives." },
+  { title: "Autopsy complete.", sub: "The code confessed." },
+];
+
 function Step3({
   profile,
   selectedTier,
@@ -565,6 +648,7 @@ function Step3({
   lastContextRestored,
   authProfile,
   onEditContext,
+  diagnosisType = "manual",
 }: {
   profile: ContextProfile;
   selectedTier: string | null;
@@ -572,6 +656,7 @@ function Step3({
   lastContextRestored?: boolean;
   authProfile?: { tier_id?: string } | null;
   onEditContext?: () => void;
+  diagnosisType?: DiagnosisType;
 }) {
   const router = useRouter();
   const { user } = useAuth();
@@ -586,6 +671,9 @@ function Step3({
   const [processingStepIndex, setProcessingStepIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [timedOut, setTimedOut] = useState(false);
+
+  const isEa = diagnosisType === "ea";
+  const activeSteps = isEa ? EA_PROCESSING_STEPS : PROCESSING_STEPS;
 
   const validateAndSetFile = (f: File | null) => {
     if (!f) return;
@@ -689,6 +777,11 @@ function Step3({
         asset_class: assetClass,
       };
 
+      if (isEa) {
+        // Algo Autopsy — ruin projection uses the account balance when provided
+        contextData.account_balance = parseFloat(profile.accountBalance) || null;
+      }
+
       if (isEaAutopsy) {
         // Always run EA engine for this tier
         contextData.ea_mode = true;
@@ -706,7 +799,7 @@ function Step3({
       formData.append("context", JSON.stringify(contextData));
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/analyze`,
+        `${process.env.NEXT_PUBLIC_API_URL}${isEa ? "/analyze/ea" : "/analyze"}`,
         {
           method: "POST",
           body: formData,
@@ -726,7 +819,11 @@ function Step3({
       const data = await response.json();
 
       // Save compliance snapshot for logged-in users (best-effort, non-blocking failure)
-      await savePrescriptions(data.analysis_id, data);
+      // EA autopsy prescriptions have a different shape — keep them out of the
+      // manual-compliance snapshot table.
+      if (!isEa) {
+        await savePrescriptions(data.analysis_id, data);
+      }
 
       setProcessingStepIndex(4);
       await new Promise((r) => setTimeout(r, 1200));
@@ -740,10 +837,10 @@ function Step3({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedFile, magicFile, selectedTier, profile, assetClass, accessToken, router, user]);
+  }, [selectedFile, magicFile, selectedTier, diagnosisType, profile, assetClass, accessToken, router, user]);
 
   if (processing) {
-    const totalSteps = PROCESSING_STEPS.length;
+    const totalSteps = activeSteps.length;
     const progressPct = ((processingStepIndex) / (totalSteps - 1)) * 100;
     const isDone = processingStepIndex >= totalSteps - 1;
 
@@ -784,7 +881,7 @@ function Step3({
         </div>
 
         <div style={{ background: "#0e1626", border: "1px solid #1e293b", borderRadius: 10, padding: "32px 28px" }}>
-          {PROCESSING_STEPS.map((s, i) => {
+          {activeSteps.map((s, i) => {
             const done = i < processingStepIndex;
             const active = i === processingStepIndex;
             return (
@@ -792,7 +889,7 @@ function Step3({
                 display: "flex",
                 gap: 14,
                 alignItems: "flex-start",
-                marginBottom: i < PROCESSING_STEPS.length - 1 ? 18 : 0,
+                marginBottom: i < activeSteps.length - 1 ? 18 : 0,
               }}>
                 <span style={{
                   fontFamily: MONO,
@@ -887,9 +984,13 @@ function Step3({
       <div style={{ marginBottom: 28 }}>
         <Disclaimer />
       </div>
-      <h2 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.02em" }}>Upload Trade History</h2>
+      <h2 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+        {isEa ? "Upload EA Trade History" : "Upload Trade History"}
+      </h2>
       <p style={{ fontSize: 14, color: "var(--text-secondary)", margin: "0 0 24px" }}>
-        Export your MT5 history and drop it below.
+        {isEa
+          ? "Export your EA's MT5 history the same way as manual trades — drop it below."
+          : "Export your MT5 history and drop it below."}
       </p>
 
       {selectedTier === 'ea-autopsy' && (
@@ -1034,7 +1135,8 @@ function Step3({
         )}
       </div>
 
-      {/* Asset class selector */}
+      {/* Asset class selector — hidden for EA autopsy (MT5-only) */}
+      {!isEa && (
       <div style={{
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
@@ -1103,6 +1205,7 @@ function Step3({
           </button>
         ))}
       </div>
+      )}
 
       {/* Drop zone */}
       <div
@@ -1155,7 +1258,7 @@ function Step3({
               </svg>
             </div>
             <p style={{ fontFamily: SPACE, fontSize: 22, fontWeight: 700, color: "#f8fafc", margin: "0 0 8px" }}>
-              Drop your MT5 export here
+              {isEa ? "Drop your EA's MT5 export here" : "Drop your MT5 export here"}
             </p>
             <p style={{ fontFamily: MONO, fontSize: 11, color: "#94a3b8", margin: "0 0 16px", letterSpacing: "0.06em" }}>
               {assetClass === "crypto" ? ".csv accepted" : ".csv · .htm · .xlsx · .xml accepted"}
@@ -1805,7 +1908,8 @@ function NewPageInner() {
   const [tierLocked, setTierLocked] = useState(false);
   const [tierResolved, setTierResolved] = useState(false);
   const [selectedOneTime, setSelectedOneTime] = useState<OneTime>(null);
-  const [currentStepKey, setCurrentStepKey] = useState("context");
+  const [diagnosisType, setDiagnosisType] = useState<DiagnosisType>("manual");
+  const [currentStepKey, setCurrentStepKey] = useState("type");
   const [lastContextRestored, setLastContextRestored] = useState(false);
   const hasInitialized = useRef(false);
 
@@ -1814,6 +1918,11 @@ function NewPageInner() {
     if (tier && tier in tierData) {
       setSelectedTier(tier);
       setTierLocked(true);
+    }
+    // /new?type=ea (tools page CTA) pre-selects the EA option on the diagnosis step
+    const type = searchParams.get("type");
+    if (type === "ea") {
+      setDiagnosisType("ea");
     }
     setTierResolved(true);
   }, [searchParams]);
@@ -1865,7 +1974,7 @@ function NewPageInner() {
             email: user.email || prev.email || "",
           }));
           setLastContextRestored(true);
-          setCurrentStepKey("upload");
+          // Diagnosis-type step is still shown first; Next jumps straight to Upload.
         }
       } catch {}
     }
@@ -1882,8 +1991,12 @@ function NewPageInner() {
   // Dynamic step array — logged-in users never see Tier or Payment steps.
   // Returning users with saved context skip directly to Upload.
   const steps = lastContextRestored
-    ? [{ label: "Upload", key: "upload" }]
+    ? [
+        { label: "Diagnosis", key: "type" },
+        { label: "Upload", key: "upload" },
+      ]
     : [
+        { label: "Diagnosis", key: "type" },
         { label: "Context", key: "context" },
         { label: "Upload", key: "upload" },
       ];
@@ -1976,6 +2089,13 @@ function NewPageInner() {
           </div>
         )}
 
+        {currentStepKey === "type" && (
+          <StepType
+            diagnosisType={diagnosisType}
+            setDiagnosisType={setDiagnosisType}
+            onNext={goToNextStep}
+          />
+        )}
         {currentStepKey === "context" && (
           <Step1 profile={profile} setProfile={setProfile} onNext={goToNextStep} />
         )}
@@ -1983,6 +2103,7 @@ function NewPageInner() {
           <Step3
             profile={profile}
             selectedTier={selectedTier}
+            diagnosisType={diagnosisType}
             accessToken={session?.access_token}
             lastContextRestored={lastContextRestored}
             authProfile={authProfile}
