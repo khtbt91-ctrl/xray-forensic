@@ -211,7 +211,7 @@ export default function TermsPage() {
             "Attempt to reverse-engineer the diagnostic algorithms",
             "Use the platform to manipulate or misrepresent trading performance to third parties",
             "Share or redistribute reports generated for other traders",
-            "Use the API (SOVEREIGN tier) to build competing services",
+            "Use the API (ELITE tier) to build competing services",
             "Circumvent usage limits or access controls",
           ]}
         />

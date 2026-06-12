@@ -266,7 +266,7 @@ function TraderDnaSection({ session, tierId }: { session: any, tierId: string })
 
   useEffect(() => {
     if (!session?.access_token) return
-    if (!['guardian', 'sovereign'].includes(tierId)) { setLoading(false); return }
+    if (!['operator', 'elite'].includes(tierId)) { setLoading(false); return }
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/dna`, {
       headers: { Authorization: `Bearer ${session.access_token}` },
     })
@@ -275,7 +275,7 @@ function TraderDnaSection({ session, tierId }: { session: any, tierId: string })
       .finally(() => setLoading(false))
   }, [session?.access_token, tierId])
 
-  if (!['forensic', 'guardian', 'sovereign'].includes(tierId)) return null
+  if (!['forensic', 'operator', 'elite'].includes(tierId)) return null
 
   if (tierId === 'forensic') return (
     <div style={{ marginTop: 24, padding: '20px 24px', background: '#0e1626', border: '1px solid #1e293b', borderRadius: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
@@ -283,11 +283,11 @@ function TraderDnaSection({ session, tierId }: { session: any, tierId: string })
         <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: GOLD, letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 6px' }}>TRADER DNA</p>
         <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1rem', fontWeight: 700, color: '#E6EDF3', margin: '0 0 4px' }}>Behavioral profile across all uploads</p>
         <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#475569', margin: 0 }}>
-          Upgrade to GUARDIAN to unlock dimension trend charts, archetype evolution, and your trader fingerprint.
+          Upgrade to OPERATOR to unlock dimension trend charts, archetype evolution, and your trader fingerprint.
         </p>
       </div>
       <a href="/pricing" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: GOLD, border: '1px solid rgba(229,184,60,0.3)', borderRadius: 4, padding: '8px 16px', textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>
-        Upgrade to GUARDIAN →
+        Upgrade to OPERATOR →
       </a>
     </div>
   )

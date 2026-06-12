@@ -16,7 +16,7 @@ const SANS = "'Space Grotesk', sans-serif"
 
 const TIER_PRICES: Record<string, string> = {
   signal: 'Free', audit: '$29/mo', forensic: '$79/mo',
-  guardian: '$149/mo', sovereign: '$399/mo',
+  operator: '$149/mo', elite: '$399/mo',
   'spot-audit': '$49', 'pre-challenge': '$79', 'failure-autopsy': '$99',
 }
 
@@ -25,8 +25,6 @@ const TIER_COLORS: Record<string, { bg: string; text: string }> = {
   audit:           { bg: 'rgba(245,158,11,0.15)',  text: '#f59e0b' },
   forensic:        { bg: 'rgba(59,130,246,0.15)',  text: '#3b82f6' },
   operator:        { bg: 'rgba(229,184,60,0.15)',  text: '#e5b83c' },
-  guardian:        { bg: 'rgba(16,185,129,0.15)',  text: '#10b981' },
-  sovereign:       { bg: 'rgba(16,185,129,0.15)',  text: '#10b981' },
   elite:           { bg: 'rgba(16,185,129,0.15)',  text: '#10b981' },
 }
 
@@ -618,7 +616,7 @@ function AdminContent() {
                               onChange={e => { const v = e.target.value; if (v) upgradeUser(u.email, v) }}
                               style={{ background: '#0b1220', border: `1px solid ${BORDER}`, color: '#94a3b8', padding: '4px 8px', borderRadius: 4, fontFamily: MONO, fontSize: 11, cursor: 'pointer', outline: 'none' }}>
                               <option value="">Upgrade…</option>
-                              {['signal','audit','forensic','guardian','sovereign'].map(t => (
+                              {['signal','audit','forensic','operator','elite'].map(t => (
                                 <option key={t} value={t}>{t}</option>
                               ))}
                             </select>

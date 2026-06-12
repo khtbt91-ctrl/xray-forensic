@@ -153,22 +153,23 @@ export default function FoundationsSection({
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 12,
-          background: BG_CARD,
-          borderTop:    `1px solid ${BORDER}`,
-          borderRight:  `1px solid ${BORDER}`,
-          borderBottom: open ? 'none' : `1px solid ${BORDER}`,
-          borderLeft:   `3px solid ${GOLD}`,
-          borderRadius: open ? '0 8px 0 0' : '0 8px 8px 0',
+          background: 'linear-gradient(135deg, rgba(229,184,60,0.08) 0%, rgba(229,184,60,0.03) 50%, transparent 100%)',
+          borderTop:    '2px solid #e5b83c',
+          borderRight:  '1px solid rgba(229,184,60,0.3)',
+          borderBottom: open ? 'none' : '1px solid rgba(229,184,60,0.3)',
+          borderLeft:   '1px solid rgba(229,184,60,0.3)',
+          borderRadius: open ? '8px 8px 0 0' : '8px',
           padding: '14px 20px',
           cursor: 'pointer',
           userSelect: 'none',
+          boxShadow: '0 0 20px rgba(229,184,60,0.06), inset 0 1px 0 rgba(229,184,60,0.1)',
         }}
       >
         {/* Left: label + subtitle */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
           <span style={{
             fontFamily: DISPLAY, fontSize: 14, fontWeight: 700,
-            color: '#f8fafc', whiteSpace: 'nowrap', letterSpacing: '-0.01em',
+            color: GOLD, whiteSpace: 'nowrap', letterSpacing: '0.2em',
           }}>
             FOUNDATIONS
           </span>
@@ -176,12 +177,12 @@ export default function FoundationsSection({
             href="/foundations"
             onClick={(e) => e.stopPropagation()}
             style={{
-              fontFamily: MONO, fontSize: 11, color: '#475569',
+              fontFamily: MONO, fontSize: 11, color: GOLD,
               letterSpacing: '0.04em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
               textDecoration: 'none', transition: 'color 0.15s',
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = GOLD }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = '#475569' }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = '#f0c84a' }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = GOLD }}
           >
             New to trading? Start here. →
           </Link>
@@ -194,15 +195,17 @@ export default function FoundationsSection({
       {/* ── Expanded body ── */}
       {open && (
         <div style={{
-          background: '#050811',
-          border: `1px solid ${BORDER}`,
+          background: 'linear-gradient(135deg, rgba(229,184,60,0.04) 0%, rgba(229,184,60,0.01) 50%, transparent 100%)',
+          borderRight:  '1px solid rgba(229,184,60,0.3)',
+          borderBottom: '1px solid rgba(229,184,60,0.3)',
+          borderLeft:   '1px solid rgba(229,184,60,0.3)',
           borderTop: 'none',
-          borderLeft: `3px solid ${GOLD}`,
-          borderRadius: '0 0 8px 0',
+          borderRadius: '0 0 8px 8px',
           padding: '20px',
           display: 'flex',
           flexDirection: 'column',
           gap: 20,
+          boxShadow: '0 4px 20px rgba(229,184,60,0.06)',
         }}>
           {/* 1. Pre-Flight Clearance */}
           <PreFlightClearance

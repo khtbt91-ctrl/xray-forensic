@@ -31,7 +31,7 @@ interface ContextProfile {
   email: string;
 }
 
-type TierName = "SIGNAL" | "FORENSIC" | "OPERATOR" | "GUARDIAN" | "SOVEREIGN";
+type TierName = "SIGNAL" | "FORENSIC" | "OPERATOR" | "ELITE";
 type OneTime = "spot" | "pre-challenge" | null;
 
 const TIERS: {
@@ -71,7 +71,7 @@ const TIERS: {
     accent: "var(--accent-primary)",
   },
   {
-    name: "GUARDIAN",
+    name: "OPERATOR",
     price: "$149/mo",
     tagline: "The risk desk you never had.",
     features: ["Unlimited analyses", "Live MT5 sync", "Telegram watchdog", "5 accounts", "Certification"],
@@ -80,7 +80,7 @@ const TIERS: {
     accent: "var(--accent-secondary)",
   },
   {
-    name: "SOVEREIGN",
+    name: "ELITE",
     price: "$399/mo",
     tagline: "White-label intelligence for firms.",
     features: ["50 accounts", "Firm-wide analytics", "Custom rule engine", "API access", "White-label"],
@@ -538,7 +538,7 @@ function Step2({
                   </li>
                 ))}
               </ul>
-              {tier.name === "SOVEREIGN" ? (
+              {tier.name === "ELITE" ? (
                 <a
                   href="mailto:admin@xrayforensic.com"
                   className="btn btn-ghost"
