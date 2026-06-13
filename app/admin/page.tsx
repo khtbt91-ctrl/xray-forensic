@@ -192,6 +192,7 @@ function AdminContent() {
 
   const [search, setSearch]                   = useState('')
   const [upgradingUser, setUpgradingUser]     = useState<string | null>(null)
+  const [tierSelections, setTierSelections]   = useState<Record<string, string>>({})
   const [confirmingPmt, setConfirmingPmt]     = useState<string | null>(null)
   const [rejectingPmt, setRejectingPmt]       = useState<string | null>(null)
 
@@ -349,17 +350,18 @@ function AdminContent() {
     setRejectingPmt(null)
   }
 
-  const upgradeUser = async (email: string, tier_id: string) => {
+  const upgradeUser = async (id: string, tier_id: string) => {
     if (!token || !tier_id) return
-    setUpgradingUser(email)
+    setUpgradingUser(id)
     try {
-      const r = await fetch(`${API}/admin/upgrade-user`, {
-        method: 'POST',
+      const r = await fetch(`${API}/admin/user/${id}/tier`, {
+        method: 'PUT',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, tier_id }),
+        body: JSON.stringify({ tier_id }),
       })
       if (r.ok) {
-        setUsers(u => u.map(x => x.email === email ? { ...x, tier_id, subscription_status: 'active' } : x))
+        setUsers(u => u.map(x => x.id === id ? { ...x, tier_id, subscription_status: 'active' } : x))
+        setTierSelections(s => ({ ...s, [id]: '' }))
         toast('User upgraded ✓', 'success')
       } else {
         toast('Error — try again', 'error')
@@ -611,15 +613,29 @@ function AdminContent() {
                         <td style={{ padding: '12px 16px' }}>
                           <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
                             <select
-                              value=""
-                              disabled={upgradingUser === u.email}
-                              onChange={e => { const v = e.target.value; if (v) upgradeUser(u.email, v) }}
-                              style={{ background: '#0b1220', border: `1px solid ${BORDER}`, color: '#94a3b8', padding: '4px 8px', borderRadius: 4, fontFamily: MONO, fontSize: 11, cursor: 'pointer', outline: 'none' }}>
-                              <option value="">Upgrade…</option>
-                              {['signal','audit','forensic','operator','elite'].map(t => (
+                              value={tierSelections[u.id] ?? ''}
+                              disabled={upgradingUser === u.id}
+                              onChange={e => setTierSelections(s => ({ ...s, [u.id]: e.target.value }))}
+                              style={{ background: '#0b1220', border: `1px solid ${BORDER}`, color: tierSelections[u.id] ? '#e2e8f0' : '#94a3b8', padding: '4px 8px', borderRadius: 4, fontFamily: MONO, fontSize: 11, cursor: 'pointer', outline: 'none' }}>
+                              <option value="">— select tier —</option>
+                              {['signal','forensic','operator','elite'].map(t => (
                                 <option key={t} value={t}>{t}</option>
                               ))}
                             </select>
+                            <button
+                              onClick={() => upgradeUser(u.id, tierSelections[u.id] ?? '')}
+                              disabled={!tierSelections[u.id] || upgradingUser === u.id}
+                              style={{
+                                padding: '4px 10px',
+                                background: tierSelections[u.id] ? 'rgba(229,184,60,0.12)' : 'rgba(71,85,105,0.08)',
+                                border: `1px solid ${tierSelections[u.id] ? 'rgba(229,184,60,0.4)' : BORDER}`,
+                                color: tierSelections[u.id] ? GOLD : '#475569',
+                                borderRadius: 4, cursor: tierSelections[u.id] ? 'pointer' : 'default',
+                                fontFamily: MONO, fontSize: 11, fontWeight: 700,
+                                opacity: upgradingUser === u.id ? 0.5 : 1,
+                              }}>
+                              {upgradingUser === u.id ? '…' : 'Upgrade'}
+                            </button>
                             <button
                               onClick={() => resetUsage(u.email)}
                               style={{ padding: '4px 10px', background: 'rgba(71,85,105,0.15)', border: `1px solid ${BORDER}`, color: '#94a3b8', borderRadius: 4, cursor: 'pointer', fontFamily: MONO, fontSize: 11 }}>
