@@ -552,7 +552,7 @@ function BottomCta() {
             marginLeft: "auto",
             marginRight: "auto",
           }}>
-            Join the X-Ray community. First to know.
+            Join the network. First to know.
             First to test. First to benefit.
           </p>
 

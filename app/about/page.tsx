@@ -416,7 +416,7 @@ const PHASES: { phase: string; status: PhaseStatus; title: string; body: string 
     phase: "Phase 1",
     status: "ACTIVE",
     title: "The Platform",
-    body: "Self-serve web application. Upload, pay, diagnose. AI-powered forensic reports. Prop firm context mode. Live at xrayforensic.com.",
+    body: "Self-serve web application. Upload, pay, diagnose. Forensic diagnostic reports. Prop firm context mode. Live at xrayforensic.com.",
   },
   {
     phase: "Phase 2",
@@ -434,7 +434,7 @@ const PHASES: { phase: string; status: PhaseStatus; title: string; body: string 
     phase: "Phase 4",
     status: "PLANNED",
     title: "AI Diagnostic Intelligence",
-    body: "Conversational AI diagnostic layer. Natural language trade analysis. AI-powered signal intelligence framework. A proprietary model trained exclusively on forensically-diagnosed trading behavior — the only model of its kind in existence. [Architecture details proprietary]",
+    body: "Conversational AI diagnostic layer. Natural language trade analysis. Behavioral signal intelligence framework. A proprietary model trained exclusively on forensically-diagnosed trading behavior — the only model of its kind in existence. [Architecture details proprietary]",
   },
   {
     phase: "Phase 5",

@@ -6,9 +6,22 @@ import ReturnToReportBanner from "./components/ReturnToReportBanner";
 import { AuthProvider } from "@/lib/auth-context";
 
 export const metadata: Metadata = {
-  title: "Institutional X-Ray",
+  metadataBase: new URL("https://www.xrayforensic.com"),
+  title: {
+    default: "X-Ray Forensic",
+    template: "%s | X-Ray Forensic",
+  },
   description:
     "Forensic trading diagnostic. Know exactly why you're losing — in dollars.",
+  openGraph: {
+    siteName: "X-Ray Forensic",
+    type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({

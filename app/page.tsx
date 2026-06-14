@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import NavBar from "./components/NavBar";
 import HeroSection from "./components/HeroSection";
@@ -17,6 +18,24 @@ import OneTimeProducts from "./components/OneTimeProducts";
 import RecoveryPrograms from "./components/RecoveryPrograms";
 import FaqSection from "./components/FaqSection";
 import FinalCta from "./components/FinalCta";
+
+export const metadata: Metadata = {
+  title: "Forensic Trade Diagnostic — Know Why You're Losing",
+  description:
+    "Upload your MT5 trade history. Get a forensic verdict on exactly which behaviors are costing you money — in dollars. Not financial advice.",
+  openGraph: {
+    title: "Forensic Trade Diagnostic — Know Why You're Losing | X-Ray Forensic",
+    description:
+      "Upload your MT5 trade history. Get a forensic verdict on exactly which behaviors are costing you money — in dollars. Not financial advice.",
+    url: "https://www.xrayforensic.com",
+    type: "website",
+  },
+  twitter: {
+    title: "Forensic Trade Diagnostic — Know Why You're Losing | X-Ray Forensic",
+    description:
+      "Upload your MT5 trade history. Get a forensic verdict on exactly which behaviors are costing you money — in dollars. Not financial advice.",
+  },
+};
 
 const MONO = "'JetBrains Mono', monospace";
 const SPACE = "'Space Grotesk', sans-serif";
