@@ -74,27 +74,33 @@ function ComplianceTracker({
       .finally(() => setLoading(false))
   }, [session?.access_token])
 
-  const markFollowed = async (id: string) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/prescriptions/${id}`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${session?.access_token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ status: 'followed' }),
-    })
-    if (res.ok) {
-      setPrescriptions(prev => prev.map(p => p.id === id ? { ...p, status: 'followed' } : p))
-      const newFollowed = followed + 1
-      setFollowed(newFollowed)
-      setToast('+25 XP')
-      setTimeout(() => setToast(null), 2500)
+  const markFollowed = async (rx: any) => {
+    setPrescriptions(prev => prev.map(p => p.id === rx.id ? { ...p, complied: true } : p))
+    setFollowed(f => f + 1)
+    setToast('+25 XP')
+    setTimeout(() => setToast(null), 2500)
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/prescription-compliance`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${session?.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prescription_id: rx.id,
+          analysis_id: rx.analysis_id,
+          dimension: rx.dimension,
+          complied: true,
+        }),
+      })
+    } catch {
+      // backend endpoint not yet live — UI already updated optimistically
     }
   }
 
   const complianceRate = total > 0 ? Math.round((followed / total) * 100) : 0
-  const active = prescriptions.filter(p => p.status !== 'followed')
-  const done   = prescriptions.filter(p => p.status === 'followed')
+  const active = prescriptions.filter(p => !p.complied)
+  const done   = prescriptions.filter(p => p.complied)
 
   return (
     <div style={{ background: '#0e1626', border: '1px solid #1e293b', borderRadius: '8px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px', position: 'relative' }}>
@@ -181,19 +187,27 @@ function ComplianceTracker({
               {active.map(p => (
                 <button
                   key={p.id}
-                  onClick={() => markFollowed(p.id)}
+                  onClick={() => markFollowed(p)}
                   style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', background: 'none', border: '1px solid #1e293b', borderRadius: '6px', padding: '10px 12px', cursor: 'pointer', textAlign: 'left', width: '100%', transition: 'border-color 0.15s' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(229,184,60,0.4)' }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#1e293b' }}
                 >
                   <div style={{ width: '15px', height: '15px', border: '1.5px solid #475569', borderRadius: '3px', flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', minWidth: 0 }}>
-                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#e2e8f0', lineHeight: 1.5 }}>
-                      {p.prescription_text}
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#e2e8f0', fontWeight: 700, lineHeight: 1.4 }}>
+                      {p.title}
                     </span>
-                    {p.estimated_impact != null && (
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#94a3b8', lineHeight: 1.5 }}>
+                      {p.action}
+                    </span>
+                    {(p.severity === 'critical' || p.severity === 'high') && (
+                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', color: p.severity === 'critical' ? '#ef4444' : '#f59e0b', border: `1px solid ${p.severity === 'critical' ? 'rgba(239,68,68,0.3)' : 'rgba(245,158,11,0.3)'}`, borderRadius: '3px', padding: '1px 5px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                        {p.severity}
+                      </span>
+                    )}
+                    {p.estimated_monthly_savings != null && (
                       <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#3FB950' }}>
-                        saves ${Math.round(p.estimated_impact).toLocaleString()}/mo
+                        saves ${Math.round(p.estimated_monthly_savings).toLocaleString()}/mo
                       </span>
                     )}
                   </div>
@@ -212,7 +226,7 @@ function ComplianceTracker({
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                   <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#475569', lineHeight: 1.5, textDecoration: 'line-through' }}>
-                    {p.prescription_text}
+                    {p.title}
                   </span>
                 </div>
               ))}
