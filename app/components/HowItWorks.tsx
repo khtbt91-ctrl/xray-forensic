@@ -22,11 +22,11 @@ export default function HowItWorks() {
       num: "2",
       title: "DIAGNOSE WITH AI",
       badge: "[FORENSIC SCANNING]",
-      badgeColor: "#3b82f6",
-      iconBg: "rgba(59,130,246,0.1)",
-      iconStroke: "#3b82f6",
+      badgeColor: "#e5b83c",
+      iconBg: "rgba(229,184,60,0.1)",
+      iconStroke: "#e5b83c",
       icon: (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e5b83c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="11" cy="11" r="8"/>
           <line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
@@ -102,7 +102,7 @@ export default function HowItWorks() {
                 transition: "border-color 0.2s, background 0.2s",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "#334155";
+                e.currentTarget.style.borderColor = "var(--border-active)";
                 e.currentTarget.style.background = "#141e35";
               }}
               onMouseLeave={(e) => {

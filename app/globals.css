@@ -28,7 +28,7 @@
   --border: #1e293b;
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
-  --text-muted: #475569;
+  --text-muted: #7d8ba3; /* lightened 2026-07-09 from #475569 — old value was ~3:1 on --bg, failed WCAG AA (needs 4.5:1) */
   --success: #10b981;
   --danger: #ef4444;
   --warning: #f59e0b;
@@ -256,6 +256,12 @@ html, body {
 @media (max-width: 768px) { .intelligence-grid { grid-template-columns: 1fr; gap: 40px; } }
 .teaser-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 @media (max-width: 900px) { .teaser-grid { grid-template-columns: 1fr; } }
+
+/* ─── Radar chart (RadarSection) — prevent page-level overflow on mobile ─── */
+.radar-chart-frame { min-width: 450px; }
+@media (max-width: 768px) {
+  .radar-chart-frame { min-width: 300px; }
+}
 
 /* ─── Progress bar ────────────────────────────────────────────────────────── */
 .progress-bar { height: 2px; background: #1e293b; border-radius: 1px; overflow: hidden; }

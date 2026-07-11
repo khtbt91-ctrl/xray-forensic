@@ -31,7 +31,7 @@ interface Verdict {
 }
 
 function scoreColor(score: number): string {
-  if (score < 40) return "#f85149";
+  if (score < 40) return "var(--loss)";
   if (score <= 70) return "#e5b83c";
   return "#10b981";
 }
@@ -54,28 +54,28 @@ function VerdictCard({ verdict }: { verdict: Verdict }) {
       {verdict.is_example && (
         <span style={{
           position: 'absolute', top: 12, right: 12,
-          fontFamily: MONO, fontSize: 8, color: '#475569',
+          fontFamily: MONO, fontSize: 8, color: 'var(--text-muted)',
           letterSpacing: '0.1em', background: '#1e293b',
           padding: '2px 6px', borderRadius: 3,
         }}>EXAMPLE</span>
       )}
 
       <div style={{
-        fontFamily: MONO, fontSize: 9, color: '#475569',
+        fontFamily: MONO, fontSize: 9, color: 'var(--text-muted)',
         letterSpacing: '0.12em', marginBottom: 16,
       }}>
         JUST DIAGNOSED · {acctLabel}
       </div>
 
       <div style={{ marginBottom: 8 }}>
-        <span style={{ fontFamily: MONO, fontSize: 11, color: '#64748b' }}>Archetype:&nbsp;</span>
-        <span style={{ fontFamily: MONO, fontSize: 11, color: '#e2e8f0', fontWeight: 700 }}>
+        <span style={{ fontFamily: MONO, fontSize: 11, color: 'var(--text-muted)' }}>Archetype:&nbsp;</span>
+        <span style={{ fontFamily: MONO, fontSize: 11, color: 'var(--text-primary)', fontWeight: 700 }}>
           {verdict.archetype.toUpperCase()}
         </span>
       </div>
 
       <div style={{ marginBottom: 16 }}>
-        <span style={{ fontFamily: MONO, fontSize: 11, color: '#64748b' }}>Overall Score:&nbsp;</span>
+        <span style={{ fontFamily: MONO, fontSize: 11, color: 'var(--text-muted)' }}>Overall Score:&nbsp;</span>
         <span style={{
           fontFamily: MONO, fontSize: 11, fontWeight: 700,
           color: scoreColor(verdict.score),
@@ -85,13 +85,13 @@ function VerdictCard({ verdict }: { verdict: Verdict }) {
       </div>
 
       <div style={{ marginBottom: 6 }}>
-        <span style={{ fontFamily: MONO, fontSize: 10, color: '#475569' }}>Biggest Leak:</span>
+        <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--text-muted)' }}>Biggest Leak:</span>
       </div>
       <div style={{ fontFamily: MONO, fontSize: 12, color: '#94a3b8', marginBottom: 18 }}>
         {leak}
       </div>
 
-      <div style={{ fontFamily: MONO, fontSize: 9, color: '#334155' }}>
+      <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--border-subtle)' }}>
         {verdict.time_ago}
         {verdict.total_trades ? ` · ${verdict.total_trades.toLocaleString()} trades analyzed` : ''}
       </div>
@@ -146,16 +146,16 @@ export default function VerdictFeed() {
           </p>
           <h2 style={{
             fontFamily: SPACE,
-            fontSize: 'clamp(26px, 3.5vw, 38px)',
+            fontSize: 'clamp(24px, 3.5vw, 40px)',
             fontWeight: 700,
-            color: '#e2e8f0',
+            color: 'var(--text-primary)',
             margin: '0 0 16px',
             letterSpacing: '-0.02em',
           }}>
             What X-Ray is finding right now.
           </h2>
           <p style={{
-            fontFamily: MONO, fontSize: 12, color: '#64748b',
+            fontFamily: MONO, fontSize: 12, color: 'var(--text-muted)',
             letterSpacing: '0.04em', margin: 0,
           }}>
             Anonymized. Real accounts. Real patterns. Updated continuously.

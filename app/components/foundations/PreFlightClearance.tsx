@@ -27,7 +27,7 @@ function Pill({
         borderRadius: 6,
         border: `1px solid ${selected ? color : BORDER}`,
         background: selected ? 'rgba(229,184,60,0.10)' : 'transparent',
-        color: selected ? color : '#64748b',
+        color: selected ? color : 'var(--text-muted)',
         fontFamily: MONO,
         fontSize: 12,
         letterSpacing: '0.06em',
@@ -136,7 +136,7 @@ function ClearanceCard({ result }: { result: any }) {
       {clearance === 'amber' && reasons.length > 0 && (
         <div style={{ marginBottom: 16, display: 'flex', flexDirection: 'column', gap: 4 }}>
           {reasons.map((r: string, i: number) => (
-            <div key={i} style={{ fontFamily: MONO, fontSize: 11, color: '#64748b', lineHeight: 1.6 }}>
+            <div key={i} style={{ fontFamily: MONO, fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.6 }}>
               → {r}
             </div>
           ))}
@@ -155,7 +155,7 @@ function ClearanceCard({ result }: { result: any }) {
           {reasons.length > 0 && (
             <div style={{ marginBottom: 12, display: 'flex', flexDirection: 'column', gap: 4 }}>
               {reasons.map((r: string, i: number) => (
-                <div key={i} style={{ fontFamily: MONO, fontSize: 11, color: '#64748b', lineHeight: 1.6 }}>
+                <div key={i} style={{ fontFamily: MONO, fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.6 }}>
                   → {r}
                 </div>
               ))}
@@ -271,7 +271,7 @@ export default function PreFlightClearance({ analyses: _analyses, calendarEvents
         border: `2px solid ${BORDER}`, borderTopColor: GOLD,
         animation: 'spin 0.8s linear infinite', flexShrink: 0,
       }} />
-      <span style={{ fontFamily: MONO, fontSize: 11, color: '#475569' }}>
+      <span style={{ fontFamily: MONO, fontSize: 11, color: 'var(--text-muted)' }}>
         Checking clearance status...
       </span>
     </div>
@@ -293,7 +293,7 @@ export default function PreFlightClearance({ analyses: _analyses, calendarEvents
         <div style={{ fontFamily: MONO, fontSize: 11, color: GOLD, letterSpacing: '0.1em' }}>
           COMPUTING CLEARANCE...
         </div>
-        <div style={{ fontFamily: MONO, fontSize: 10, color: '#475569', marginTop: 3 }}>
+        <div style={{ fontFamily: MONO, fontSize: 10, color: 'var(--text-muted)', marginTop: 3 }}>
           Analysing risk factors against your profile.
         </div>
       </div>
@@ -385,7 +385,7 @@ export default function PreFlightClearance({ analyses: _analyses, calendarEvents
         {questions.map(q => (
           <div key={q.id}>
             <div style={{
-              fontFamily: MONO, fontSize: 11, color: '#64748b',
+              fontFamily: MONO, fontSize: 11, color: 'var(--text-muted)',
               letterSpacing: '0.12em', marginBottom: 8,
             }}>
               {q.label}
@@ -412,7 +412,7 @@ export default function PreFlightClearance({ analyses: _analyses, calendarEvents
         style={{
           marginTop: 20, width: '100%', padding: '12px',
           background: canSubmit ? GOLD : '#1e293b',
-          color: canSubmit ? '#000' : '#334155',
+          color: canSubmit ? '#000' : 'var(--text-muted)',
           border: 'none', borderRadius: 6,
           fontFamily: DISPLAY, fontSize: 13, fontWeight: 700,
           cursor: canSubmit ? 'pointer' : 'not-allowed',

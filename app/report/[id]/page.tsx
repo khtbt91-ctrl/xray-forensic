@@ -257,7 +257,7 @@ export default function ReportPage() {
             }}>
               <p style={{
                 fontFamily: 'JetBrains Mono, monospace', fontSize: '0.65rem',
-                color: '#C9A84C', letterSpacing: '0.15em',
+                color: 'var(--accent-primary)', letterSpacing: '0.15em',
                 textTransform: 'uppercase', margin: 0,
               }}>
                 DIAGNOSTIC SCORECARD
@@ -355,7 +355,7 @@ export default function ReportPage() {
           <div style={{ maxWidth: 800, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'JetBrains Mono, monospace', fontSize: '0.65rem',
-              color: '#C9A84C', letterSpacing: '0.15em', textTransform: 'uppercase',
+              color: 'var(--accent-primary)', letterSpacing: '0.15em', textTransform: 'uppercase',
               margin: '0 0 6px',
             }}>
               PRIORITY PRESCRIPTIONS
@@ -437,7 +437,7 @@ export default function ReportPage() {
                   }}>
                     {/* Lock icon */}
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                      stroke="#475569" strokeWidth="2" strokeLinecap="round"
+                      stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round"
                       strokeLinejoin="round" style={{ flexShrink: 0 }}>
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                       <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
@@ -445,7 +445,7 @@ export default function ReportPage() {
                     <div>
                       <p style={{
                         fontFamily: 'JetBrains Mono, monospace', fontSize: '0.75rem',
-                        color: '#475569', margin: '0 0 4px',
+                        color: 'var(--text-muted)', margin: '0 0 4px',
                       }}>
                         Upgrade to {nextTier} to unlock this prescription
                       </p>
@@ -471,7 +471,7 @@ export default function ReportPage() {
           <div style={{ maxWidth: 800, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'JetBrains Mono, monospace', fontSize: '0.65rem',
-              color: '#C9A84C', letterSpacing: '0.15em', textTransform: 'uppercase',
+              color: 'var(--accent-primary)', letterSpacing: '0.15em', textTransform: 'uppercase',
               margin: '0 0 6px',
             }}>
               WHAT-IF ANALYSIS
@@ -491,7 +491,7 @@ export default function ReportPage() {
 
             {whatIfLoading ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '24px 0', color: '#8B949E', fontFamily: 'JetBrains Mono, monospace', fontSize: '0.7rem' }}>
-                <div style={{ width: 16, height: 16, border: '2px solid #1e293b', borderTopColor: '#C9A84C', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
+                <div style={{ width: 16, height: 16, border: '2px solid #1e293b', borderTopColor: 'var(--accent-primary)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
                 <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
                 Calculating scenarios...
               </div>
@@ -509,7 +509,7 @@ export default function ReportPage() {
                     { label: 'NET P&L', value: `${whatIfData.actual.net_pnl >= 0 ? '+' : ''}$${Math.abs(whatIfData.actual.net_pnl).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, color: whatIfData.actual.net_pnl >= 0 ? '#3FB950' : '#F85149' },
                   ].map(({ label, value, color }) => (
                     <div key={label}>
-                      <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.55rem', color: '#475569', letterSpacing: '0.1em', marginBottom: 4 }}>{label}</div>
+                      <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.55rem', color: 'var(--text-muted)', letterSpacing: '0.1em', marginBottom: 4 }}>{label}</div>
                       <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.8rem', fontWeight: 700, color: color || '#E6EDF3' }}>{value}</div>
                     </div>
                   ))}
@@ -536,7 +536,7 @@ export default function ReportPage() {
                           <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.6rem', color: '#8B949E', letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 4px' }}>
                             {s.name}
                           </p>
-                          <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.62rem', color: '#475569', margin: 0 }}>
+                          <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.62rem', color: 'var(--text-muted)', margin: 0 }}>
                             {s.trades_removed} off-rule trades removed
                           </p>
                         </div>
@@ -546,7 +546,7 @@ export default function ReportPage() {
                             { label: 'WHAT-IF', value: fmtPnl(s.net_pnl), color: s.net_pnl >= 0 ? '#3FB950' : '#F85149' },
                           ].map(({ label, value, color }) => (
                             <div key={label} style={{ background: '#080f1e', borderRadius: 4, padding: '8px 10px' }}>
-                              <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.52rem', color: '#475569', letterSpacing: '0.08em', marginBottom: 3 }}>{label}</div>
+                              <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.52rem', color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: 3 }}>{label}</div>
                               <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.82rem', fontWeight: 700, color }}>{value}</div>
                             </div>
                           ))}
@@ -573,7 +573,7 @@ export default function ReportPage() {
       {(benchmarkLoading || benchmarkData) && (
         <div style={{ background: 'var(--bg-base)', padding: '48px 24px 8px' }}>
           <div style={{ maxWidth: 800, margin: '0 auto' }}>
-            <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.65rem', color: '#C9A84C', letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 6px' }}>
+            <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.65rem', color: 'var(--accent-primary)', letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 6px' }}>
               ANONYMOUS BENCHMARKING
             </p>
             <h2 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.25rem', fontWeight: 700, color: '#E6EDF3', margin: '0 0 4px' }}>
@@ -585,7 +585,7 @@ export default function ReportPage() {
 
             {benchmarkLoading ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '24px 0', color: '#8B949E', fontFamily: 'JetBrains Mono, monospace', fontSize: '0.7rem' }}>
-                <div style={{ width: 16, height: 16, border: '2px solid #1e293b', borderTopColor: '#C9A84C', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
+                <div style={{ width: 16, height: 16, border: '2px solid #1e293b', borderTopColor: 'var(--accent-primary)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
                 Calculating rankings...
               </div>
             ) : benchmarkData && benchmarkData.total_traders_analyzed < 10 ? (
@@ -612,18 +612,18 @@ export default function ReportPage() {
                 <div key={label} style={{ marginBottom: 20 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                     <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.62rem', color: '#8B949E', letterSpacing: '0.1em' }}>{label}</span>
-                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.62rem', color: '#475569' }}>
+                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.62rem', color: 'var(--text-muted)' }}>
                       Your score: <span style={{ color: '#E6EDF3', fontWeight: 700 }}>{userScore}</span>
                       {platformAvg !== null && <>&nbsp;&nbsp;Platform avg: <span style={{ color: '#8B949E' }}>{platformAvg}</span></>}
                     </span>
                   </div>
                   <div style={{ position: 'relative', width: '100%', height: 6, background: '#1e293b', borderRadius: 100, overflow: 'hidden', marginBottom: 4 }}>
-                    <div style={{ position: 'absolute', height: '100%', width: `${percentile}%`, background: '#C9A84C', borderRadius: 100, transition: 'width 0.8s ease' }} />
+                    <div style={{ position: 'absolute', height: '100%', width: `${percentile}%`, background: 'var(--accent-primary)', borderRadius: 100, transition: 'width 0.8s ease' }} />
                     {platformAvg !== null && (
                       <div style={{ position: 'absolute', height: '100%', width: 2, left: `${platformAvg}%`, background: 'rgba(139,148,158,0.5)' }} />
                     )}
                   </div>
-                  <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.58rem', color: '#C9A84C' }}>{percentile}th percentile</span>
+                  <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.58rem', color: 'var(--accent-primary)' }}>{percentile}th percentile</span>
                 </div>
               )
               return (
@@ -639,11 +639,11 @@ export default function ReportPage() {
                     return renderBar(label, d.user_score, d.platform_average, d.percentile)
                   })}
                   {!showAllDims && (
-                    <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.62rem', color: '#475569', margin: '16px 0 0', borderTop: '1px solid #1e293b', paddingTop: 16 }}>
+                    <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.62rem', color: 'var(--text-muted)', margin: '16px 0 0', borderTop: '1px solid #1e293b', paddingTop: 16 }}>
                       Upgrade to FORENSIC to unlock all 7 dimension percentiles.
                     </p>
                   )}
-                  <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.6rem', color: '#475569', margin: '16px 0 0' }}>
+                  <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.6rem', color: 'var(--text-muted)', margin: '16px 0 0' }}>
                     Based on {benchmarkData.total_traders_analyzed} anonymized trader{benchmarkData.total_traders_analyzed !== 1 ? 's' : ''} on the platform.
                   </p>
                 </div>

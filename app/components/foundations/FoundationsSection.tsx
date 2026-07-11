@@ -32,7 +32,7 @@ function ChevronIcon({ open }: { open: boolean }) {
     >
       <polyline
         points="3,6 8,11 13,6"
-        stroke="#475569" strokeWidth="1.8"
+        stroke="var(--text-muted)" strokeWidth="1.8"
         strokeLinecap="round" strokeLinejoin="round"
       />
     </svg>

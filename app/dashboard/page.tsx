@@ -21,7 +21,7 @@ class DashboardErrorBoundary extends Component<
       return (
         <div style={{ background: '#050811', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
           <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.75rem', color: '#ef4444', letterSpacing: '0.1em' }}>DASHBOARD ERROR</p>
-          <p style={{ color: '#475569', fontSize: '0.8rem' }}>Something went wrong loading your dashboard.</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Something went wrong loading your dashboard.</p>
           <a href="/dashboard" style={{ color: '#e5b83c', fontSize: '0.8rem', textDecoration: 'none' }}>Reload →</a>
         </div>
       )
@@ -146,7 +146,7 @@ function ComplianceTracker({
         <div style={{ textAlign: 'center', padding: '24px 0' }}>
           {analysesCount === 0 ? (
             <>
-              <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#475569', lineHeight: 1.7, margin: '0 0 16px' }}>
+              <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: 'var(--text-muted)', lineHeight: 1.7, margin: '0 0 16px' }}>
                 Complete your first analysis to unlock<br />compliance tracking.
               </p>
               <a href="/new" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#e5b83c', textDecoration: 'none', border: '1px solid rgba(229,184,60,0.3)', borderRadius: '4px', padding: '6px 14px' }}>
@@ -155,7 +155,7 @@ function ComplianceTracker({
             </>
           ) : (
             <>
-              <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#475569', lineHeight: 1.7, margin: '0 0 16px' }}>
+              <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: 'var(--text-muted)', lineHeight: 1.7, margin: '0 0 16px' }}>
                 Your next analysis will generate trackable<br />prescriptions. Upload again to activate<br />compliance tracking.
               </p>
               <a href="/new" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#e5b83c', textDecoration: 'none', border: '1px solid rgba(229,184,60,0.3)', borderRadius: '4px', padding: '6px 14px' }}>
@@ -175,7 +175,7 @@ function ComplianceTracker({
             <div style={{ width: '100%', height: '8px', background: '#0b1220', borderRadius: '100px', overflow: 'hidden' }}>
               <div style={{ height: '100%', width: `${complianceRate}%`, background: '#e5b83c', borderRadius: '100px', boxShadow: '0 0 8px rgba(229,184,60,0.4)', transition: 'width 0.6s ease' }} />
             </div>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#475569' }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: 'var(--text-muted)' }}>
               {followed}/{total} prescriptions followed
             </span>
           </div>
@@ -183,7 +183,7 @@ function ComplianceTracker({
           {/* Active prescriptions */}
           {active.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#475569', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Active</span>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Active</span>
               {active.map(p => (
                 <button
                   key={p.id}
@@ -192,9 +192,9 @@ function ComplianceTracker({
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(229,184,60,0.4)' }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#1e293b' }}
                 >
-                  <div style={{ width: '15px', height: '15px', border: '1.5px solid #475569', borderRadius: '3px', flexShrink: 0, marginTop: '2px' }} />
+                  <div style={{ width: '15px', height: '15px', border: '1.5px solid var(--border-subtle)', borderRadius: '3px', flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', minWidth: 0 }}>
-                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#e2e8f0', fontWeight: 700, lineHeight: 1.4 }}>
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: 'var(--text-primary)', fontWeight: 700, lineHeight: 1.4 }}>
                       {p.title}
                     </span>
                     <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#94a3b8', lineHeight: 1.5 }}>
@@ -219,19 +219,19 @@ function ComplianceTracker({
           {/* Followed prescriptions */}
           {done.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#475569', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Followed</span>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Followed</span>
               {done.slice(0, 3).map(p => (
                 <div key={p.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', border: '1px solid rgba(63,185,80,0.15)', borderRadius: '6px', padding: '10px 12px' }}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3FB950" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: '2px' }}>
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#475569', lineHeight: 1.5, textDecoration: 'line-through' }}>
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: 'var(--text-muted)', lineHeight: 1.5, textDecoration: 'line-through' }}>
                     {p.title}
                   </span>
                 </div>
               ))}
               {done.length > 3 && (
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#475569', textAlign: 'center' }}>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: 'var(--text-muted)', textAlign: 'center' }}>
                   +{done.length - 3} more followed
                 </span>
               )}
@@ -296,7 +296,7 @@ function TraderDnaSection({ session, tierId }: { session: any, tierId: string })
       <div>
         <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: GOLD, letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 6px' }}>TRADER DNA</p>
         <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1rem', fontWeight: 700, color: '#E6EDF3', margin: '0 0 4px' }}>Behavioral profile across all uploads</p>
-        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#475569', margin: 0 }}>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'var(--text-muted)', margin: 0 }}>
           Upgrade to OPERATOR to unlock dimension trend charts, archetype evolution, and your trader fingerprint.
         </p>
       </div>
@@ -309,7 +309,7 @@ function TraderDnaSection({ session, tierId }: { session: any, tierId: string })
   if (loading) return (
     <div style={{ marginTop: 24, padding: '20px 24px', background: '#0e1626', border: '1px solid #1e293b', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 12 }}>
       <div style={{ width: 16, height: 16, border: '2px solid #1e293b', borderTopColor: GOLD, borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
-      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#475569' }}>Loading Trader DNA...</span>
+      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'var(--text-muted)' }}>Loading Trader DNA...</span>
     </div>
   )
 
@@ -317,7 +317,7 @@ function TraderDnaSection({ session, tierId }: { session: any, tierId: string })
     <div style={{ marginTop: 24, padding: '24px', background: '#0e1626', border: '1px solid #1e293b', borderRadius: 8, textAlign: 'center' }}>
       <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: GOLD, letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 10px' }}>TRADER DNA</p>
       <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1rem', fontWeight: 700, color: '#E6EDF3', margin: '0 0 6px' }}>Upload again to unlock your Trader DNA profile.</p>
-      <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#475569', margin: 0 }}>
+      <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'var(--text-muted)', margin: 0 }}>
         Requires 2 or more analyses to detect behavioral patterns.
       </p>
     </div>
@@ -332,11 +332,11 @@ function TraderDnaSection({ session, tierId }: { session: any, tierId: string })
       <div style={{ padding: '14px 24px', borderBottom: '1px solid #1e293b', background: 'rgba(11,18,32,0.4)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: GOLD, letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700 }}>TRADER DNA</span>
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#475569' }}>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'var(--text-muted)' }}>
             {dna.total_analyses} uploads · {dna.date_range}
           </span>
         </div>
-        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#475569' }}>Behavioral fingerprint</span>
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'var(--text-muted)' }}>Behavioral fingerprint</span>
       </div>
 
       <div style={{ padding: 24, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
@@ -377,7 +377,7 @@ function TraderDnaSection({ session, tierId }: { session: any, tierId: string })
             if (!d) return null
             return (
               <div key={label} style={{ background: '#080f1e', borderRadius: 6, padding: '13px 14px', border: `1px solid ${accent}22` }}>
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: '#475569', letterSpacing: '0.1em', display: 'block', marginBottom: 5 }}>{label}</span>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: 'var(--text-muted)', letterSpacing: '0.1em', display: 'block', marginBottom: 5 }}>{label}</span>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 13, fontWeight: 700, color: '#E6EDF3' }}>{d.label}</span>
                   <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: accent, fontWeight: 700 }}>{val(d)}</span>
@@ -388,7 +388,7 @@ function TraderDnaSection({ session, tierId }: { session: any, tierId: string })
 
           {/* Archetype */}
           <div style={{ background: '#080f1e', borderRadius: 6, padding: '13px 14px', border: `1px solid rgba(229,184,60,0.12)`, marginTop: 2 }}>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: '#475569', letterSpacing: '0.1em', display: 'block', marginBottom: 5 }}>CURRENT ARCHETYPE</span>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: 'var(--text-muted)', letterSpacing: '0.1em', display: 'block', marginBottom: 5 }}>CURRENT ARCHETYPE</span>
             <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 13, fontWeight: 700, color: GOLD }}>
               {dna.current_archetype ? dna.current_archetype.replace(/_/g, ' ').toUpperCase() : '—'}
             </span>
@@ -428,10 +428,10 @@ function StatCard({ label, value, color, icon, sub }: {
           {value}
         </span>
         {sub && (
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#475569' }}>{sub}</span>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: 'var(--text-muted)' }}>{sub}</span>
         )}
       </div>
-      <div style={{ padding: '14px', borderRadius: '8px', background: '#0b1220', border: '1px solid #1e293b', color: '#475569', flexShrink: 0 }}>
+      <div style={{ padding: '14px', borderRadius: '8px', background: '#0b1220', border: '1px solid #1e293b', color: 'var(--text-muted)', flexShrink: 0 }}>
         {icon}
       </div>
     </div>
@@ -513,7 +513,7 @@ function DashboardContent() {
   if (!profile) return (
     <div style={{ background: '#050811', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
       <div style={{ width: '20px', height: '20px', border: '2px solid #1e293b', borderTopColor: '#e5b83c', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-      <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.75rem', color: '#475569', letterSpacing: '0.1em' }}>SETTING UP YOUR ACCOUNT...</p>
+      <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.75rem', color: 'var(--text-muted)', letterSpacing: '0.1em' }}>SETTING UP YOUR ACCOUNT...</p>
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   )
@@ -585,7 +585,7 @@ function DashboardContent() {
             ))}
             <button
               onClick={signOut}
-              style={{ background: 'transparent', border: '1px solid #1e293b', color: '#475569', padding: '10px 16px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '0.04em' }}
+              style={{ background: 'transparent', border: '1px solid #1e293b', color: 'var(--text-muted)', padding: '10px 16px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '0.04em' }}
             >
               Sign Out
             </button>
@@ -633,7 +633,7 @@ function DashboardContent() {
         {/* Usage bar (below cards, full-width, only for limited tiers) */}
         {profile.analyses_limit !== -1 && (
           <div style={{ marginBottom: '28px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#475569', whiteSpace: 'nowrap' }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
               {profile.analyses_used}/{profile.analyses_limit} this month
             </span>
             <div style={{ flex: 1, height: '3px', background: '#1e293b', borderRadius: '2px', overflow: 'hidden' }}>
@@ -660,7 +660,7 @@ function DashboardContent() {
                 Analysis History
               </span>
               {!loadingData && (
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#475569', letterSpacing: '0.06em' }}>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.06em' }}>
                   Showing {analyses.length} {analyses.length === 1 ? 'log' : 'logs'}
                 </span>
               )}
@@ -674,7 +674,7 @@ function DashboardContent() {
             ) : analyses.length === 0 ? (
               <div style={{ padding: '60px 24px', textAlign: 'center' }}>
                 <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '17px', fontWeight: 600, color: '#f8fafc', marginBottom: '8px' }}>Run your first diagnosis</p>
-                <p style={{ color: '#475569', fontSize: '13px', marginBottom: '20px' }}>Upload your MT5 trade history to get your forensic report.</p>
+                <p style={{ color: 'var(--text-muted)', fontSize: '13px', marginBottom: '20px' }}>Upload your MT5 trade history to get your forensic report.</p>
                 <a href="/new" style={{ display: 'inline-flex', alignItems: 'center', padding: '10px 24px', background: '#e5b83c', color: '#000', borderRadius: '6px', textDecoration: 'none', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '13px' }}>
                   Upload Trade Data →
                 </a>
@@ -685,7 +685,7 @@ function DashboardContent() {
                   <thead>
                     <tr style={{ borderBottom: '1px solid #1e293b' }}>
                       {['Date', 'Trades', 'Score', 'Δ', 'Archetype', 'Action'].map(col => (
-                        <th key={col} style={{ padding: '12px 16px', textAlign: 'left', fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: '#475569', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700 }}>
+                        <th key={col} style={{ padding: '12px 16px', textAlign: 'left', fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700 }}>
                           {col}
                         </th>
                       ))}
@@ -703,10 +703,10 @@ function DashboardContent() {
                           onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(20,30,53,0.5)' }}
                           onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
                         >
-                          <td style={{ padding: '14px 16px', color: '#e2e8f0', fontWeight: 500 }}>
+                          <td style={{ padding: '14px 16px', color: 'var(--text-primary)', fontWeight: 500 }}>
                             {new Date(analysis.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                             {analysis.client_name && (
-                              <div style={{ fontSize: '10px', color: '#475569', marginTop: '2px' }}>{analysis.client_name}</div>
+                              <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>{analysis.client_name}</div>
                             )}
                           </td>
                           <td style={{ padding: '14px 16px', color: '#94a3b8' }}>{analysis.total_trades}</td>
@@ -716,7 +716,7 @@ function DashboardContent() {
                                 {score}/100
                               </span>
                             ) : (
-                              <span style={{ color: '#475569' }}>—</span>
+                              <span style={{ color: 'var(--text-muted)' }}>—</span>
                             )}
                           </td>
                           <td style={{ padding: '14px 16px' }}>
@@ -734,7 +734,7 @@ function DashboardContent() {
                                 {delta > 0 ? `+${delta}` : delta === 0 ? '—' : String(delta)}
                               </span>
                             ) : (
-                              <span style={{ color: '#475569', fontFamily: "'JetBrains Mono', monospace", fontSize: '10px' }}>—</span>
+                              <span style={{ color: 'var(--text-muted)', fontFamily: "'JetBrains Mono', monospace", fontSize: '10px' }}>—</span>
                             )}
                           </td>
                           <td style={{ padding: '14px 16px' }}>
@@ -754,7 +754,7 @@ function DashboardContent() {
                                 {analysis.archetype_name}
                               </span>
                             ) : (
-                              <span style={{ color: '#475569' }}>—</span>
+                              <span style={{ color: 'var(--text-muted)' }}>—</span>
                             )}
                           </td>
                           <td style={{ padding: '14px 16px', textAlign: 'right' }}>

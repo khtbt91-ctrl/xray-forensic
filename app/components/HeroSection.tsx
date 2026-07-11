@@ -175,7 +175,7 @@ export default function HeroSection() {
               transition: "border-color 0.15s, color 0.15s",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#475569";
+              e.currentTarget.style.borderColor = "var(--border-active)";
               e.currentTarget.style.color = "#f8fafc";
             }}
             onMouseLeave={(e) => {
@@ -192,7 +192,7 @@ export default function HeroSection() {
           style={{
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: "10px",
-            color: "#475569",
+            color: "var(--text-muted)",
             letterSpacing: "0.08em",
             marginTop: "24px",
           }}

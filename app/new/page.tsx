@@ -127,7 +127,7 @@ function StepIndicator({
                   fontFamily: MONO,
                   fontSize: 12,
                   fontWeight: active ? 700 : 400,
-                  color: done ? "#475569" : active ? GOLD : "#475569",
+                  color: done ? "var(--text-muted)" : active ? GOLD : "var(--text-muted)",
                   letterSpacing: "0.05em",
                   borderBottom: active ? `1px solid ${GOLD}` : "none",
                   paddingBottom: active ? 2 : 0,
@@ -906,7 +906,7 @@ function Step3({
                     fontFamily: MONO,
                     fontSize: 12,
                     fontWeight: active ? 700 : 400,
-                    color: done ? "#10b981" : active ? "#f8fafc" : "#475569",
+                    color: done ? "#10b981" : active ? "#f8fafc" : "var(--text-muted)",
                     margin: active ? "0 0 4px" : 0,
                     transition: "color 0.3s",
                   }}>
@@ -1122,12 +1122,12 @@ function Step3({
                   <>→ Right-click → <span style={{ color: "var(--text-secondary)" }}>Report</span> → change type to .xlsx</>,
                   <>→ File → <span style={{ color: "var(--text-secondary)" }}>Export</span> → .xml</>,
                 ].map((line, i) => (
-                  <p key={i} style={{ fontFamily: MONO, fontSize: 12, color: "#475569", margin: 0, lineHeight: 1.6 }}>
+                  <p key={i} style={{ fontFamily: MONO, fontSize: 12, color: "var(--text-muted)", margin: 0, lineHeight: 1.6 }}>
                     {line}
                   </p>
                 ))}
               </div>
-              <p style={{ fontFamily: MONO, fontSize: 11, color: "#475569", margin: "10px 0 0" }}>
+              <p style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", margin: "10px 0 0" }}>
                 All four formats are accepted.
               </p>
             </div>
@@ -1299,7 +1299,7 @@ function Step3({
         </p>
       )}
 
-      <p style={{ fontFamily: MONO, fontSize: "0.65rem", color: "#475569", textAlign: "center", margin: "0 0 20px", letterSpacing: "0.04em" }}>
+      <p style={{ fontFamily: MONO, fontSize: "0.65rem", color: "var(--text-muted)", textAlign: "center", margin: "0 0 20px", letterSpacing: "0.04em" }}>
         🔒 Your file is analyzed and immediately discarded. We never store your raw trade data.
       </p>
 

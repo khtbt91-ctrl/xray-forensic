@@ -174,11 +174,11 @@ export default function OperatorRank({ rankData: externalData }: OperatorRankPro
           {xp} XP
         </span>
         {next ? (
-          <span style={{ fontFamily: MONO, fontSize: 10, color: '#475569', letterSpacing: '0.04em' }}>
+          <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
             {xpToNext} XP to {next.rank}
           </span>
         ) : (
-          <span style={{ fontFamily: MONO, fontSize: 10, color: '#334155', letterSpacing: '0.04em' }}>
+          <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
             MAX RANK
           </span>
         )}
@@ -196,7 +196,7 @@ export default function OperatorRank({ rankData: externalData }: OperatorRankPro
             {streak}
           </span>
           {' '}
-          <span style={{ color: '#475569' }}>
+          <span style={{ color: 'var(--text-muted)' }}>
             {streak === 1 ? 'day' : 'days'}
           </span>
         </span>

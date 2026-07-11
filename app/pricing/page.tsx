@@ -290,7 +290,7 @@ function PricingPageInner() {
                     fontFamily: MONO,
                     fontSize: 18,
                     fontWeight: 600,
-                    color: "#475569",
+                    color: "var(--text-muted)",
                     paddingTop: 6,
                     lineHeight: 1,
                   }}>
@@ -308,7 +308,7 @@ function PricingPageInner() {
                   <span style={{
                     fontFamily: MONO,
                     fontSize: 14,
-                    color: "#475569",
+                    color: "var(--text-muted)",
                     alignSelf: "flex-end",
                     paddingBottom: 4,
                     lineHeight: 1,
@@ -337,11 +337,11 @@ function PricingPageInner() {
                     gap: 10,
                     alignItems: "flex-start",
                     fontSize: 13,
-                    color: f.included ? "#f8fafc" : "#475569",
+                    color: f.included ? "var(--text-primary)" : "var(--text-muted)",
                     lineHeight: 1.4,
                   }}>
                     <span style={{
-                      color: f.included ? GOLD : "#334155",
+                      color: f.included ? GOLD : "var(--border-subtle)",
                       flexShrink: 0,
                       fontFamily: MONO,
                       fontSize: 13,
@@ -407,7 +407,7 @@ function PricingPageInner() {
         <p style={{
           fontFamily: MONO,
           fontSize: 12,
-          color: "#475569",
+          color: "var(--text-muted)",
           letterSpacing: "0.04em",
         }}>
           Institutional and prop firm partnerships →{" "}

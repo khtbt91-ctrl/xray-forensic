@@ -37,7 +37,7 @@ function Tooltip({ text }: { text: string }) {
         style={{
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           width: 14, height: 14, borderRadius: '50%',
-          border: '1px solid #475569', color: '#64748b',
+          border: '1px solid var(--border-subtle)', color: 'var(--text-muted)',
           fontSize: 9, fontFamily: MONO, cursor: 'help', userSelect: 'none', flexShrink: 0,
         }}
       >?</span>
@@ -216,9 +216,9 @@ decay = E_b − E_d`}
               className="calc-slider"
               style={{ width: "100%" }}
             />
-            <div style={{ display: "flex", justifyContent: "space-between", color: "#475569", fontSize: 10, fontFamily: MONO, marginTop: 3 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", color: "var(--text-muted)", fontSize: 10, fontFamily: MONO, marginTop: 3 }}>
               <span>30%</span>
-              <span style={{ color: "#475569" }}>Your baseline win rate</span>
+              <span style={{ color: "var(--text-muted)" }}>Your baseline win rate</span>
               <span>70%</span>
             </div>
           </div>
@@ -235,9 +235,9 @@ decay = E_b − E_d`}
               className="calc-slider"
               style={{ width: "100%" }}
             />
-            <div style={{ display: "flex", justifyContent: "space-between", color: "#475569", fontSize: 10, fontFamily: MONO, marginTop: 3 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", color: "var(--text-muted)", fontSize: 10, fontFamily: MONO, marginTop: 3 }}>
               <span>0.5</span>
-              <span style={{ color: "#475569" }}>Your target R:R ratio</span>
+              <span style={{ color: "var(--text-muted)" }}>Your target R:R ratio</span>
               <span>3.0</span>
             </div>
           </div>
@@ -270,7 +270,7 @@ decay = E_b − E_d`}
               borderRadius: "0 8px 8px 0",
             }}>
               <div style={{
-                color: "#475569", fontSize: 10, fontFamily: MONO,
+                color: "var(--text-muted)", fontSize: 10, fontFamily: MONO,
                 letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12,
               }}>
                 SHARPE RATIO IMPACT
@@ -278,26 +278,26 @@ decay = E_b − E_d`}
               <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
                 <div>
                   <div style={{
-                    color: "#475569", fontSize: 10, fontFamily: MONO,
+                    color: "var(--text-muted)", fontSize: 10, fontFamily: MONO,
                     letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4,
                   }}>
                     EXPECTED EDGE
                   </div>
                   <div style={{ color: GOLD, fontSize: 20, fontWeight: 700, fontFamily: MONO }}>
                     {E_b >= 0 ? "+" : ""}{E_b.toFixed(2)}
-                    <span style={{ fontSize: 11, color: "#475569", fontWeight: 400 }}> per trade</span>
+                    <span style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 400 }}> per trade</span>
                   </div>
                 </div>
                 <div>
                   <div style={{
-                    color: "#475569", fontSize: 10, fontFamily: MONO,
+                    color: "var(--text-muted)", fontSize: 10, fontFamily: MONO,
                     letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4,
                   }}>
                     BEHAVIORAL DECAY
                   </div>
                   <div style={{ color: GOLD, fontSize: 20, fontWeight: 700, fontFamily: MONO }}>
                     -{decay.toFixed(2)}
-                    <span style={{ fontSize: 11, color: "#475569", fontWeight: 400 }}> per trade</span>
+                    <span style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 400 }}> per trade</span>
                   </div>
                 </div>
               </div>
@@ -314,7 +314,7 @@ decay = E_b − E_d`}
 
             {/* Disclaimer */}
             <div style={{
-              color: "#475569", fontSize: 11, fontFamily: MONO,
+              color: "var(--text-muted)", fontSize: 11, fontFamily: MONO,
               marginTop: 12, lineHeight: 1.6, fontStyle: "italic",
             }}>
               Mathematical model based on your inputs. Not a guarantee of trading performance.
@@ -323,7 +323,7 @@ decay = E_b − E_d`}
             <div style={{ color: MUTED, fontSize: 12, marginTop: 14, fontStyle: "italic" }}>
               Estimate from your inputs, not your real history. Upload your trades for the exact figure across all 7 dimensions.
             </div>
-            <div style={{ color: "#64748b", fontSize: 12, fontFamily: MONO, marginTop: 14, lineHeight: 1.6 }}>
+            <div style={{ color: "var(--text-muted)", fontSize: 12, fontFamily: MONO, marginTop: 14, lineHeight: 1.6 }}>
               This is one behavior estimated from your inputs. X-Ray finds all 7 leaks in your actual trade history — with exact dollar amounts from real data.
             </div>
             <a href={user ? "/new" : "/signup"} style={{

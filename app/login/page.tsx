@@ -209,7 +209,7 @@ export default function LoginPage() {
                   style={{
                     width: 15,
                     height: 15,
-                    border: `2px solid ${rememberMe ? GOLD : '#334155'}`,
+                    border: `2px solid ${rememberMe ? GOLD : 'var(--border-subtle)'}`,
                     borderRadius: 3,
                     background: rememberMe ? GOLD : 'transparent',
                     cursor: 'pointer',
@@ -232,7 +232,7 @@ export default function LoginPage() {
                   style={{
                     fontFamily: MONO,
                     fontSize: 11,
-                    color: '#64748b',
+                    color: 'var(--text-muted)',
                     letterSpacing: '0.08em',
                     cursor: 'pointer',
                     userSelect: 'none',

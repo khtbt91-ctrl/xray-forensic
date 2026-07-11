@@ -28,7 +28,7 @@ function Chevron({ open }: { open: boolean }) {
       width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden
       style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.25s ease", flexShrink: 0 }}
     >
-      <polyline points="3,6 8,11 13,6" stroke="#475569" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points="3,6 8,11 13,6" stroke="var(--text-muted)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -103,7 +103,7 @@ function MechanicsCard({
             <p style={{ fontFamily: BODY, fontSize: 15, color: "#94a3b8", lineHeight: 1.7, margin: 0 }}>{why}</p>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <p style={{ fontFamily: MONO, fontSize: 10, color: "#475569", letterSpacing: "0.12em", textTransform: "uppercase", margin: 0 }}>
+            <p style={{ fontFamily: MONO, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase", margin: 0 }}>
               X-RAY SCORES THIS AS:
             </p>
             <span style={{
@@ -446,7 +446,7 @@ export default function FoundationsPage() {
             </SetupCard>
           </div>
 
-          <p style={{ fontFamily: BODY, fontSize: 14, color: "#475569", lineHeight: 1.7, margin: "24px 0 0" }}>
+          <p style={{ fontFamily: BODY, fontSize: 14, color: "var(--text-muted)", lineHeight: 1.7, margin: "24px 0 0" }}>
             These are starting points, not promises. Practice on demo, then upload your results to X-Ray to see which fits how you actually behave.{" "}
             <Link href="/new" style={{ color: GOLD, textDecoration: "none", fontWeight: 600 }}>
               Run a free diagnosis →
@@ -630,33 +630,33 @@ export default function FoundationsPage() {
               <p style={{ fontFamily: DISPLAY, fontSize: "1rem", fontWeight: 700, color: "#f8fafc", letterSpacing: "0.04em", margin: "0 0 4px" }}>
                 X-RAY FORENSIC
               </p>
-              <p style={{ fontFamily: MONO, fontSize: "0.6rem", color: "#475569", letterSpacing: "0.15em", textTransform: "uppercase", margin: "0 0 14px" }}>
+              <p style={{ fontFamily: MONO, fontSize: "0.6rem", color: "var(--text-muted)", letterSpacing: "0.15em", textTransform: "uppercase", margin: "0 0 14px" }}>
                 FORENSIC TRADE DIAGNOSTIC
               </p>
-              <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.75rem", color: "#475569", lineHeight: 1.6, margin: 0 }}>
+              <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.75rem", color: "var(--text-muted)", lineHeight: 1.6, margin: 0 }}>
                 Built on 15 years of institutional trading.<br />
                 Not financial advice. Diagnostic analysis only.
               </p>
             </div>
             <div>
-              <p style={{ fontFamily: MONO, fontSize: "0.6rem", color: "#475569", letterSpacing: "0.15em", textTransform: "uppercase", margin: "0 0 16px" }}>
+              <p style={{ fontFamily: MONO, fontSize: "0.6rem", color: "var(--text-muted)", letterSpacing: "0.15em", textTransform: "uppercase", margin: "0 0 16px" }}>
                 PLATFORM
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <Link href="/#how-it-works" style={{ fontFamily: MONO, fontSize: 11, color: "#475569", textDecoration: "none" }}>How It Works</Link>
-                <Link href="/#pricing"      style={{ fontFamily: MONO, fontSize: 11, color: "#475569", textDecoration: "none" }}>Pricing</Link>
-                <Link href="/foundations"   style={{ fontFamily: MONO, fontSize: 11, color: "#475569", textDecoration: "none" }}>Foundations</Link>
-                <Link href="/new"           style={{ fontFamily: MONO, fontSize: 11, color: "#475569", textDecoration: "none" }}>Get Diagnosed</Link>
+                <Link href="/#how-it-works" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>How It Works</Link>
+                <Link href="/#pricing"      style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>Pricing</Link>
+                <Link href="/foundations"   style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>Foundations</Link>
+                <Link href="/new"           style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>Get Diagnosed</Link>
               </div>
             </div>
             <div>
-              <p style={{ fontFamily: MONO, fontSize: "0.6rem", color: "#475569", letterSpacing: "0.15em", textTransform: "uppercase", margin: "0 0 16px" }}>
+              <p style={{ fontFamily: MONO, fontSize: "0.6rem", color: "var(--text-muted)", letterSpacing: "0.15em", textTransform: "uppercase", margin: "0 0 16px" }}>
                 LEGAL
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <Link href="/about"   style={{ fontFamily: MONO, fontSize: 11, color: "#475569", textDecoration: "none" }}>About</Link>
-                <Link href="/privacy" style={{ fontFamily: MONO, fontSize: 11, color: "#475569", textDecoration: "none" }}>Privacy Policy</Link>
-                <Link href="/terms"   style={{ fontFamily: MONO, fontSize: 11, color: "#475569", textDecoration: "none" }}>Terms of Service</Link>
+                <Link href="/about"   style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>About</Link>
+                <Link href="/privacy" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>Privacy Policy</Link>
+                <Link href="/terms"   style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>Terms of Service</Link>
               </div>
             </div>
           </div>
@@ -664,13 +664,13 @@ export default function FoundationsPage() {
             <p style={{ fontFamily: MONO, fontSize: "9px", color: "#10b981", letterSpacing: "0.12em", marginBottom: "8px" }}>
               [SYSTEM STATUS: ONLINE]
             </p>
-            <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "#475569", margin: "0 0 8px" }}>
+            <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "var(--text-muted)", margin: "0 0 8px" }}>
               For prop firms and institutional desks:{" "}
               <a href="mailto:admin@xrayforensic.com" style={{ color: GOLD, textDecoration: "none" }}>
                 admin@xrayforensic.com
               </a>
             </p>
-            <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "#475569", margin: 0 }}>
+            <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "var(--text-muted)", margin: 0 }}>
               &copy; 2026 X-Ray Forensic &middot; Not financial advice &middot; All trading involves risk
             </p>
           </div>

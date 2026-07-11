@@ -79,7 +79,7 @@ export default function ActivityCounter() {
       <span style={{
         fontFamily: MONO,
         fontSize: 9,
-        color: '#334155',
+        color: 'var(--text-muted)',
         marginLeft: 'auto',
       }}>
         Aggregate data · not financial advice

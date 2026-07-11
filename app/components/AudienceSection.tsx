@@ -37,7 +37,7 @@ const cards = [
     ],
   },
   {
-    accent: "#3b82f6",
+    accent: "var(--accent-primary)",
     title: "THE BEGINNER",
     body: "You've just started. Everyone's telling you different things. You don't know what you don't know yet.\n\nX-Ray's FOUNDATIONS layer teaches the institutional framework from zero — then diagnoses your first real trades the moment you have history.\n\nStart right. Not after 6 months of expensive mistakes.",
     scenarios: null,

@@ -145,7 +145,7 @@ function FeedCard({ note, today }: { note: DeskNote; today: string }) {
         )}
         <span style={{
           marginLeft: 'auto',
-          fontFamily: MONO, fontSize: 9, color: '#334155',
+          fontFamily: MONO, fontSize: 9, color: 'var(--text-muted)',
           letterSpacing: '0.06em',
         }}>
           {today}
@@ -263,7 +263,7 @@ export default function DeskNoteFeed({ analyses, complianceData }: DeskNoteFeedP
         }}>
           INTEL FEED
         </span>
-        <span style={{ fontFamily: MONO, fontSize: 9, color: '#334155', letterSpacing: '0.08em' }}>
+        <span style={{ fontFamily: MONO, fontSize: 9, color: 'var(--text-muted)', letterSpacing: '0.08em' }}>
           {feed.length} ENTRIES — {today}
         </span>
       </div>
@@ -285,7 +285,7 @@ export default function DeskNoteFeed({ analyses, complianceData }: DeskNoteFeedP
             background: BG_CARD, border: `1px solid ${BORDER}`, borderRadius: 6,
             padding: '24px', textAlign: 'center',
           }}>
-            <p style={{ fontFamily: MONO, fontSize: 11, color: '#334155', margin: 0 }}>
+            <p style={{ fontFamily: MONO, fontSize: 11, color: 'var(--text-muted)', margin: 0 }}>
               INTEL FEED LOADING...
             </p>
           </div>

@@ -139,8 +139,8 @@ function CheckIcon() {
 function LockIcon() {
   return (
     <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <rect x="3" y="7" width="10" height="8" rx="2" stroke="#475569" strokeWidth="1.5" />
-      <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="#475569" strokeWidth="1.5" strokeLinecap="round" />
+      <rect x="3" y="7" width="10" height="8" rx="2" stroke="var(--text-muted)" strokeWidth="1.5" />
+      <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   )
 }
@@ -148,7 +148,7 @@ function LockIcon() {
 function CircleIcon({ active }: { active: boolean }) {
   return (
     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <circle cx="8" cy="8" r="7" stroke={active ? GOLD : '#334155'} strokeWidth="1.5" />
+      <circle cx="8" cy="8" r="7" stroke={active ? GOLD : 'var(--border-subtle)'} strokeWidth="1.5" />
       {active && <circle cx="8" cy="8" r="3" fill={GOLD} />}
     </svg>
   )
@@ -194,7 +194,7 @@ function ProtocolCard({ state, depLabel }: { state: ProtocolState; depLabel?: st
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 6 }}>
             <span style={{
               fontFamily: MONO, fontSize: 11, fontWeight: 700,
-              color: isCompleted ? '#10b981' : isActive ? '#f8fafc' : '#475569',
+              color: isCompleted ? '#10b981' : isActive ? '#f8fafc' : 'var(--text-muted)',
               letterSpacing: '0.06em',
             }}>
               {def.label}
@@ -235,7 +235,7 @@ function ProtocolCard({ state, depLabel }: { state: ProtocolState; depLabel?: st
             {/* XP label (active) */}
             {isActive && (
               <span style={{
-                fontFamily: MONO, fontSize: 9, color: '#475569',
+                fontFamily: MONO, fontSize: 9, color: 'var(--text-muted)',
                 marginLeft: 'auto', letterSpacing: '0.06em',
               }}>
                 +{def.xp} XP
@@ -246,7 +246,7 @@ function ProtocolCard({ state, depLabel }: { state: ProtocolState; depLabel?: st
           {/* Description */}
           {!isCompleted && (
             <p style={{
-              fontFamily: MONO, fontSize: 11, color: '#64748b',
+              fontFamily: MONO, fontSize: 11, color: 'var(--text-muted)',
               lineHeight: 1.6, margin: '0 0 10px',
             }}>
               {def.description}
@@ -255,9 +255,9 @@ function ProtocolCard({ state, depLabel }: { state: ProtocolState; depLabel?: st
 
           {/* Locked message */}
           {isLocked && depLabel && (
-            <p style={{ fontFamily: MONO, fontSize: 10, color: '#334155', margin: '0 0 0', letterSpacing: '0.04em' }}>
+            <p style={{ fontFamily: MONO, fontSize: 10, color: 'var(--text-muted)', margin: '0 0 0', letterSpacing: '0.04em' }}>
               Complete{' '}
-              <span style={{ color: '#475569' }}>{depLabel}</span>
+              <span style={{ color: 'var(--text-muted)' }}>{depLabel}</span>
               {' '}to unlock
             </p>
           )}
@@ -350,7 +350,7 @@ export default function ActiveProtocols({ analyses }: ActiveProtocolsProps) {
         }}>
           ACTIVE PROTOCOLS
         </span>
-        <span style={{ fontFamily: MONO, fontSize: 9, color: '#334155', letterSpacing: '0.08em' }}>
+        <span style={{ fontFamily: MONO, fontSize: 9, color: 'var(--text-muted)', letterSpacing: '0.08em' }}>
           {completedCount}/{PROTOCOLS.length} COMPLETE
         </span>
       </div>

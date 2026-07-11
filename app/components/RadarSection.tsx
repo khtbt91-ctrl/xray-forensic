@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { MONO, FadeInUp } from "./shared";
 
-const GOLD = "#C9A84C";
+const GOLD = "var(--accent-primary)";
 
 const DIMENSIONS = [
   {
@@ -121,7 +121,8 @@ export default function RadarSection() {
       </FadeInUp>
 
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 28 }}>
-        <div style={{ width: "100%", minWidth: 450, height: 500, position: "relative" }}>
+        <div style={{ width: "100%", overflowX: "auto" }}>
+        <div className="radar-chart-frame" style={{ width: "100%", height: 500, position: "relative" }}>
           <span
             style={{
               position: "absolute",
@@ -227,6 +228,7 @@ export default function RadarSection() {
               </RadarChart>
             </ResponsiveContainer>
           )}
+        </div>
         </div>
 
         {activeDim && (

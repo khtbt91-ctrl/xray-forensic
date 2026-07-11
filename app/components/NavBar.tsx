@@ -92,7 +92,7 @@ export default function NavBar() {
                   fontWeight: 300,
                   fontSize: "1.1rem",
                   letterSpacing: "0.18em",
-                  color: "#e2e8f0",
+                  color: "var(--text-primary)",
                 }}
               >
                 FORENSIC

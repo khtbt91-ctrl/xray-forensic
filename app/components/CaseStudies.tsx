@@ -71,8 +71,8 @@ export default function CaseStudies() {
         <h2
           style={{
             fontFamily: "Inter, sans-serif",
-            fontSize: "1.75rem",
-            fontWeight: 600,
+            fontSize: "clamp(24px, 3.5vw, 40px)",
+            fontWeight: 700,
             color: "var(--text-primary)",
             textAlign: "center",
             marginBottom: 48,

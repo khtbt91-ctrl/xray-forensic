@@ -90,7 +90,7 @@ function fmtDate(iso: string | null): string {
 }
 
 function scoreColor(s: number | null): string {
-  if (s == null) return '#475569'
+  if (s == null) return 'var(--text-muted)'
   if (s < 40) return '#ef4444'
   if (s < 70) return '#f59e0b'
   return '#10b981'
@@ -164,7 +164,7 @@ function TierBadge({ tier }: { tier: string }) {
 
 function TH({ children }: { children: React.ReactNode }) {
   return (
-    <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 10, color: '#475569', letterSpacing: '0.1em', textTransform: 'uppercase' as const, fontWeight: 700, whiteSpace: 'nowrap' as const }}>
+    <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 10, color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase' as const, fontWeight: 700, whiteSpace: 'nowrap' as const }}>
       {children}
     </th>
   )
@@ -415,7 +415,7 @@ function AdminContent() {
           <h1 style={{ fontFamily: SANS, fontSize: '1.75rem', fontWeight: 800, color: '#f8fafc', margin: '8px 0 4px', letterSpacing: '-0.01em' }}>
             X-Ray Forensic — Operator Dashboard
           </h1>
-          <p style={{ fontFamily: MONO, fontSize: 11, color: '#475569', margin: 0 }}>
+          <p style={{ fontFamily: MONO, fontSize: 11, color: 'var(--text-muted)', margin: 0 }}>
             Internal use only. Not indexed.
           </p>
         </div>
@@ -433,7 +433,7 @@ function AdminContent() {
             {
               label: 'Pending Payments',
               value: pendingCount > 0 ? pendingCount : (stats?.pending_payments ?? 0),
-              color: (pendingCount > 0 || (stats?.pending_payments ?? 0) > 0) ? GOLD : '#475569',
+              color: (pendingCount > 0 || (stats?.pending_payments ?? 0) > 0) ? GOLD : 'var(--text-muted)',
               onClick: () => paymentsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
             },
           ] as const).map((c, i) => (
@@ -515,18 +515,18 @@ function AdminContent() {
                       return (
                         <tr key={p.id} style={{ borderBottom: `1px solid rgba(30,41,59,0.5)`, background: rowBg }}>
                           <td style={{ padding: '12px 16px', color: '#94a3b8' }}>{p.id.slice(0, 8)}</td>
-                          <td style={{ padding: '12px 16px', color: '#e2e8f0' }}>{p.email}</td>
+                          <td style={{ padding: '12px 16px', color: 'var(--text-primary)' }}>{p.email}</td>
                           <td style={{ padding: '12px 16px' }}><TierBadge tier={p.tier_id} /></td>
                           <td style={{ padding: '12px 16px', color: GOLD }}>{TIER_PRICES[p.tier_id] ?? '—'}</td>
                           <td style={{ padding: '12px 16px' }}>
                             {p.tx_hash ? (
                               <a href={txLink} target="_blank" rel="noreferrer"
-                                style={{ color: '#3b82f6', textDecoration: 'none', fontFamily: MONO }}>
+                                style={{ color: 'var(--accent-primary)', textDecoration: 'none', fontFamily: MONO }}>
                                 {p.tx_hash.slice(0, 14)}…
                               </a>
                             ) : '—'}
                           </td>
-                          <td style={{ padding: '12px 16px', color: '#475569' }}>{relTime(p.created_at)}</td>
+                          <td style={{ padding: '12px 16px', color: 'var(--text-muted)' }}>{relTime(p.created_at)}</td>
                           <td style={{ padding: '12px 16px' }}>
                             {local ? (
                               <span style={{ color: local === 'confirmed' ? '#10b981' : '#ef4444', fontWeight: 700, fontSize: 11, fontFamily: MONO }}>
@@ -600,23 +600,23 @@ function AdminContent() {
                   <tbody>
                     {filteredUsers.map(u => (
                       <tr key={u.id} style={{ borderBottom: `1px solid rgba(30,41,59,0.5)` }}>
-                        <td style={{ padding: '12px 16px', color: '#e2e8f0' }}>{u.email}</td>
+                        <td style={{ padding: '12px 16px', color: 'var(--text-primary)' }}>{u.email}</td>
                         <td style={{ padding: '12px 16px' }}><TierBadge tier={u.tier_id} /></td>
-                        <td style={{ padding: '12px 16px', color: u.subscription_status === 'active' ? '#10b981' : '#475569' }}>
+                        <td style={{ padding: '12px 16px', color: u.subscription_status === 'active' ? '#10b981' : 'var(--text-muted)' }}>
                           {u.subscription_status}
                         </td>
                         <td style={{ padding: '12px 16px', color: '#94a3b8' }}>
                           {u.analyses_used_this_month ?? 0}/{u.analyses_limit === -1 ? '∞' : (u.analyses_limit ?? '?')}
                         </td>
-                        <td style={{ padding: '12px 16px', color: '#475569' }}>{fmtDate(u.created_at)}</td>
-                        <td style={{ padding: '12px 16px', color: '#475569' }}>{relTime(u.last_login_date)}</td>
+                        <td style={{ padding: '12px 16px', color: 'var(--text-muted)' }}>{fmtDate(u.created_at)}</td>
+                        <td style={{ padding: '12px 16px', color: 'var(--text-muted)' }}>{relTime(u.last_login_date)}</td>
                         <td style={{ padding: '12px 16px' }}>
                           <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
                             <select
                               value={tierSelections[u.id] ?? ''}
                               disabled={upgradingUser === u.id}
                               onChange={e => setTierSelections(s => ({ ...s, [u.id]: e.target.value }))}
-                              style={{ background: '#0b1220', border: `1px solid ${BORDER}`, color: tierSelections[u.id] ? '#e2e8f0' : '#94a3b8', padding: '4px 8px', borderRadius: 4, fontFamily: MONO, fontSize: 11, cursor: 'pointer', outline: 'none' }}>
+                              style={{ background: '#0b1220', border: `1px solid ${BORDER}`, color: tierSelections[u.id] ? 'var(--text-primary)' : '#94a3b8', padding: '4px 8px', borderRadius: 4, fontFamily: MONO, fontSize: 11, cursor: 'pointer', outline: 'none' }}>
                               <option value="">— select tier —</option>
                               {['signal','forensic','operator','elite'].map(t => (
                                 <option key={t} value={t}>{t}</option>
@@ -629,7 +629,7 @@ function AdminContent() {
                                 padding: '4px 10px',
                                 background: tierSelections[u.id] ? 'rgba(229,184,60,0.12)' : 'rgba(71,85,105,0.08)',
                                 border: `1px solid ${tierSelections[u.id] ? 'rgba(229,184,60,0.4)' : BORDER}`,
-                                color: tierSelections[u.id] ? GOLD : '#475569',
+                                color: tierSelections[u.id] ? GOLD : 'var(--text-muted)',
                                 borderRadius: 4, cursor: tierSelections[u.id] ? 'pointer' : 'default',
                                 fontFamily: MONO, fontSize: 11, fontWeight: 700,
                                 opacity: upgradingUser === u.id ? 0.5 : 1,
@@ -652,7 +652,7 @@ function AdminContent() {
                     ))}
                     {filteredUsers.length === 0 && (
                       <tr>
-                        <td colSpan={7} style={{ padding: '32px 24px', textAlign: 'center', color: '#475569', fontFamily: MONO, fontSize: 12 }}>
+                        <td colSpan={7} style={{ padding: '32px 24px', textAlign: 'center', color: 'var(--text-muted)', fontFamily: MONO, fontSize: 12 }}>
                           No users found.
                         </td>
                       </tr>
@@ -694,14 +694,14 @@ function AdminContent() {
                   <tbody>
                     {analyses.map(a => (
                       <tr key={a.id} style={{ borderBottom: `1px solid rgba(30,41,59,0.5)` }}>
-                        <td style={{ padding: '12px 16px', color: '#e2e8f0' }}>{a.user_email || '—'}</td>
+                        <td style={{ padding: '12px 16px', color: 'var(--text-primary)' }}>{a.user_email || '—'}</td>
                         <td style={{ padding: '12px 16px', fontWeight: 700, color: scoreColor(a.overall_score), fontFamily: MONO }}>
                           {a.overall_score ?? '—'}
                         </td>
                         <td style={{ padding: '12px 16px', color: '#94a3b8' }}>{a.archetype || '—'}</td>
                         <td style={{ padding: '12px 16px' }}><TierBadge tier={a.tier_id || 'signal'} /></td>
                         <td style={{ padding: '12px 16px', color: '#94a3b8' }}>{a.total_trades ?? '—'}</td>
-                        <td style={{ padding: '12px 16px', color: '#475569' }}>{fmtDate(a.created_at)}</td>
+                        <td style={{ padding: '12px 16px', color: 'var(--text-muted)' }}>{fmtDate(a.created_at)}</td>
                         <td style={{ padding: '12px 16px' }}>
                           <a
                             href={`/report/${a.id}`}
@@ -713,7 +713,7 @@ function AdminContent() {
                     ))}
                     {analyses.length === 0 && (
                       <tr>
-                        <td colSpan={7} style={{ padding: '32px 24px', textAlign: 'center', color: '#475569', fontFamily: MONO, fontSize: 12 }}>
+                        <td colSpan={7} style={{ padding: '32px 24px', textAlign: 'center', color: 'var(--text-muted)', fontFamily: MONO, fontSize: 12 }}>
                           No analyses yet.
                         </td>
                       </tr>
@@ -734,7 +734,7 @@ function AdminContent() {
 
             {/* API Status */}
             <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 8, padding: '20px 24px' }}>
-              <div style={{ fontFamily: MONO, fontSize: 10, color: '#475569', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>API Status</div>
+              <div style={{ fontFamily: MONO, fontSize: 10, color: 'var(--text-muted)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>API Status</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{
                   width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
@@ -748,17 +748,17 @@ function AdminContent() {
 
             {/* Railway */}
             <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 8, padding: '20px 24px' }}>
-              <div style={{ fontFamily: MONO, fontSize: 10, color: '#475569', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>Railway Backend</div>
+              <div style={{ fontFamily: MONO, fontSize: 10, color: 'var(--text-muted)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>Railway Backend</div>
               <a href="https://railway.app" target="_blank" rel="noreferrer"
-                style={{ fontFamily: MONO, fontSize: 12, color: '#3b82f6', textDecoration: 'none' }}>
+                style={{ fontFamily: MONO, fontSize: 12, color: 'var(--accent-primary)', textDecoration: 'none' }}>
                 → Open Railway Dashboard
               </a>
-              <div style={{ marginTop: 6, fontFamily: MONO, fontSize: 10, color: '#475569' }}>delightful-miracle</div>
+              <div style={{ marginTop: 6, fontFamily: MONO, fontSize: 10, color: 'var(--text-muted)' }}>delightful-miracle</div>
             </div>
 
             {/* Supabase */}
             <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 8, padding: '20px 24px' }}>
-              <div style={{ fontFamily: MONO, fontSize: 10, color: '#475569', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>Supabase</div>
+              <div style={{ fontFamily: MONO, fontSize: 10, color: 'var(--text-muted)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>Supabase</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{
                   width: 8, height: 8, borderRadius: '50%', flexShrink: 0,

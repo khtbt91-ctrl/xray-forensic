@@ -59,7 +59,7 @@ const TIERS: Tier[] = [
     href: "/payment?tier=forensic",
     highlight: true,
     popular: true,
-    accent: "#C9A84C",
+    accent: "var(--accent-primary)",
   },
   {
     name: "OPERATOR",
@@ -116,7 +116,7 @@ export default function TierCards() {
             fontSize: 11,
             letterSpacing: "0.15em",
             textTransform: "uppercase",
-            color: "#C9A84C",
+            color: "var(--accent-primary)",
             textAlign: "center",
             marginBottom: 16,
           }}
@@ -164,7 +164,7 @@ export default function TierCards() {
           {TIERS.map((tier) => {
             const isHovered = hoveredTier === tier.name;
             const borderColor = tier.highlight
-              ? "#C9A84C"
+              ? "var(--accent-primary)"
               : tier.disabled
               ? "var(--border-subtle)"
               : isHovered
@@ -172,8 +172,8 @@ export default function TierCards() {
               : "var(--border-subtle)";
             const shadow = tier.highlight
               ? isHovered
-                ? "0 0 30px rgba(201,168,76,0.2)"
-                : "0 0 20px rgba(201,168,76,0.1)"
+                ? "0 0 30px rgba(229,184,60,0.2)"
+                : "0 0 20px rgba(229,184,60,0.1)"
               : "none";
 
             return (
@@ -208,7 +208,7 @@ export default function TierCards() {
                       top: -16,
                       left: "50%",
                       transform: "translateX(-50%)",
-                      background: "#C9A84C",
+                      background: "var(--accent-primary)",
                       color: "#000",
                       padding: "4px 16px",
                       borderRadius: 4,
@@ -264,8 +264,8 @@ export default function TierCards() {
                 <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
                   <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
                     {tier.features.map((f, fi) => (
-                      <li key={fi} style={{ fontSize: 12, color: f.included ? "var(--text-secondary)" : "#4B5563", display: "flex", gap: 8, alignItems: "flex-start", lineHeight: 1.4 }}>
-                        <span style={{ color: f.included ? tier.accent : "#374151", flexShrink: 0 }}>
+                      <li key={fi} style={{ fontSize: 12, color: f.included ? "var(--text-secondary)" : "var(--text-muted)", display: "flex", gap: 8, alignItems: "flex-start", lineHeight: 1.4 }}>
+                        <span style={{ color: f.included ? tier.accent : "var(--border-subtle)", flexShrink: 0 }}>
                           {f.included ? "—" : "—"}
                         </span>
                         {f.text}
@@ -290,7 +290,7 @@ export default function TierCards() {
                       borderRadius: 6,
                       fontWeight: 700,
                       textDecoration: "none",
-                      background: tier.highlight ? "#C9A84C" : "transparent",
+                      background: tier.highlight ? "var(--accent-primary)" : "transparent",
                       color: tier.highlight ? "#000" : "var(--text-primary)",
                       border: tier.highlight ? "none" : "1px solid var(--border-subtle)",
                       transition: "opacity 150ms ease",

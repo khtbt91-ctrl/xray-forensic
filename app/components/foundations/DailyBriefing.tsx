@@ -48,7 +48,7 @@ function formatUTCDate(d: Date): string {
 function SessionCard({ label, session }: { label: string; session: SessionState }) {
   const textColor =
     session.status === 'active'   ? '#10b981' :
-    session.status === 'upcoming' ? GOLD       : '#475569'
+    session.status === 'upcoming' ? GOLD       : 'var(--text-muted)'
 
   return (
     <div style={{
@@ -59,7 +59,7 @@ function SessionCard({ label, session }: { label: string; session: SessionState 
       padding: '10px 14px',
     }}>
       <div style={{
-        fontFamily: MONO, fontSize: 9, color: '#475569',
+        fontFamily: MONO, fontSize: 9, color: 'var(--text-muted)',
         letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6,
       }}>
         {label}
@@ -89,7 +89,7 @@ function CalendarCard({ events }: { events: { time: string; currency: string; ev
       background: BG_BASE, border: `1px solid ${BORDER}`, borderRadius: 6, padding: '10px 14px',
     }}>
       <div style={{
-        fontFamily: MONO, fontSize: 9, color: '#475569',
+        fontFamily: MONO, fontSize: 9, color: 'var(--text-muted)',
         letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6,
       }}>
         HIGH IMPACT TODAY
@@ -109,7 +109,7 @@ function CalendarCard({ events }: { events: { time: string; currency: string; ev
             </div>
           ))}
           {events.length > 3 && (
-            <span style={{ fontFamily: MONO, fontSize: 9, color: '#475569' }}>
+            <span style={{ fontFamily: MONO, fontSize: 9, color: 'var(--text-muted)' }}>
               +{events.length - 3} more events today
             </span>
           )}
@@ -129,7 +129,7 @@ function SessionRowSkeleton() {
           background: BG_BASE, border: `1px solid ${BORDER}`, borderRadius: 6, padding: '10px 14px',
         }}>
           <div style={{
-            fontFamily: MONO, fontSize: 9, color: '#475569',
+            fontFamily: MONO, fontSize: 9, color: 'var(--text-muted)',
             letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6,
           }}>
             {l}
@@ -233,7 +233,7 @@ export default function DailyBriefing({
         }}>
           THE MORNING DESK
         </span>
-        <span style={{ fontFamily: MONO, fontSize: 10, color: '#475569', letterSpacing: '0.06em' }}>
+        <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--text-muted)', letterSpacing: '0.06em' }}>
           {now ? formatUTCDate(now) : ''}
         </span>
       </div>
@@ -323,7 +323,7 @@ export default function DailyBriefing({
               PERSONAL INTEL
             </div>
             {bestSession ? (
-              <p style={{ fontFamily: MONO, fontSize: 12, color: '#e2e8f0', lineHeight: 1.65, margin: 0 }}>
+              <p style={{ fontFamily: MONO, fontSize: 12, color: 'var(--text-primary)', lineHeight: 1.65, margin: 0 }}>
                 YOUR EDGE:{' '}
                 <span style={{ color: GOLD, fontWeight: 700 }}>{bestSession.name.toUpperCase()}</span>
                 {' '}session.{' '}
@@ -333,7 +333,7 @@ export default function DailyBriefing({
                 {' '}trades.
               </p>
             ) : (
-              <p style={{ fontFamily: MONO, fontSize: 12, color: '#475569', lineHeight: 1.65, margin: 0 }}>
+              <p style={{ fontFamily: MONO, fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.65, margin: 0 }}>
                 Upload more trades to unlock session intelligence.
               </p>
             )}

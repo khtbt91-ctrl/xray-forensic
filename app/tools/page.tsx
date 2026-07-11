@@ -64,7 +64,7 @@ export default function ToolsPage() {
               <p style={{
                 fontFamily: 'JetBrains Mono, monospace',
                 fontSize: '0.7rem',
-                color: '#C9A84C',
+                color: 'var(--accent-primary)',
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
                 marginBottom: '8px'
@@ -88,7 +88,7 @@ export default function ToolsPage() {
             </div>
             <span style={{
               background: 'rgba(201,168,76,0.12)',
-              color: '#C9A84C',
+              color: 'var(--accent-primary)',
               padding: '4px 12px',
               borderRadius: '4px',
               fontSize: '0.7rem',
@@ -115,7 +115,7 @@ export default function ToolsPage() {
               display: 'block',
               width: '100%',
               padding: '14px',
-              background: '#C9A84C',
+              background: 'var(--accent-primary)',
               color: '#000000',
               borderRadius: '8px',
               textDecoration: 'none',

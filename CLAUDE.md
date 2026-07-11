@@ -41,7 +41,7 @@ xray-web/
 │   ├── layout.tsx                # Root layout — AuthProvider, NavBar, ReturnToReportBanner
 │   ├── globals.css               # Design system CSS variables + animations
 │   ├── components/
-│   │   ├── NavBar.tsx            # Shared fixed nav (height 64px, position: fixed)
+│   │   ├── NavBar.tsx            # Shared sticky nav (position: sticky, padding-driven height)
 │   │   ├── HeroSection.tsx       # Landing hero
 │   │   ├── HowItWorks.tsx        # "Three steps. One verdict." section
 │   │   ├── RadarSection.tsx      # 7-dimension radar chart
@@ -92,51 +92,64 @@ xray-web/
 
 ## Design System (LOCKED)
 
-### CSS Variables (globals.css)
+### CSS Variables (globals.css) — actual values, verified 2026-07-09
 ```css
---bg-base:        #0D1117
---bg-card:        #161B22
---bg-elevated:    #21262D
---border-subtle:  #30363D
---border-active:  #8B949E
---text-primary:   #E6EDF3
---text-secondary: #8B949E
---text-muted:     #6E7681
---accent-primary: #58A6FF
---accent-secondary: #A371F7
---profit:         #3FB950
---loss:           #F85149
---warning:        #D29922
+--color-brand-gold:      #e5b83c
+--color-brand-gold-dark: #b88d1d
+--color-brand-bg:        #050811
+--bg-card / --card:      #0e1626
+--bg-elevated / --card-hover: #141e35
+--border / --border-subtle:  #1e293b
+--border-active:         #94a3b8
+--text-primary:          #f8fafc
+--text-secondary:        #94a3b8
+--text-muted:            #7d8ba3   (lightened 2026-07-09 for WCAG AA; was #475569, ~3:1 contrast)
+--accent-primary / --accent-secondary: #e5b83c  (both resolve to brand gold — there is no separate secondary hue)
+--success / --profit:    #10b981
+--danger / --loss:       #ef4444
+--warning:               #f59e0b
 ```
+There is no blue accent in the token system. `#3b82f6` seen in a couple of
+components historically was leftover hardcoded debt, not a real token —
+removed 2026-07-09.
 
 ### JS Constants (use in all components)
 ```ts
-const GOLD = "#C9A84C"
-const BG   = "#0A0A0A"
-const MONO = "JetBrains Mono, monospace"
-const GRAY = "#9CA3AF"
+const MONO = "JetBrains Mono, monospace"   // from app/components/shared.tsx
+const SERIF_ITALIC = "'IBM Plex Serif', serif"  // from app/components/shared.tsx
 ```
+Prefer `var(--accent-primary)` etc. over hardcoding hex — most components
+already do this. A few older components still hardcode `#e5b83c` literally;
+that's acceptable (it's the correct value) but var() is preferred for new work.
 
 ### Typography Standards
-| Element       | Desktop | Mobile | Weight | Color  |
-|---------------|---------|--------|--------|--------|
-| h1 / hero     | 56px    | 36px   | 800    | #E6EDF3 |
-| h2            | 40px    | 28px   | 700    | #E6EDF3 |
-| Section label | 11px    | 11px   | 400    | #C9A84C |
-| Body          | 15-16px | 15px   | 400    | #9CA3AF |
+| Element       | Desktop           | Weight | Color  |
+|---------------|--------------------|--------|--------|
+| h1 / hero     | ~56px (clamp)      | 800    | #f8fafc |
+| h2 (section)  | clamp(24px, 3.5vw, 40px) | 700 | var(--text-primary) |
+| Section label | 11px               | 400    | var(--accent-primary) |
+| Body          | 14-16px            | 400    | var(--text-secondary) |
 
+Section headline convention (h2-level): `clamp(24px, 3.5vw, 40px)`, weight 700 —
+consolidated across RadarSection, FrameworkSection, TierCards, FaqSection,
+VerdictFeed, CaseStudies, HonestyGradient, PreChallengeSection as of 2026-07-09.
 Section labels: uppercase, letter-spacing 0.15em, JetBrains Mono
 Hero headlines only: IBM Plex Serif Italic
 Section spacing: minimum 96px between sections
 
 ### Buttons
-Gold CTA: background #C9A84C, color #000, font-weight 700
-Ghost:    border 1px solid #30363D, color #E6EDF3
-Danger:   border 1px solid #F85149, color #F85149
+Gold CTA: background var(--accent-primary) (#e5b83c), color #000, font-weight 700
+Ghost:    border 1px solid var(--border-subtle) (#1e293b), color var(--text-primary)
+Danger:   border 1px solid var(--loss) (#ef4444), color var(--loss)
 
 ### NavBar
-- position: fixed, top 0, height 64px, z-index 50
-- Pages using NavBar need paddingTop: 80px on their container
+- `app/components/NavBar.tsx` actually uses `position: sticky; top: 0; z-index: 50`
+  (NOT fixed). Height is not a hardcoded 64px — it's padding-driven (`14px 32px`,
+  `56px` fixed height only in the `<768px` mobile media query).
+- Because it's sticky (not fixed/overlaid), pages do NOT need a manual
+  paddingTop offset for the nav itself — sticky pushes normal document flow.
+  (Hero-specific top padding on mobile, e.g. `.hero-section` in globals.css,
+  is for visual spacing, not to compensate for an overlaid fixed nav.)
 - Import: `import NavBar from '../components/NavBar'`
   (adjust relative path based on depth)
 
@@ -168,9 +181,9 @@ without checking if they're necessary.
 3. No localStorage for auth state — Supabase handles it
 4. `npm run build` zero errors before pushing
 5. Never break the existing auth flow
-6. All CTAs use gold (#C9A84C) not blue
+6. All CTAs use gold (var(--accent-primary), #e5b83c) not blue
 7. NavBar is the shared component — never create inline navs
-8. Pages using fixed NavBar need paddingTop: 80px minimum
+8. NavBar is sticky, not fixed — no manual paddingTop offset needed for the nav itself
 9. Mobile-first: test at 375px before any push
 
 ## Brand Voice Rules
@@ -226,8 +239,17 @@ After every deploy:
 
 ### Active
 - [ ] /analyze returns 502 (backend issue — see institutional-xray/CLAUDE.md)
-- [ ] Typography audit not yet complete — inconsistencies remain
-- [ ] Mobile audit not yet complete — 375px issues unfixed
+
+### Fixed 2026-07-09 (design/code audit pass)
+- [x] Stale gold `#C9A84C` replaced with `var(--accent-primary)` (#e5b83c) in TierCards.tsx and RadarSection.tsx
+- [x] RadarSection mobile overflow — chart's fixed `minWidth: 450` now scoped to `.radar-chart-frame` with a `@media (max-width: 768px)` override (300px) plus a self-contained `overflow-x: auto` wrapper
+- [x] Leftover blue accent (`#3b82f6`) in HowItWorks step 2 and AudienceSection "Beginner" card replaced with brand gold
+- [x] Hardcoded off-palette colors in VerdictFeed.tsx (`#f85149`, `#64748b`, `#334155`, `#e2e8f0`, `#475569`) replaced with `var(--loss)` / `var(--text-muted)` / `var(--text-primary)` / `var(--border-subtle)`
+- [x] TierCards.tsx excluded-feature text (`#4B5563`/`#374151`) replaced with `var(--text-muted)` / `var(--border-subtle)`
+- [x] `--text-muted` contrast failure fixed — lightened `#475569` → `#7d8ba3` (now ~5.8:1 on `--bg`, passes WCAG AA)
+- [x] Typography audit — section h2 headlines consolidated to `clamp(24px, 3.5vw, 40px)` weight 700 across VerdictFeed, CaseStudies, HonestyGradient, PreChallengeSection
+- [x] Dead code — 9 unused components (ComparisonSection, LiveTicker, MetricBar, ProtocolsSection, RotatingTagline, SamplePreview, TestimonialsSection, TrustBar, LeakCalculator) moved to `app/components/_archive/`
+- [x] Follow-up sweep — same stale-gold/blue/gray hardcoded hex found site-wide (admin, dashboard, login, payment, pricing, tools, report/[id], new, foundations/*, HeroSection, NavBar, LeakCalculatorGuide, page.tsx) replaced with the matching CSS var. Left alone on purpose: `roadmap.tsx`'s own redaction-themed gray palette, and the two legitimate multi-hue category legends (admin `TIER_COLORS`, `DeskNoteFeed` note-type colors) — those aren't bugs, they're intentional categorical color systems.
 
 ### Fixed This Session (2026-05-31)
 - [x] NavBar missing from /pricing, /new, /dashboard, /payment — added

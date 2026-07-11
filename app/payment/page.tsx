@@ -161,7 +161,7 @@ function PaymentContent() {
           <p style={{ fontFamily: MONO, fontSize: 13, color: "#94a3b8", lineHeight: 1.75, margin: "0 0 8px" }}>
             We&apos;ll email <span style={{ color: "#f8fafc" }}>{user?.email}</span> once verified.
           </p>
-          <p style={{ fontFamily: MONO, fontSize: 13, color: "#475569", margin: 0 }}>
+          <p style={{ fontFamily: MONO, fontSize: 13, color: "var(--text-muted)", margin: 0 }}>
             Usually within a few hours.
           </p>
         </div>
@@ -278,7 +278,7 @@ function PaymentContent() {
                 <span style={{
                   fontFamily: MONO,
                   fontSize: 11,
-                  color: "#475569",
+                  color: "var(--text-muted)",
                   marginLeft: 8,
                 }}>
                   {chain}
@@ -315,7 +315,7 @@ function PaymentContent() {
                 <p style={{
                   fontFamily: MONO,
                   fontSize: 10,
-                  color: "#475569",
+                  color: "var(--text-muted)",
                   margin: "6px 0 0",
                   letterSpacing: "0.05em",
                 }}>
@@ -376,7 +376,7 @@ function PaymentContent() {
           }}>
             TRANSACTION ID
           </label>
-          <p style={{ fontFamily: MONO, fontSize: 10, color: "#475569", margin: "0 0 10px" }}>
+          <p style={{ fontFamily: MONO, fontSize: 10, color: "var(--text-muted)", margin: "0 0 10px" }}>
             Optional — speeds up activation
           </p>
           <input
@@ -398,7 +398,7 @@ function PaymentContent() {
               transition: "border-color 0.15s",
             }}
           />
-          <p style={{ fontFamily: MONO, fontSize: 10, color: "#334155", margin: "8px 0 0", lineHeight: 1.8 }}>
+          <p style={{ fontFamily: MONO, fontSize: 10, color: "var(--text-muted)", margin: "8px 0 0", lineHeight: 1.8 }}>
             Find in your wallet → Transaction History → tap the transaction → copy the ID<br />
             Without it: activated within 24h<br />
             With it: activated within 1–2h
@@ -437,7 +437,7 @@ function PaymentContent() {
               width: "100%",
               padding: "16px 32px",
               background: selectedNetwork ? GOLD : "#1e293b",
-              color: selectedNetwork ? "#000000" : "#475569",
+              color: selectedNetwork ? "#000000" : "var(--text-muted)",
               fontFamily: SPACE,
               fontSize: 15,
               fontWeight: 700,
@@ -453,7 +453,7 @@ function PaymentContent() {
             I&apos;ve Paid — Notify Team →
           </button>
           {!selectedNetwork && (
-            <p style={{ fontFamily: MONO, fontSize: 11, color: "#334155", margin: 0 }}>
+            <p style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", margin: 0 }}>
               Copy a wallet address above to continue
             </p>
           )}
@@ -521,7 +521,7 @@ function PaymentContent() {
                 </li>
               ))}
             </ul>
-            <p style={{ fontFamily: MONO, fontSize: 11, color: "#475569", margin: "0 0 28px", lineHeight: 1.6 }}>
+            <p style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", margin: "0 0 28px", lineHeight: 1.6 }}>
               Our team will verify and activate your account within a few hours.
             </p>
             <div style={{ display: "flex", gap: 12 }}>
@@ -539,7 +539,7 @@ function PaymentContent() {
                   cursor: "pointer",
                   transition: "border-color 0.15s",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#334155" }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--border-active)" }}
                 onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#1e293b" }}
               >
                 Cancel
@@ -553,7 +553,7 @@ function PaymentContent() {
                   background: submitting ? "#1e293b" : GOLD,
                   border: "none",
                   borderRadius: 6,
-                  color: submitting ? "#475569" : "#000000",
+                  color: submitting ? "var(--text-muted)" : "#000000",
                   fontFamily: MONO,
                   fontSize: 12,
                   fontWeight: 700,
