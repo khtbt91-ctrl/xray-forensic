@@ -31,6 +31,21 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/* Preload the critical H1 weight so download starts at HTML-parse time,
+            not after CSS is fetched and the @font-face rule is discovered.
+            QA round 2 fix (2026-07-12): font-display: swap alone still left a
+            3083ms render-delay repaint (87% of a 3.5s LCP) because the browser
+            had no reason to fetch the woff2 until it found the @font-face rule
+            in globals.css. Extrabold (800) is the H1 weight — the LCP element. */}
+        <link
+          rel="preload"
+          as="font"
+          type="font/woff2"
+          href="/fonts/CabinetGrotesk-Extrabold.woff2"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body>
         <AuthProvider>
           <AnimationInit />
