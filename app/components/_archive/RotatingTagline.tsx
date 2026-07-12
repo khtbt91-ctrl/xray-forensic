@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
  * rotating verdict line your brief asked for without a second marquee.
  */
 
-const MONO = "'JetBrains Mono', monospace";
+const MONO = "var(--font-mono)";
 const GOLD = "#e5b83c";
 
 const ONE_LINERS: string[] = [

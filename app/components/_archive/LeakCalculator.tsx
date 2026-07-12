@@ -238,7 +238,7 @@ export default function LeakCalculator() {
       </div>
 
       <FadeInUp delay={0.3} style={{ textAlign: "center", width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
-        <p style={{ textAlign: "center", fontFamily: "Inter, sans-serif", fontSize: 13, color: "var(--text-muted)", marginTop: 28, width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
+        <p style={{ textAlign: "center", fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--text-muted)", marginTop: 28, width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
           The machine doesn&apos;t guess. It counts.
         </p>
       </FadeInUp>

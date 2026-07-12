@@ -40,7 +40,7 @@ export default function HowItWorks() {
       <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
         <p
           style={{
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: "11px",
             color: "#38BDF8",
             letterSpacing: "0.15em",
@@ -86,7 +86,7 @@ export default function HowItWorks() {
               >
                 <p
                   style={{
-                    fontFamily: "'JetBrains Mono', monospace",
+                    fontFamily: "var(--font-mono)",
                     fontSize: "12px",
                     letterSpacing: "0.1em",
                     color: "#38BDF8",
@@ -97,7 +97,7 @@ export default function HowItWorks() {
                 </p>
                 <p
                   style={{
-                    fontFamily: "'JetBrains Mono', monospace",
+                    fontFamily: "var(--font-mono)",
                     fontSize: "10px",
                     letterSpacing: "0.08em",
                     color: "#8B98A9",
@@ -108,7 +108,7 @@ export default function HowItWorks() {
                 </p>
                 <h3
                   style={{
-                    fontFamily: "'Inter', sans-serif",
+                    fontFamily: "var(--font-sans)",
                     fontSize: "24px",
                     fontWeight: 700,
                     color: "#E6EDF3",

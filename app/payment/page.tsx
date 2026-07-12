@@ -9,7 +9,7 @@ import NavBar from "../components/NavBar";
 import { QRCodeSVG } from "qrcode.react";
 
 const GOLD = "#e5b83c";
-const MONO = "'JetBrains Mono', monospace";
+const MONO = "var(--font-mono)";
 const SPACE = "'Space Grotesk', sans-serif";
 
 const TIER_MAP: Record<string, { name: string; amount: number }> = {

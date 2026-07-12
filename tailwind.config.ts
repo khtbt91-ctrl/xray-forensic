@@ -33,9 +33,14 @@ const config: Config = {
         warning: "#f59e0b",
       },
       fontFamily: {
-        sans:    ["Inter", "system-ui", "sans-serif"],
-        display: ["Inter", "system-ui", "sans-serif"],
-        mono:    ["JetBrains Mono", "monospace"],
+        // Updated 2026-07-12 alongside the next/font migration (globals.css) —
+        // these literal names no longer resolve to anything since the Google
+        // Fonts CDN @import was removed. Not exercised by any live className
+        // today (grepped clean), but left stale would silently break the
+        // first component that ever adopts font-sans/font-mono/font-display.
+        sans:    ["var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "system-ui", "sans-serif"],
+        mono:    ["var(--font-mono)", "monospace"],
       },
       animation: {
         "pulse-subtle": "pulse-subtle 2s ease-in-out infinite",

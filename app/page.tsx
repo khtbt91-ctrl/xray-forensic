@@ -44,8 +44,8 @@ export const metadata: Metadata = {
   },
 };
 
-const MONO = "'JetBrains Mono', monospace";
-const SPACE = "'Inter', sans-serif";
+const MONO = "var(--font-mono)";
+const SPACE = "var(--font-sans)";
 
 export default function LandingPage() {
   return (
@@ -95,7 +95,7 @@ export default function LandingPage() {
               <p style={{ fontFamily: MONO, fontSize: "0.6rem", color: "var(--text-muted)", letterSpacing: "0.15em", textTransform: "uppercase", margin: "0 0 14px" }}>
                 FORENSIC TRADE DIAGNOSTIC
               </p>
-              <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.75rem", color: "var(--text-muted)", lineHeight: 1.6, margin: 0 }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--text-muted)", lineHeight: 1.6, margin: 0 }}>
                 Built on 15 years of institutional trading.
                 <br />
                 Not financial advice. Diagnostic analysis only.
@@ -133,13 +133,13 @@ export default function LandingPage() {
             <p style={{ fontFamily: MONO, fontSize: "9px", color: "#10b981", letterSpacing: "0.12em", marginBottom: "8px" }}>
               [SYSTEM STATUS: ONLINE]
             </p>
-            <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "var(--text-muted)", margin: "0 0 8px" }}>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--text-muted)", margin: "0 0 8px" }}>
               For prop firms and institutional desks:{" "}
               <a href="mailto:admin@xrayforensic.com" style={{ color: "#38BDF8", textDecoration: "none" }}>
                 admin@xrayforensic.com
               </a>
             </p>
-            <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "var(--text-muted)", margin: 0 }}>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--text-muted)", margin: 0 }}>
               &copy; 2026 X-Ray Forensic &middot; Not financial advice &middot; All trading involves risk
             </p>
           </div>

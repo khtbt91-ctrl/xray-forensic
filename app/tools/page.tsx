@@ -15,7 +15,7 @@ export default function ToolsPage() {
 
         {/* Header */}
         <p style={{
-          fontFamily: 'JetBrains Mono, monospace',
+          fontFamily: 'var(--font-mono)',
           fontSize: '0.75rem',
           color: 'var(--accent-primary)',
           letterSpacing: '0.15em',
@@ -62,7 +62,7 @@ export default function ToolsPage() {
           }}>
             <div>
               <p style={{
-                fontFamily: 'JetBrains Mono, monospace',
+                fontFamily: 'var(--font-mono)',
                 fontSize: '0.7rem',
                 color: 'var(--accent-primary)',
                 letterSpacing: '0.1em',
@@ -146,7 +146,7 @@ export default function ToolsPage() {
             <div>
               <p style={{
                 fontFamily:
-                  'JetBrains Mono, monospace',
+                  'var(--font-mono)',
                 fontSize: '0.7rem',
                 color: 'var(--warning)',
                 letterSpacing: '0.1em',
@@ -204,7 +204,7 @@ export default function ToolsPage() {
             marginBottom: '24px'
           }}>
             <p style={{
-              fontFamily: 'JetBrains Mono, monospace',
+              fontFamily: 'var(--font-mono)',
               fontSize: '0.65rem',
               color: 'var(--text-muted)',
               letterSpacing: '0.08em',
@@ -245,7 +245,7 @@ export default function ToolsPage() {
             marginBottom: '24px'
           }}>
             <p style={{
-              fontFamily: 'JetBrains Mono, monospace',
+              fontFamily: 'var(--font-mono)',
               fontSize: '0.65rem',
               color: 'var(--text-muted)',
               letterSpacing: '0.08em',
@@ -273,7 +273,7 @@ export default function ToolsPage() {
                 gap: '10px'
               }}>
                 <span style={{
-                  fontFamily: 'JetBrains Mono',
+                  fontFamily: 'var(--font-mono)',
                   fontSize: '0.65rem',
                   color: 'var(--accent-primary)',
                   flexShrink: 0,
@@ -327,7 +327,7 @@ export default function ToolsPage() {
           opacity: 0.5
         }}>
           <p style={{
-            fontFamily: 'JetBrains Mono, monospace',
+            fontFamily: 'var(--font-mono)',
             fontSize: '0.7rem',
             color: 'var(--text-muted)',
             letterSpacing: '0.08em',

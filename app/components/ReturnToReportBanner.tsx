@@ -71,7 +71,7 @@ export default function ReturnToReportBanner() {
       whiteSpace: 'nowrap'
     }}>
       <span style={{
-        fontFamily: 'JetBrains Mono, monospace',
+        fontFamily: 'var(--font-mono)',
         fontSize: '0.75rem',
         color: 'var(--text-secondary)'
       }}>

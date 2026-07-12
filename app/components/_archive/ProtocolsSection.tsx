@@ -85,7 +85,7 @@ function ProtocolCard({
       {/* Preview body */}
       <p
         style={{
-          fontFamily: "Inter, sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.875rem",
           color: "var(--text-secondary)",
           lineHeight: 1.7,
@@ -189,7 +189,7 @@ export default function ProtocolsSection() {
             </h2>
             <p
               style={{
-                fontFamily: "Inter, sans-serif",
+                fontFamily: "var(--font-sans)",
                 fontSize: 15,
                 color: "var(--text-secondary)",
                 lineHeight: 1.75,
@@ -218,7 +218,7 @@ export default function ProtocolsSection() {
           <div style={{ textAlign: "center", marginTop: 44, width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
             <p
               style={{
-                fontFamily: "Inter, sans-serif",
+                fontFamily: "var(--font-sans)",
                 fontSize: "0.85rem",
                 color: "var(--text-muted)",
                 marginBottom: 28,

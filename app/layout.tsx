@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from 'next/script'
 import "./globals.css";
+import { inter, jetbrainsMono } from "./fonts";
 import AnimationInit from "./components/AnimationInit";
 import ReturnToReportBanner from "./components/ReturnToReportBanner";
 import { AuthProvider } from "@/lib/auth-context";
@@ -30,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <head>
         {/* Preload the critical H1 weight so download starts at HTML-parse time,
             not after CSS is fetched and the @font-face rule is discovered.

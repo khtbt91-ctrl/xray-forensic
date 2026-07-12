@@ -50,7 +50,7 @@ export default function FrameworkSection() {
           </h2>
           <p
             style={{
-              fontFamily: "Inter, sans-serif",
+              fontFamily: "var(--font-sans)",
               fontSize: 15,
               color: "var(--text-secondary)",
               lineHeight: 1.75,
@@ -64,7 +64,7 @@ export default function FrameworkSection() {
             institutional desks: Smart Money Concepts, liquidity engineering, order flow analysis,
             kill zone mechanics.
           </p>
-          <p style={{ fontFamily: "Inter, sans-serif", fontSize: 14, color: "var(--text-muted)", marginBottom: 40, textAlign: "center", width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--text-muted)", marginBottom: 40, textAlign: "center", width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
             The machine doesn&apos;t guess what good trading looks like. It was trained by traders
             who lived it.
           </p>

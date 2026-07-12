@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const MONO = "JetBrains Mono, monospace";
+const MONO = "var(--font-mono)";
 
 function Section({ title }: { title: string }) {
   return (
@@ -25,7 +25,7 @@ function Body({ children }: { children: React.ReactNode }) {
   return (
     <p
       style={{
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "var(--font-sans)",
         fontSize: 15,
         color: "var(--text-secondary)",
         lineHeight: 1.75,
@@ -53,7 +53,7 @@ function ListItems({ items }: { items: string[] }) {
         <li
           key={item}
           style={{
-            fontFamily: "Inter, sans-serif",
+            fontFamily: "var(--font-sans)",
             fontSize: 15,
             color: "var(--text-secondary)",
             lineHeight: 1.55,

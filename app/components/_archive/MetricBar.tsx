@@ -18,7 +18,7 @@ export default function MetricBar() {
             <div key={i} style={{ textAlign: "center" }}>
               <div
                 style={{
-                  fontFamily: "JetBrains Mono, monospace",
+                  fontFamily: "var(--font-mono)",
                   fontSize: "2rem",
                   fontWeight: 500,
                   color: "var(--text-primary)",
@@ -32,7 +32,7 @@ export default function MetricBar() {
               </div>
               <div
                 style={{
-                  fontFamily: "Inter, sans-serif",
+                  fontFamily: "var(--font-sans)",
                   fontSize: "0.75rem",
                   color: "var(--text-muted)",
                   textTransform: "uppercase",

@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
 
 const GOLD = '#e5b83c'
-const MONO = "'JetBrains Mono', monospace"
+const MONO = "var(--font-mono)"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -85,7 +85,7 @@ export default function LoginPage() {
     fontSize: 14,
     outline: 'none',
     boxSizing: 'border-box',
-    fontFamily: 'Inter, sans-serif',
+    fontFamily: 'var(--font-sans)',
     transition: 'border-color 0.15s',
   }
 

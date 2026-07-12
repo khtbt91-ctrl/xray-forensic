@@ -71,7 +71,7 @@ export default function FinalCta() {
           }}
         >
           <p style={{
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: 10,
             letterSpacing: "0.15em",
             textTransform: "uppercase",
@@ -81,7 +81,7 @@ export default function FinalCta() {
             X-RAY FORENSIC
           </p>
           <p style={{
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: "13px",
             color: "var(--text-muted)",
             lineHeight: 1.7,

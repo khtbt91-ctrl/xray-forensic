@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-const MONO = "'JetBrains Mono', monospace";
-const SPACE = "'Inter', sans-serif";
+const MONO = "var(--font-mono)";
+const SPACE = "var(--font-sans)";
 
 const ARCHETYPE_LEAK: Record<string, string> = {
   "Session Tourist":    "Off-session trading leak",

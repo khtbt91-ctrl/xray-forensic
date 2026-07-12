@@ -95,7 +95,7 @@ function ScenarioBlock({ card }: { card: (typeof cards)[number] }) {
             <p style={{ fontFamily: MONO, fontSize: "0.65rem", color: card.accent, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 8px" }}>
               {s.label}
             </p>
-            <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.85rem", color: "var(--text-secondary)", margin: 0, lineHeight: 1.65 }}>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: "var(--text-secondary)", margin: 0, lineHeight: 1.65 }}>
               {s.text}
             </p>
           </div>
@@ -139,7 +139,7 @@ export default function AudienceSection() {
                   {card.title}
                 </h3>
                 {card.body && (
-                  <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.9rem", color: "var(--text-secondary)", margin: 0, lineHeight: 1.7, whiteSpace: "pre-line" }}>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.9rem", color: "var(--text-secondary)", margin: 0, lineHeight: 1.7, whiteSpace: "pre-line" }}>
                     {card.body}
                   </p>
                 )}

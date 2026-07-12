@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const MONO = "'JetBrains Mono', monospace";
+const MONO = "var(--font-mono)";
 
 interface BenchmarkStats {
   total_traders_analyzed: number;

@@ -70,7 +70,7 @@ export default function CaseStudies() {
       <FadeInUp delay={0.05}>
         <h2
           style={{
-            fontFamily: "Inter, sans-serif",
+            fontFamily: "var(--font-sans)",
             fontSize: "clamp(24px, 3.5vw, 40px)",
             fontWeight: 700,
             color: "var(--text-primary)",
@@ -144,7 +144,7 @@ export default function CaseStudies() {
               {/* Title */}
               <h3
                 style={{
-                  fontFamily: "Inter, sans-serif",
+                  fontFamily: "var(--font-sans)",
                   fontSize: "1rem",
                   fontWeight: 600,
                   color: "var(--text-primary)",
@@ -180,7 +180,7 @@ export default function CaseStudies() {
                   <p
                     key={j}
                     style={{
-                      fontFamily: "Inter, sans-serif",
+                      fontFamily: "var(--font-sans)",
                       fontSize: "0.85rem",
                       color: "var(--text-secondary)",
                       margin: "0 0 4px",

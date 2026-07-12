@@ -1,4 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+/* Inter + JetBrains Mono — migrated OFF the Google Fonts CDN @import to
+   next/font/google (QA round 3 fix, 2026-07-12). See app/fonts.ts. That CDN
+   @import was a 955ms render-blocking round-trip that became the new LCP
+   bottleneck the moment round 2's Cabinet Grotesk preload fixed the H1 —
+   the hero's Inter paragraph became the LCP element next. next/font
+   self-hosts both at build time and exposes them as --font-inter /
+   --font-jetbrains-mono on <html> (see layout.tsx). --font-sans / --font-mono
+   below now resolve to those variables; every component that previously
+   hardcoded the literal string "Inter"/"JetBrains Mono" was updated in this
+   same commit to reference var(--font-sans)/var(--font-mono) instead, since
+   those literal names no longer resolve to any registered font once the
+   CDN @import is gone. */
 @import "@fontsource/ibm-plex-serif/400-italic.css";
 @tailwind base;
 @tailwind components;
@@ -28,9 +39,9 @@
 
 /* ─── Design tokens (mirrors Gemini @theme block) ──────────────────────────── */
 :root {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Cabinet Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Cabinet Grotesk", var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
 
   --color-brand-accent: #38BDF8;
   --color-brand-accent-dark: #0EA5E9;
@@ -76,7 +87,7 @@ html, body {
   padding: 0;
   background-color: #0A0E14;
   color: #E6EDF3;
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-align: left;
 }
@@ -187,7 +198,7 @@ html, body {
 .metric-number { text-align: center; font-variant-numeric: tabular-nums; }
 
 .mono {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 
@@ -217,7 +228,7 @@ html, body {
   background: #38BDF8;
   color: var(--bg);
   border-color: #38BDF8;
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-sans);
   font-weight: 700;
 }
 .btn-primary:hover { background: #0EA5E9; border-color: #0EA5E9; }
@@ -230,7 +241,7 @@ html, body {
 
 .nav-link {
   font-size: 0.75rem;
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--font-mono);
   color: #8B98A9;
   text-decoration: none;
   letter-spacing: 0.05em;
@@ -240,7 +251,7 @@ html, body {
 
 .nav-logo-text {
   white-space: nowrap;
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-sans);
 }
 
 /* ─── Terminal cursor ─────────────────────────────────────────────────────── */
@@ -249,7 +260,7 @@ html, body {
 .terminal-cursor {
   animation: blink 1s step-end infinite;
   color: #10b981;
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--font-mono);
 }
 
 /* ─── Accordion ───────────────────────────────────────────────────────────── */
@@ -362,7 +373,7 @@ html, body {
 .mobile-menu-close:hover { color: #E6EDF3; }
 .mobile-nav-link {
   font-size: 1.25rem; color: #E6EDF3; text-decoration: none;
-  font-weight: 500; font-family: "Inter", sans-serif; transition: color 0.15s;
+  font-weight: 500; font-family: var(--font-sans); transition: color 0.15s;
 }
 .mobile-nav-link:hover { color: #38BDF8; }
 .mobile-menu-divider { width: 100%; height: 1px; background: #26313F; margin: 4px 0; }
@@ -419,14 +430,14 @@ html, body {
 .funded-input {
   flex: 1; min-width: 220px; background: #131A24; border: 1px solid #26313F;
   border-radius: 6px; padding: 12px 16px; color: #E6EDF3; font-size: 15px;
-  font-family: Inter, sans-serif; outline: none; transition: border-color 0.15s;
+  font-family: var(--font-sans); outline: none; transition: border-color 0.15s;
 }
 .funded-input:focus { border-color: #38BDF8; }
 .funded-input::placeholder { color: #475569; }
 
 .waitlist-input {
   flex: 1; min-width: 220px; background: #131A24; border: 1px solid #26313F;
-  border-radius: 6px; padding: 10px 14px; font-family: Inter, sans-serif;
+  border-radius: 6px; padding: 10px 14px; font-family: var(--font-sans);
   font-size: 0.9rem; color: #E6EDF3; outline: none; transition: border-color 0.15s;
 }
 .waitlist-input:focus { border-color: #38BDF8; }

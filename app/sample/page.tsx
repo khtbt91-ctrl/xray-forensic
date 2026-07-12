@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Disclaimer from "../../components/Disclaimer";
 
-const MONO = "JetBrains Mono, monospace";
+const MONO = "var(--font-mono)";
 
 const DIMENSIONS = [
   { label: "HTF Bias", score: 42 },

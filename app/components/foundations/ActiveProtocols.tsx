@@ -10,7 +10,7 @@ const GOLD    = '#e5b83c'
 const BG_CARD = '#0e1626'
 const BG_BASE = '#050811'
 const BORDER  = '#1e293b'
-const MONO    = "'JetBrains Mono', monospace"
+const MONO    = "var(--font-mono)"
 const DISPLAY = "'Space Grotesk', sans-serif"
 
 // ── Protocol definitions ───────────────────────────────────────────────────────

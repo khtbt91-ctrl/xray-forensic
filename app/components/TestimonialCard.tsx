@@ -38,7 +38,7 @@ export default function TestimonialCard({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontFamily: 'JetBrains Mono, monospace',
+              fontFamily: 'var(--font-mono)',
               fontSize: '0.8rem',
               color: 'var(--text-muted)',
             }}
@@ -48,7 +48,7 @@ export default function TestimonialCard({
           <div>
             <p
               style={{
-                fontFamily: 'JetBrains Mono, monospace',
+                fontFamily: 'var(--font-mono)',
                 fontSize: '0.7rem',
                 color: 'var(--text-muted)',
                 margin: 0,
@@ -97,7 +97,7 @@ export default function TestimonialCard({
         <div>
           <p
             style={{
-              fontFamily: 'JetBrains Mono, monospace',
+              fontFamily: 'var(--font-mono)',
               fontSize: '0.65rem',
               color: 'var(--text-muted)',
               letterSpacing: '0.08em',
@@ -110,7 +110,7 @@ export default function TestimonialCard({
           </p>
           <p
             style={{
-              fontFamily: 'JetBrains Mono, monospace',
+              fontFamily: 'var(--font-mono)',
               fontSize: compact ? '1.25rem' : '1.5rem',
               fontWeight: 700,
               color: 'var(--loss)',
@@ -124,7 +124,7 @@ export default function TestimonialCard({
         {testimonial.verified && (
           <span
             style={{
-              fontFamily: 'JetBrains Mono, monospace',
+              fontFamily: 'var(--font-mono)',
               fontSize: '0.6rem',
               color: 'var(--profit)',
               background: 'rgba(63,185,80,0.1)',
@@ -161,7 +161,7 @@ export default function TestimonialCard({
       {!compact && testimonial.disclaimer && (
         <p
           style={{
-            fontFamily: 'JetBrains Mono, monospace',
+            fontFamily: 'var(--font-mono)',
             fontSize: '0.6rem',
             color: 'var(--text-muted)',
             margin: 0,
@@ -190,7 +190,7 @@ export default function TestimonialCard({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontFamily: 'JetBrains Mono, monospace',
+            fontFamily: 'var(--font-mono)',
             fontSize: '0.75rem',
             color: 'var(--accent-primary)',
             fontWeight: 700,
@@ -202,7 +202,7 @@ export default function TestimonialCard({
         <div>
           <p
             style={{
-              fontFamily: 'JetBrains Mono, monospace',
+              fontFamily: 'var(--font-mono)',
               fontSize: '0.75rem',
               color: 'var(--text-primary)',
               fontWeight: 600,

@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
  * Mobile: horizontal-scroll row, edge-fade right (not a wrapped grid).
  */
 
-const MONO = "'JetBrains Mono', monospace";
+const MONO = "var(--font-mono)";
 
 interface BenchmarkStats {
   total_traders_analyzed: number;

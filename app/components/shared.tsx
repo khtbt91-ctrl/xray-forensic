@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 
-export const MONO = "JetBrains Mono, monospace";
+export const MONO = "var(--font-mono)";
 export const SERIF_ITALIC = "'IBM Plex Serif', serif";
 
 export function useCountUp(target: number, duration = 1500, active = false) {

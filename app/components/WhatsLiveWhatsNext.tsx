@@ -42,7 +42,7 @@ export default function WhatsLiveWhatsNext() {
   return (
     <section style={{ background: "#0A0E14", borderTop: "1px solid #26313F", padding: "96px 24px" }}>
       <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center" }}>
-        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 12 }}>
+        <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 12 }}>
           NO OVERCLAIMING
         </p>
         <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(26px, 3.5vw, 40px)", color: "#E6EDF3", margin: "0 0 48px" }}>
@@ -64,7 +64,7 @@ export default function WhatsLiveWhatsNext() {
             >
               <span style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
-                fontFamily: "'JetBrains Mono', monospace", fontSize: 18, fontWeight: 700,
+                fontFamily: "var(--font-mono)", fontSize: 18, fontWeight: 700,
                 letterSpacing: "0.1em", color: STATUS_COLOR[b.status], marginBottom: 12,
               }}>
                 <span style={{ width: 7, height: 7, borderRadius: "50%", background: STATUS_COLOR[b.status], display: "inline-block" }} />
@@ -79,7 +79,7 @@ export default function WhatsLiveWhatsNext() {
 
         <Link
           href="/roadmap"
-          style={{ display: "inline-block", marginTop: 32, fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: "#38BDF8", textDecoration: "none", letterSpacing: "0.04em" }}
+          style={{ display: "inline-block", marginTop: 32, fontFamily: "var(--font-mono)", fontSize: 13, color: "#38BDF8", textDecoration: "none", letterSpacing: "0.04em" }}
         >
           See the Full Roadmap →
         </Link>

@@ -11,7 +11,7 @@ import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/lib/supabase";
 import { QRCodeSVG } from "qrcode.react";
 
-const MONO = "'JetBrains Mono', monospace";
+const MONO = "var(--font-mono)";
 const SPACE = "'Space Grotesk', sans-serif";
 const GOLD = "#e5b83c";
 
@@ -208,7 +208,7 @@ function TextField({
           borderRadius: 6,
           color: "var(--text-primary)",
           fontSize: 14,
-          fontFamily: "Inter, sans-serif",
+          fontFamily: "var(--font-sans)",
           outline: "none",
           boxSizing: "border-box",
         }}
@@ -1002,7 +1002,7 @@ function Step3({
           marginBottom: '20px'
         }}>
           <p style={{
-            fontFamily: 'JetBrains Mono, monospace',
+            fontFamily: 'var(--font-mono)',
             fontSize: '0.7rem',
             color: 'var(--warning)',
             letterSpacing: '0.08em',
@@ -1186,7 +1186,7 @@ function Step3({
               {opt.icon}
             </div>
             <div style={{
-              fontFamily: 'JetBrains Mono, monospace',
+              fontFamily: 'var(--font-mono)',
               fontSize: '0.75rem',
               color: assetClass === opt.value
                 ? 'var(--accent-primary)'

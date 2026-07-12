@@ -78,7 +78,7 @@ export default function AuthCallback() {
       />
       <p
         style={{
-          fontFamily: 'JetBrains Mono, monospace',
+          fontFamily: 'var(--font-mono)',
           fontSize: '0.85rem',
           color: 'var(--text-muted)',
         }}

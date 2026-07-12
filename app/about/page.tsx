@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import NavBar from "../components/NavBar";
 
-const MONO = "JetBrains Mono, monospace";
+const MONO = "var(--font-mono)";
 const SERIF = "'IBM Plex Serif', serif";
 
 function FadeIn({
@@ -69,7 +69,7 @@ function SectionHeadline({
   return (
     <h2
       style={{
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "var(--font-sans)",
         fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
         fontWeight: 700,
         color: "var(--text-primary)",
@@ -92,7 +92,7 @@ function HeroSection() {
         <Label text="The Origin Story" color="var(--accent-primary)" />
         <h1
           style={{
-            fontFamily: "Inter, sans-serif",
+            fontFamily: "var(--font-sans)",
             fontSize: "clamp(2rem, 5vw, 3.5rem)",
             fontWeight: 800,
             color: "var(--text-primary)",
@@ -112,7 +112,7 @@ function HeroSection() {
       >
         <p
           style={{
-            fontFamily: "Inter, sans-serif",
+            fontFamily: "var(--font-sans)",
             fontSize: "1.05rem",
             lineHeight: 1.75,
             color: "var(--text-secondary)",
@@ -125,7 +125,7 @@ function HeroSection() {
         </p>
         <p
           style={{
-            fontFamily: "Inter, sans-serif",
+            fontFamily: "var(--font-sans)",
             fontSize: "1.05rem",
             lineHeight: 1.75,
             color: "var(--text-secondary)",
@@ -139,7 +139,7 @@ function HeroSection() {
         </p>
         <p
           style={{
-            fontFamily: "Inter, sans-serif",
+            fontFamily: "var(--font-sans)",
             fontSize: "1.05rem",
             lineHeight: 1.75,
             color: "var(--text-secondary)",
@@ -208,7 +208,7 @@ function CoreBeliefsSection() {
                 </div>
                 <h3
                   style={{
-                    fontFamily: "Inter, sans-serif",
+                    fontFamily: "var(--font-sans)",
                     fontSize: "1rem",
                     fontWeight: 600,
                     color: "var(--text-primary)",
@@ -219,7 +219,7 @@ function CoreBeliefsSection() {
                 </h3>
                 <p
                   style={{
-                    fontFamily: "Inter, sans-serif",
+                    fontFamily: "var(--font-sans)",
                     fontSize: "0.88rem",
                     lineHeight: 1.65,
                     color: "var(--text-secondary)",
@@ -255,7 +255,7 @@ function IntelligenceSection() {
             <div style={{ display: "flex", flexDirection: "column" }}>
               <h3
                 style={{
-                  fontFamily: "Inter, sans-serif",
+                  fontFamily: "var(--font-sans)",
                   fontSize: "1.1rem",
                   fontWeight: 600,
                   color: "var(--text-primary)",
@@ -267,7 +267,7 @@ function IntelligenceSection() {
               <div style={{ display: "flex", flexDirection: "column", gap: 16, flex: 1 }}>
                 <p
                   style={{
-                    fontFamily: "Inter, sans-serif",
+                    fontFamily: "var(--font-sans)",
                     fontSize: "0.92rem",
                     lineHeight: 1.72,
                     color: "var(--text-secondary)",
@@ -280,7 +280,7 @@ function IntelligenceSection() {
                 </p>
                 <p
                   style={{
-                    fontFamily: "Inter, sans-serif",
+                    fontFamily: "var(--font-sans)",
                     fontSize: "0.92rem",
                     lineHeight: 1.72,
                     color: "var(--text-secondary)",
@@ -293,7 +293,7 @@ function IntelligenceSection() {
                 </p>
                 <p
                   style={{
-                    fontFamily: "Inter, sans-serif",
+                    fontFamily: "var(--font-sans)",
                     fontSize: "0.92rem",
                     lineHeight: 1.72,
                     color: "var(--text-secondary)",
@@ -324,7 +324,7 @@ function IntelligenceSection() {
             <div style={{ display: "flex", flexDirection: "column" }}>
               <h3
                 style={{
-                  fontFamily: "Inter, sans-serif",
+                  fontFamily: "var(--font-sans)",
                   fontSize: "1.1rem",
                   fontWeight: 600,
                   color: "var(--text-primary)",
@@ -336,7 +336,7 @@ function IntelligenceSection() {
               <div style={{ display: "flex", flexDirection: "column", gap: 16, flex: 1 }}>
                 <p
                   style={{
-                    fontFamily: "Inter, sans-serif",
+                    fontFamily: "var(--font-sans)",
                     fontSize: "0.92rem",
                     lineHeight: 1.72,
                     color: "var(--text-secondary)",
@@ -349,7 +349,7 @@ function IntelligenceSection() {
                 </p>
                 <p
                   style={{
-                    fontFamily: "Inter, sans-serif",
+                    fontFamily: "var(--font-sans)",
                     fontSize: "0.92rem",
                     lineHeight: 1.72,
                     color: "var(--text-secondary)",
@@ -362,7 +362,7 @@ function IntelligenceSection() {
                 </p>
                 <p
                   style={{
-                    fontFamily: "Inter, sans-serif",
+                    fontFamily: "var(--font-sans)",
                     fontSize: "0.92rem",
                     lineHeight: 1.72,
                     color: "var(--text-secondary)",
@@ -545,7 +545,7 @@ function RoadmapSection() {
                     </div>
                     <h3
                       style={{
-                        fontFamily: "Inter, sans-serif",
+                        fontFamily: "var(--font-sans)",
                         fontSize: "1rem",
                         fontWeight: 600,
                         color: "var(--text-primary)",
@@ -556,7 +556,7 @@ function RoadmapSection() {
                     </h3>
                     <p
                       style={{
-                        fontFamily: "Inter, sans-serif",
+                        fontFamily: "var(--font-sans)",
                         fontSize: "0.88rem",
                         lineHeight: 1.65,
                         color: "var(--text-secondary)",
@@ -602,7 +602,7 @@ function ClosingSection() {
           <div style={{ marginBottom: 36 }}>
             <p
               style={{
-                fontFamily: "Inter, sans-serif",
+                fontFamily: "var(--font-sans)",
                 fontSize: "0.85rem",
                 color: "var(--text-muted)",
                 margin: "0 0 6px",
@@ -612,7 +612,7 @@ function ClosingSection() {
             </p>
             <p
               style={{
-                fontFamily: "Inter, sans-serif",
+                fontFamily: "var(--font-sans)",
                 fontSize: "0.85rem",
                 color: "var(--text-muted)",
                 margin: 0,
@@ -673,7 +673,7 @@ function WaitlistSection() {
           <SectionHeadline>Be first when Phase 4 opens.</SectionHeadline>
           <p
             style={{
-              fontFamily: "Inter, sans-serif",
+              fontFamily: "var(--font-sans)",
               fontSize: "0.95rem",
               lineHeight: 1.65,
               color: "var(--text-secondary)",
@@ -706,7 +706,7 @@ function WaitlistSection() {
               </div>
               <p
                 style={{
-                  fontFamily: "Inter, sans-serif",
+                  fontFamily: "var(--font-sans)",
                   fontSize: "0.95rem",
                   color: "var(--text-primary)",
                   margin: 0,
@@ -745,7 +745,7 @@ function WaitlistSection() {
 
           <p
             style={{
-              fontFamily: "Inter, sans-serif",
+              fontFamily: "var(--font-sans)",
               fontSize: "0.7rem",
               color: "var(--text-muted)",
               margin: "16px 0 0",
@@ -772,7 +772,7 @@ function Footer() {
     >
       <p
         style={{
-          fontFamily: "Inter, sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.7rem",
           color: "var(--text-muted)",
           margin: "0 0 8px",

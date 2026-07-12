@@ -12,7 +12,7 @@ export default function TestimonialsSection() {
     >
       <p
         style={{
-          fontFamily: 'JetBrains Mono, monospace',
+          fontFamily: 'var(--font-mono)',
           fontSize: '0.75rem',
           color: 'var(--accent-primary)',
           letterSpacing: '0.15em',

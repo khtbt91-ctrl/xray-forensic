@@ -1,6 +1,6 @@
 "use client";
 
-const MONO = "'JetBrains Mono', monospace";
+const MONO = "var(--font-mono)";
 
 // Pre-seeded anonymized findings — replace with API call once real data flows
 // Format reflects real X-Ray output language

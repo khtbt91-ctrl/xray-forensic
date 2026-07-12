@@ -31,7 +31,7 @@ export default function PreChallengeSection() {
 
             <h2
               style={{
-                fontFamily: "Inter, sans-serif",
+                fontFamily: "var(--font-sans)",
                 fontSize: "clamp(24px, 3.5vw, 40px)",
                 fontWeight: 700,
                 color: "var(--text-primary)",
@@ -44,7 +44,7 @@ export default function PreChallengeSection() {
 
             <p
               style={{
-                fontFamily: "Inter, sans-serif",
+                fontFamily: "var(--font-sans)",
                 fontSize: "0.9rem",
                 color: "var(--text-secondary)",
                 lineHeight: 1.65,
@@ -59,7 +59,7 @@ export default function PreChallengeSection() {
 
             <p
               style={{
-                fontFamily: "Inter, sans-serif",
+                fontFamily: "var(--font-sans)",
                 fontSize: "0.9rem",
                 color: "var(--text-secondary)",
                 lineHeight: 1.65,
@@ -87,7 +87,7 @@ export default function PreChallengeSection() {
             </p>
 
             <p style={{
-              fontFamily: 'JetBrains Mono, monospace',
+              fontFamily: 'var(--font-mono)',
               fontSize: '0.8rem',
               color: 'var(--text-muted)',
               lineHeight: 1.65,
@@ -112,7 +112,7 @@ export default function PreChallengeSection() {
               </span>
               <span
                 style={{
-                  fontFamily: "Inter, sans-serif",
+                  fontFamily: "var(--font-sans)",
                   fontSize: "0.8rem",
                   color: "var(--text-muted)",
                   marginLeft: 8,
@@ -171,7 +171,7 @@ export default function PreChallengeSection() {
               </p>
               <p
                 style={{
-                  fontFamily: "Inter, sans-serif",
+                  fontFamily: "var(--font-sans)",
                   fontSize: "0.8rem",
                   color: "var(--text-secondary)",
                   margin: 0,
@@ -182,7 +182,7 @@ export default function PreChallengeSection() {
               <span style={{
                 fontSize: '0.65rem',
                 color: 'rgba(248,81,73,0.7)',
-                fontFamily: 'JetBrains Mono, monospace',
+                fontFamily: 'var(--font-mono)',
                 display: 'block',
                 marginTop: '4px',
               }}>
@@ -217,7 +217,7 @@ export default function PreChallengeSection() {
               </p>
               <p
                 style={{
-                  fontFamily: "Inter, sans-serif",
+                  fontFamily: "var(--font-sans)",
                   fontSize: "0.8rem",
                   color: "var(--text-secondary)",
                   margin: 0,
@@ -253,7 +253,7 @@ export default function PreChallengeSection() {
               </p>
               <p
                 style={{
-                  fontFamily: "Inter, sans-serif",
+                  fontFamily: "var(--font-sans)",
                   fontSize: "0.8rem",
                   color: "var(--text-secondary)",
                   margin: 0,
@@ -265,7 +265,7 @@ export default function PreChallengeSection() {
 
             <p
               style={{
-                fontFamily: "Inter, sans-serif",
+                fontFamily: "var(--font-sans)",
                 fontSize: "0.75rem",
                 color: "var(--text-muted)",
                 textAlign: "center",

@@ -13,8 +13,8 @@ import { useState } from "react";
  * Background shade: BASE (first of the 5/6/7 alternation).
  */
 
-const MONO  = "'JetBrains Mono', monospace";
-const SPACE = "'Inter', sans-serif";
+const MONO  = "var(--font-mono)";
+const SPACE = "var(--font-sans)";
 const GOLD  = "#38BDF8";
 const LOSS  = "#f85149";
 const BG    = "#0A0E14";

@@ -5,8 +5,8 @@ import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
 import NavBar from "../components/NavBar";
 
-const MONO  = "'JetBrains Mono', monospace";
-const SPACE = "'Inter', sans-serif";
+const MONO  = "var(--font-mono)";
+const SPACE = "var(--font-sans)";
 const GOLD  = "#38BDF8";
 const BG    = "#0A0E14";
 const CARD  = "#131A24";

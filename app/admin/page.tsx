@@ -11,7 +11,7 @@ const BG = '#050811'
 const CARD = '#0e1626'
 const BORDER = '#1e293b'
 const GOLD = '#e5b83c'
-const MONO = "'JetBrains Mono', monospace"
+const MONO = "var(--font-mono)"
 const SANS = "'Space Grotesk', sans-serif"
 
 const TIER_PRICES: Record<string, string> = {

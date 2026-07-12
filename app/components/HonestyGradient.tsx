@@ -162,7 +162,7 @@ export default function HonestyGradient() {
         <p
           className="honesty-tap-label"
           style={{
-            fontFamily: "Inter, sans-serif",
+            fontFamily: "var(--font-sans)",
             fontStyle: "italic",
             fontSize: "0.75rem",
             color: "var(--text-muted)",

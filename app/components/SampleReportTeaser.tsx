@@ -19,7 +19,7 @@ export default function SampleReportTeaser() {
   return (
     <section style={{ background: "#0A0E14", padding: "96px 24px", overflow: "hidden" }}>
       <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 12 }}>
+        <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 12 }}>
           SEE THE EVIDENCE
         </p>
         <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(28px, 4vw, 44px)", color: "#E6EDF3", margin: "0 0 48px" }}>
@@ -40,33 +40,33 @@ export default function SampleReportTeaser() {
             }}
           >
             <span style={{
-              position: "absolute", top: 12, right: 16, fontFamily: "'JetBrains Mono', monospace",
+              position: "absolute", top: 12, right: 16, fontFamily: "var(--font-mono)",
               fontSize: 9, letterSpacing: "0.1em", color: "var(--text-muted)",
               border: "1px solid var(--border-subtle)", padding: "2px 8px", borderRadius: 4,
             }}>
               SAMPLE — ILLUSTRATIVE
             </span>
 
-            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--text-muted)", textAlign: "left", margin: "0 0 16px" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--text-muted)", textAlign: "left", margin: "0 0 16px" }}>
               SUMMARY
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 20 }}>
               <div style={{ textAlign: "left" }}>
                 <p style={{ fontSize: 10, color: "var(--text-muted)", margin: "0 0 6px", letterSpacing: "0.08em" }}>BEHAVIORAL SCORE</p>
-                <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 17, color: "#ef4444", margin: 0, fontWeight: 700 }}>18/100</p>
+                <p style={{ fontFamily: "var(--font-mono)", fontSize: 17, color: "#ef4444", margin: 0, fontWeight: 700 }}>18/100</p>
               </div>
               <div style={{ textAlign: "left" }}>
                 <p style={{ fontSize: 10, color: "var(--text-muted)", margin: "0 0 6px", letterSpacing: "0.08em" }}>ARCHETYPE</p>
-                <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 17, color: "#E6EDF3", margin: 0, fontWeight: 700 }}>Revenge Chaser</p>
+                <p style={{ fontFamily: "var(--font-mono)", fontSize: 17, color: "#E6EDF3", margin: 0, fontWeight: 700 }}>Revenge Chaser</p>
               </div>
               <div style={{ textAlign: "left" }}>
                 <p style={{ fontSize: 10, color: "var(--text-muted)", margin: "0 0 6px", letterSpacing: "0.08em" }}>QUANTIFIED COST</p>
-                <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 17, color: "#38BDF8", margin: 0, fontWeight: 700 }}>-$3,200</p>
+                <p style={{ fontFamily: "var(--font-mono)", fontSize: 17, color: "#38BDF8", margin: 0, fontWeight: 700 }}>-$3,200</p>
               </div>
             </div>
 
             <div className="sample-teaser-flag" style={{ background: "#0A0E14", border: "1px solid #26313F", borderLeft: "3px solid #38BDF8", borderRadius: 8, padding: "14px 16px", textAlign: "left" }}>
-              <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "#38BDF8", margin: "0 0 6px" }}>
+              <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "#38BDF8", margin: "0 0 6px" }}>
                 BEHAVIORAL FLAG · 276 INSTANCES
               </p>
               <p style={{ fontSize: 13, color: "var(--text-secondary)", margin: 0, lineHeight: 1.6 }}>
@@ -78,7 +78,7 @@ export default function SampleReportTeaser() {
 
         <Link
           href="/sample"
-          style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 14, color: "#38BDF8", textDecoration: "none", letterSpacing: "0.04em" }}
+          style={{ fontFamily: "var(--font-mono)", fontSize: 14, color: "#38BDF8", textDecoration: "none", letterSpacing: "0.04em" }}
         >
           View the Full Sample Report →
         </Link>

@@ -124,7 +124,7 @@ export default function PainWall() {
             Target: Profit factor &gt; 1.3 over 30 trades.
           </p>
           <p style={{
-            fontFamily: 'JetBrains Mono, monospace',
+            fontFamily: 'var(--font-mono)',
             fontSize: '0.8rem',
             color: 'var(--warning)',
             textAlign: 'center',

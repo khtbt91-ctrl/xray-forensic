@@ -6,8 +6,8 @@
  * Wire into app/page.tsx (after OneTimeProducts, before FaqSection).
  */
 
-const MONO = "'JetBrains Mono', monospace";
-const SPACE = "'Inter', sans-serif";
+const MONO = "var(--font-mono)";
+const SPACE = "var(--font-sans)";
 const GOLD = "#38BDF8";
 const CARD = "#131A24";
 const BORDER = "#26313F";

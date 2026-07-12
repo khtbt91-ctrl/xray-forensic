@@ -33,7 +33,7 @@ export default function TrustBar() {
                 ·
               </span>
             )}
-            <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.75rem", color: "var(--text-muted)" }}>
+            <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--text-muted)" }}>
               {item}
             </span>
           </Fragment>

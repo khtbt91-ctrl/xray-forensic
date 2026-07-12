@@ -67,7 +67,7 @@ export default function HeroSection() {
         {/* Eyebrow — demoted positioning line (D-5) */}
         <p
           style={{
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: "13px",
             color: "#38BDF8",
             letterSpacing: "0.12em",
@@ -98,7 +98,7 @@ export default function HeroSection() {
         <p
           style={{
             fontSize: "18px",
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "var(--font-sans)",
             color: "#8B98A9",
             lineHeight: 1.6,
             maxWidth: "560px",
@@ -135,7 +135,7 @@ export default function HeroSection() {
               color: "var(--bg)",
               border: "none",
               borderRadius: "8px",
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "var(--font-sans)",
               fontWeight: 700,
               fontSize: "15px",
               cursor: loading ? "not-allowed" : "pointer",
@@ -163,7 +163,7 @@ export default function HeroSection() {
               color: "#8B98A9",
               border: "1px solid #26313F",
               borderRadius: "8px",
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "var(--font-sans)",
               fontWeight: 600,
               fontSize: "15px",
               textDecoration: "none",
@@ -184,7 +184,7 @@ export default function HeroSection() {
 
         <p
           style={{
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: "10px",
             color: "var(--text-muted)",
             letterSpacing: "0.08em",

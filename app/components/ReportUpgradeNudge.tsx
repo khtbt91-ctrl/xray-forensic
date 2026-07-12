@@ -23,7 +23,7 @@ export default function ReportUpgradeNudge({
     >
       <p
         style={{
-          fontFamily: 'JetBrains Mono, monospace',
+          fontFamily: 'var(--font-mono)',
           fontSize: '0.7rem',
           color: 'var(--accent-primary)',
           letterSpacing: '0.1em',
@@ -97,7 +97,7 @@ export default function ReportUpgradeNudge({
             color: '#8B98A9',
             fontSize: '0.72rem',
             marginTop: '8px',
-            fontFamily: 'JetBrains Mono, monospace',
+            fontFamily: 'var(--font-mono)',
             textDecoration: 'none',
             cursor: 'pointer',
             transition: 'color 0.15s',

@@ -7,8 +7,8 @@ import { useAuth } from "@/lib/auth-context";
 import NavBar from "../components/NavBar";
 
 const GOLD = "#38BDF8";
-const MONO = "'JetBrains Mono', monospace";
-const SPACE = "'Inter', sans-serif";
+const MONO = "var(--font-mono)";
+const SPACE = "var(--font-sans)";
 
 const TIERS = [
   {

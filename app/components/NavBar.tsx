@@ -79,7 +79,7 @@ export default function NavBar() {
             <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <span
                 style={{
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "var(--font-sans)",
                   fontWeight: 900,
                   fontStyle: "italic",
                   fontSize: "1.35rem",
@@ -92,7 +92,7 @@ export default function NavBar() {
               </span>
               <span
                 style={{
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "var(--font-sans)",
                   fontWeight: 300,
                   fontSize: "1.1rem",
                   letterSpacing: "0.18em",
@@ -122,7 +122,7 @@ export default function NavBar() {
                 href={item.href}
                 onClick={item.href.startsWith("/#") ? (e) => handleNavClick(e, item.id) : undefined}
                 style={{
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "var(--font-sans)",
                   fontSize: "0.8rem",
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
@@ -154,7 +154,7 @@ export default function NavBar() {
                     borderRadius: "100px",
                     padding: "4px 12px",
                     fontSize: "0.7rem",
-                    fontFamily: "'JetBrains Mono', monospace",
+                    fontFamily: "var(--font-mono)",
                     background: "rgba(56, 189, 248,0.08)",
                     border: "1px solid rgba(56, 189, 248,0.35)",
                     color: "#38BDF8",
@@ -183,7 +183,7 @@ export default function NavBar() {
                     borderRadius: "100px",
                     padding: "4px 12px",
                     fontSize: "0.7rem",
-                    fontFamily: "'JetBrains Mono', monospace",
+                    fontFamily: "var(--font-mono)",
                     background: "#0a1120",
                     border: "1px solid #26313F",
                     color: "#8B98A9",
@@ -204,7 +204,7 @@ export default function NavBar() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "6px",
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "var(--font-sans)",
                 fontWeight: 600,
                 fontSize: "0.8rem",
                 letterSpacing: "0.08em",
