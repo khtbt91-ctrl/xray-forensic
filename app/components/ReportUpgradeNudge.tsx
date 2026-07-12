@@ -94,7 +94,7 @@ export default function ReportUpgradeNudge({
           href="/payment?tier=forensic&amount=49&type=one-time"
           style={{
             display: 'block',
-            color: '#94a3b8',
+            color: '#8B98A9',
             fontSize: '0.72rem',
             marginTop: '8px',
             fontFamily: 'JetBrains Mono, monospace',
@@ -102,8 +102,8 @@ export default function ReportUpgradeNudge({
             cursor: 'pointer',
             transition: 'color 0.15s',
           }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = '#e5b83c'; (e.currentTarget as HTMLAnchorElement).style.textDecoration = 'underline'; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = '#94a3b8'; (e.currentTarget as HTMLAnchorElement).style.textDecoration = 'none'; }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = '#38BDF8'; (e.currentTarget as HTMLAnchorElement).style.textDecoration = 'underline'; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = '#8B98A9'; (e.currentTarget as HTMLAnchorElement).style.textDecoration = 'none'; }}
         >
           Or $49 one-time · No commitment
         </a>

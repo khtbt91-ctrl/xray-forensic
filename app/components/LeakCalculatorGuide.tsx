@@ -10,14 +10,14 @@ import { useAuth } from "@/lib/auth-context";
  */
 
 const MONO  = "'JetBrains Mono', monospace";
-const SPACE = "'Space Grotesk', sans-serif";
-const GOLD  = "#e5b83c";
+const SPACE = "'Inter', sans-serif";
+const GOLD  = "#38BDF8";
 const LOSS  = "#f85149";
-const BG    = "#050811";
-const CARD  = "#0e1626";
-const BORDER = "#1e293b";
-const TEXT  = "#f8fafc";
-const MUTED = "#94a3b8";
+const BG    = "#0A0E14";
+const CARD  = "#131A24";
+const BORDER = "#26313F";
+const TEXT  = "#E6EDF3";
+const MUTED = "#8B98A9";
 
 const LEAKS: Record<string, { label: string; multiple: number; hint: string; penalty: number }> = {
   revenge:    { label: "Revenge trading",            multiple: 1.8, penalty: 1.35, hint: "Entering again right after a loss to win it back."   },
@@ -341,24 +341,24 @@ decay = E_b − E_d`}
         @media (max-width: 768px) { .leak-grid { grid-template-columns: 1fr !important; } }
         .calc-slider {
           -webkit-appearance: none; appearance: none;
-          height: 4px; background: #1e293b; border-radius: 2px;
+          height: 4px; background: #26313F; border-radius: 2px;
           outline: none; cursor: pointer;
         }
         .calc-slider::-webkit-slider-thumb {
           -webkit-appearance: none; appearance: none;
           width: 14px; height: 14px; border-radius: 50%;
-          background: #e5b83c; cursor: pointer;
-          border: 2px solid #0e1626;
-          box-shadow: 0 0 6px rgba(229,184,60,0.5);
+          background: #38BDF8; cursor: pointer;
+          border: 2px solid #131A24;
+          box-shadow: 0 0 6px rgba(56, 189, 248,0.5);
         }
         .calc-slider::-moz-range-thumb {
           width: 14px; height: 14px; border-radius: 50%;
-          background: #e5b83c; cursor: pointer;
-          border: 2px solid #0e1626;
-          box-shadow: 0 0 6px rgba(229,184,60,0.5);
+          background: #38BDF8; cursor: pointer;
+          border: 2px solid #131A24;
+          box-shadow: 0 0 6px rgba(56, 189, 248,0.5);
         }
         .calc-slider::-webkit-slider-runnable-track {
-          background: #1e293b; border-radius: 2px;
+          background: #26313F; border-radius: 2px;
         }
       `}</style>
     </section>

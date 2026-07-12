@@ -7,12 +7,12 @@
  */
 
 const MONO = "'JetBrains Mono', monospace";
-const SPACE = "'Space Grotesk', sans-serif";
-const GOLD = "#e5b83c";
-const CARD = "#0e1626";
-const BORDER = "#1e293b";
-const TEXT = "#f8fafc";
-const MUTED = "#94a3b8";
+const SPACE = "'Inter', sans-serif";
+const GOLD = "#38BDF8";
+const CARD = "#131A24";
+const BORDER = "#26313F";
+const TEXT = "#E6EDF3";
+const MUTED = "#8B98A9";
 
 const PROGRAMS = [
   {

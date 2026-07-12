@@ -38,16 +38,16 @@ export const metadata: Metadata = {
 };
 
 const MONO = "'JetBrains Mono', monospace";
-const SPACE = "'Space Grotesk', sans-serif";
+const SPACE = "'Inter', sans-serif";
 
 export default function LandingPage() {
   return (
-    <main style={{ minHeight: "100vh", background: "#050811", color: "#f8fafc" }}>
+    <main style={{ minHeight: "100vh", background: "#0A0E14", color: "#E6EDF3" }}>
       <NavBar />
       <HeroSection />
       <div style={{
-        borderTop: '1px solid #1e293b',
-        borderBottom: '1px solid #1e293b',
+        borderTop: '1px solid #26313F',
+        borderBottom: '1px solid #26313F',
         background: '#0a1020',
         padding: '12px 40px',
         display: 'flex',
@@ -94,12 +94,12 @@ export default function LandingPage() {
       <RecoveryPrograms />
       <FaqSection />
       <FinalCta />
-      <footer style={{ borderTop: "1px solid #1e293b", background: "#050811" }}>
+      <footer style={{ borderTop: "1px solid #26313F", background: "#0A0E14" }}>
         <div style={{ width: "100%", maxWidth: 1400, margin: "0 auto", padding: "0 32px" }}>
           <div className="footer-grid">
             {/* Brand */}
             <div>
-              <p style={{ fontFamily: SPACE, fontSize: "1rem", fontWeight: 700, color: "#f8fafc", letterSpacing: "0.04em", margin: "0 0 4px" }}>
+              <p style={{ fontFamily: SPACE, fontSize: "1rem", fontWeight: 700, color: "#E6EDF3", letterSpacing: "0.04em", margin: "0 0 4px" }}>
                 X-RAY FORENSIC
               </p>
               <p style={{ fontFamily: MONO, fontSize: "0.6rem", color: "var(--text-muted)", letterSpacing: "0.15em", textTransform: "uppercase", margin: "0 0 14px" }}>
@@ -139,13 +139,13 @@ export default function LandingPage() {
           </div>
 
           {/* Bottom bar */}
-          <div style={{ borderTop: "1px solid #1e293b", paddingTop: 24, paddingBottom: 24, textAlign: "center" }}>
+          <div style={{ borderTop: "1px solid #26313F", paddingTop: 24, paddingBottom: 24, textAlign: "center" }}>
             <p style={{ fontFamily: MONO, fontSize: "9px", color: "#10b981", letterSpacing: "0.12em", marginBottom: "8px" }}>
               [SYSTEM STATUS: ONLINE]
             </p>
             <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: "var(--text-muted)", margin: "0 0 8px" }}>
               For prop firms and institutional desks:{" "}
-              <a href="mailto:admin@xrayforensic.com" style={{ color: "#e5b83c", textDecoration: "none" }}>
+              <a href="mailto:admin@xrayforensic.com" style={{ color: "#38BDF8", textDecoration: "none" }}>
                 admin@xrayforensic.com
               </a>
             </p>

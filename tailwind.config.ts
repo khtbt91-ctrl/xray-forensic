@@ -9,28 +9,32 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Gemini brand tokens — enables text-brand-gold, bg-brand-bg, etc.
-        "brand-gold":       "#e5b83c",
-        "brand-gold-dark":  "#b88d1d",
-        "brand-bg":         "#050811",
-        "brand-slate":      "#0b1220",
-        "brand-card":       "#0e1626",
-        "brand-card-hover": "#141e35",
-        "brand-border":     "#1e293b",
+        // Blue clinical system (campaign tokens) — see projects/xray/site-migration-spec.md
+        "brand-accent":      "#38BDF8",
+        "brand-accent-dark": "#0EA5E9",
+        "brand-accent-dim":  "#1E5C78",
+        // Old names kept as value-swapped aliases so existing classes keep working
+        "brand-gold":       "#38BDF8",
+        "brand-gold-dark":  "#0EA5E9",
+        "brand-bg":         "#0A0E14",
+        "brand-slate":      "#0F141D",
+        "brand-card":       "#131A24",
+        "brand-card-hover": "#1A2330",
+        "brand-border":     "#26313F",
         // Legacy aliases
-        "bg-base":       "#050811",
-        "bg-card":       "#0e1626",
-        "bg-elevated":   "#141e35",
-        "border-subtle": "#1e293b",
+        "bg-base":       "#0A0E14",
+        "bg-card":       "#131A24",
+        "bg-elevated":   "#1A2330",
+        "border-subtle": "#26313F",
         "border-active": "#94a3b8",
-        "accent-primary":"#e5b83c",
+        "accent-primary":"#38BDF8",
         profit:  "#10b981",
         loss:    "#ef4444",
         warning: "#f59e0b",
       },
       fontFamily: {
         sans:    ["Inter", "system-ui", "sans-serif"],
-        display: ["Space Grotesk", "system-ui", "sans-serif"],
+        display: ["Inter", "system-ui", "sans-serif"],
         mono:    ["JetBrains Mono", "monospace"],
       },
       animation: {

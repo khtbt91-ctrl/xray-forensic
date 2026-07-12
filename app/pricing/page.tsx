@@ -6,9 +6,9 @@ import { Suspense, useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import NavBar from "../components/NavBar";
 
-const GOLD = "#e5b83c";
+const GOLD = "#38BDF8";
 const MONO = "'JetBrains Mono', monospace";
-const SPACE = "'Space Grotesk', sans-serif";
+const SPACE = "'Inter', sans-serif";
 
 const TIERS = [
   {
@@ -103,7 +103,7 @@ function PricingPageInner() {
   const freeCTALabel = !user ? "Start Free →" : "View Dashboard →";
 
   return (
-    <main style={{ minHeight: "100vh", background: "#050811", color: "#f8fafc" }}>
+    <main style={{ minHeight: "100vh", background: "#0A0E14", color: "#E6EDF3" }}>
       <style>{`
         .pricing-grid {
           display: grid;
@@ -129,7 +129,7 @@ function PricingPageInner() {
           padding: "calc(64px + 24px) 24px 0",
         }}>
           <div style={{
-            background: "rgba(229,184,60,0.06)",
+            background: "rgba(56, 189, 248,0.06)",
             border: `1px solid ${GOLD}`,
             borderRadius: 8,
             padding: "14px 20px",
@@ -185,7 +185,7 @@ function PricingPageInner() {
           fontSize: "clamp(2rem, 4vw, 3rem)",
           fontWeight: 800,
           letterSpacing: "-0.02em",
-          color: "#f8fafc",
+          color: "#E6EDF3",
           lineHeight: 1.1,
           margin: "0 0 16px",
           textTransform: "uppercase",
@@ -194,7 +194,7 @@ function PricingPageInner() {
         </h1>
         <p style={{
           fontSize: 16,
-          color: "#94a3b8",
+          color: "#8B98A9",
           lineHeight: 1.7,
           maxWidth: 520,
           margin: "0 auto",
@@ -211,11 +211,11 @@ function PricingPageInner() {
             <div
               key={tier.id}
               id={`tier-${tier.id}`}
-              className={tier.popular ? "glow-gold" : ""}
+              className={tier.popular ? "glow-accent" : ""}
               style={{
                 position: "relative",
-                background: "#0e1626",
-                border: tier.popular ? `2px solid ${GOLD}` : "1px solid #1e293b",
+                background: "#131A24",
+                border: tier.popular ? `2px solid ${GOLD}` : "1px solid #26313F",
                 borderRadius: 12,
                 padding: 28,
                 display: "flex",
@@ -254,7 +254,7 @@ function PricingPageInner() {
                 fontWeight: 700,
                 letterSpacing: "0.15em",
                 textTransform: "uppercase",
-                color: tier.popular ? GOLD : "#94a3b8",
+                color: tier.popular ? GOLD : "#8B98A9",
                 margin: "0 0 6px",
               }}>
                 {tier.name}
@@ -263,7 +263,7 @@ function PricingPageInner() {
               {/* Tagline */}
               <p style={{
                 fontSize: 13,
-                color: "#94a3b8",
+                color: "#8B98A9",
                 margin: "0 0 20px",
                 lineHeight: 1.5,
               }}>
@@ -277,7 +277,7 @@ function PricingPageInner() {
                     fontFamily: MONO,
                     fontSize: 40,
                     fontWeight: 800,
-                    color: "#f8fafc",
+                    color: "#E6EDF3",
                     lineHeight: 1,
                     display: "block",
                   }}>
@@ -300,7 +300,7 @@ function PricingPageInner() {
                     fontFamily: MONO,
                     fontSize: 40,
                     fontWeight: 800,
-                    color: "#f8fafc",
+                    color: "#E6EDF3",
                     lineHeight: 1,
                   }}>
                     {tier.price}
@@ -319,7 +319,7 @@ function PricingPageInner() {
               )}
 
               {/* Divider */}
-              <div style={{ height: 1, background: "#1e293b", marginBottom: 20 }} />
+              <div style={{ height: 1, background: "#26313F", marginBottom: 20 }} />
 
               {/* Features */}
               <ul style={{
@@ -364,10 +364,10 @@ function PricingPageInner() {
                     display: "block",
                     textAlign: "center",
                     padding: "12px 20px",
-                    background: "#0b1220",
-                    border: "1px solid #1e293b",
+                    background: "#0F141D",
+                    border: "1px solid #26313F",
                     borderRadius: 6,
-                    color: "#94a3b8",
+                    color: "#8B98A9",
                     fontFamily: SPACE,
                     fontWeight: 600,
                     fontSize: 13,
@@ -382,10 +382,10 @@ function PricingPageInner() {
                   onClick={() => router.push(`/payment?tier=${tier.id}&amount=${tier.price ?? ""}`)}
                   style={{
                     padding: "12px 20px",
-                    background: tier.popular ? GOLD : "#0b1220",
-                    border: `1px solid ${tier.popular ? GOLD : "#1e293b"}`,
+                    background: tier.popular ? GOLD : "#0F141D",
+                    border: `1px solid ${tier.popular ? GOLD : "#26313F"}`,
                     borderRadius: 6,
-                    color: tier.popular ? "#000000" : "#94a3b8",
+                    color: tier.popular ? "#000000" : "#8B98A9",
                     fontFamily: SPACE,
                     fontSize: 13,
                     fontWeight: tier.popular ? 700 : 600,
@@ -413,7 +413,7 @@ function PricingPageInner() {
           Institutional and prop firm partnerships →{" "}
           <a
             href="mailto:admin@xrayforensic.com"
-            style={{ color: "#94a3b8", textDecoration: "none" }}
+            style={{ color: "#8B98A9", textDecoration: "none" }}
           >
             admin@xrayforensic.com
           </a>
@@ -422,8 +422,8 @@ function PricingPageInner() {
 
       {/* Bottom CTA */}
       <div style={{
-        borderTop: "1px solid #1e293b",
-        background: "#0e1626",
+        borderTop: "1px solid #26313F",
+        background: "#131A24",
         padding: "72px 24px",
         textAlign: "center",
       }}>
@@ -431,7 +431,7 @@ function PricingPageInner() {
           fontFamily: SPACE,
           fontSize: 24,
           fontWeight: 700,
-          color: "#f8fafc",
+          color: "#E6EDF3",
           lineHeight: 1.5,
           margin: "0 0 4px",
         }}>
@@ -441,7 +441,7 @@ function PricingPageInner() {
           fontFamily: SPACE,
           fontSize: 24,
           fontWeight: 400,
-          color: "#94a3b8",
+          color: "#8B98A9",
           lineHeight: 1.5,
           margin: "0 0 32px",
         }}>

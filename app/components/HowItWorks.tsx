@@ -6,11 +6,11 @@ export default function HowItWorks() {
       num: "1",
       title: "UPLOAD YOUR HISTORY",
       badge: "[DATA INGESTION]",
-      badgeColor: "#e5b83c",
-      iconBg: "rgba(229,184,60,0.1)",
-      iconStroke: "#e5b83c",
+      badgeColor: "#38BDF8",
+      iconBg: "rgba(56, 189, 248,0.1)",
+      iconStroke: "#38BDF8",
       icon: (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e5b83c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
           <polyline points="17 8 12 3 7 8"/>
           <line x1="12" y1="3" x2="12" y2="15"/>
@@ -22,11 +22,11 @@ export default function HowItWorks() {
       num: "2",
       title: "DIAGNOSE WITH AI",
       badge: "[FORENSIC SCANNING]",
-      badgeColor: "#e5b83c",
-      iconBg: "rgba(229,184,60,0.1)",
-      iconStroke: "#e5b83c",
+      badgeColor: "#38BDF8",
+      iconBg: "rgba(56, 189, 248,0.1)",
+      iconStroke: "#38BDF8",
       icon: (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e5b83c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="11" cy="11" r="8"/>
           <line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
@@ -55,8 +55,8 @@ export default function HowItWorks() {
       id="how-it-works"
       style={{
         padding: "96px 24px",
-        background: "#050811",
-        borderTop: "1px solid #1e293b",
+        background: "#0A0E14",
+        borderTop: "1px solid #26313F",
       }}
     >
       <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
@@ -64,7 +64,7 @@ export default function HowItWorks() {
         <p style={{
           fontFamily: "'JetBrains Mono', monospace",
           fontSize: "11px",
-          color: "#e5b83c",
+          color: "#38BDF8",
           letterSpacing: "0.15em",
           textTransform: "uppercase",
           textAlign: "center",
@@ -74,10 +74,10 @@ export default function HowItWorks() {
         </p>
 
         <h2 style={{
-          fontFamily: "'Space Grotesk', sans-serif",
+          fontFamily: "'Inter', sans-serif",
           fontSize: "clamp(1.75rem, 3vw, 2rem)",
           fontWeight: 700,
-          color: "#f8fafc",
+          color: "#E6EDF3",
           textAlign: "center",
           letterSpacing: "0.05em",
           textTransform: "uppercase",
@@ -95,19 +95,19 @@ export default function HowItWorks() {
             <div
               key={step.num}
               style={{
-                background: "#0e1626",
-                border: "1px solid #1e293b",
+                background: "#131A24",
+                border: "1px solid #26313F",
                 borderRadius: "10px",
                 padding: "28px",
                 transition: "border-color 0.2s, background 0.2s",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = "var(--border-active)";
-                e.currentTarget.style.background = "#141e35";
+                e.currentTarget.style.background = "#1A2330";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "#1e293b";
-                e.currentTarget.style.background = "#0e1626";
+                e.currentTarget.style.borderColor = "#26313F";
+                e.currentTarget.style.background = "#131A24";
               }}
             >
               {/* Icon */}
@@ -126,10 +126,10 @@ export default function HowItWorks() {
 
               {/* Title */}
               <h3 style={{
-                fontFamily: "'Space Grotesk', sans-serif",
+                fontFamily: "'Inter', sans-serif",
                 fontSize: "15px",
                 fontWeight: 700,
-                color: "#f8fafc",
+                color: "#E6EDF3",
                 marginBottom: "4px",
               }}>
                 {step.num}. {step.title}
@@ -149,7 +149,7 @@ export default function HowItWorks() {
               {/* Body */}
               <p style={{
                 fontSize: "14px",
-                color: "#94a3b8",
+                color: "#8B98A9",
                 lineHeight: 1.7,
               }}>
                 {step.body}

@@ -172,8 +172,8 @@ export default function TierCards() {
               : "var(--border-subtle)";
             const shadow = tier.highlight
               ? isHovered
-                ? "0 0 30px rgba(229,184,60,0.2)"
-                : "0 0 20px rgba(229,184,60,0.1)"
+                ? "0 0 30px rgba(56, 189, 248,0.2)"
+                : "0 0 20px rgba(56, 189, 248,0.1)"
               : "none";
 
             return (

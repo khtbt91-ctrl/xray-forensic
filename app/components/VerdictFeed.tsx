@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 const MONO = "'JetBrains Mono', monospace";
-const SPACE = "'Space Grotesk', sans-serif";
+const SPACE = "'Inter', sans-serif";
 
 const ARCHETYPE_LEAK: Record<string, string> = {
   "Session Tourist":    "Off-session trading leak",
@@ -32,7 +32,7 @@ interface Verdict {
 
 function scoreColor(score: number): string {
   if (score < 40) return "var(--loss)";
-  if (score <= 70) return "#e5b83c";
+  if (score <= 70) return "#38BDF8";
   return "#10b981";
 }
 
@@ -42,8 +42,8 @@ function VerdictCard({ verdict }: { verdict: Verdict }) {
 
   return (
     <div style={{
-      background: '#0e1626',
-      border: '1px solid #1e293b',
+      background: '#131A24',
+      border: '1px solid #26313F',
       borderRadius: 8,
       padding: '22px 26px',
       width: 360,
@@ -55,7 +55,7 @@ function VerdictCard({ verdict }: { verdict: Verdict }) {
         <span style={{
           position: 'absolute', top: 12, right: 12,
           fontFamily: MONO, fontSize: 8, color: 'var(--text-muted)',
-          letterSpacing: '0.1em', background: '#1e293b',
+          letterSpacing: '0.1em', background: '#26313F',
           padding: '2px 6px', borderRadius: 3,
         }}>EXAMPLE</span>
       )}
@@ -87,7 +87,7 @@ function VerdictCard({ verdict }: { verdict: Verdict }) {
       <div style={{ marginBottom: 6 }}>
         <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--text-muted)' }}>Biggest Leak:</span>
       </div>
-      <div style={{ fontFamily: MONO, fontSize: 12, color: '#94a3b8', marginBottom: 18 }}>
+      <div style={{ fontFamily: MONO, fontSize: 12, color: '#8B98A9', marginBottom: 18 }}>
         {leak}
       </div>
 
@@ -133,12 +133,12 @@ export default function VerdictFeed() {
   const current = verdicts[activeIdx];
 
   return (
-    <section style={{ padding: '96px 0', background: '#050811' }}>
+    <section style={{ padding: '96px 0', background: '#0A0E14' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 40px' }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 52 }}>
           <p style={{
-            fontFamily: MONO, fontSize: 10, color: '#e5b83c',
+            fontFamily: MONO, fontSize: 10, color: '#38BDF8',
             letterSpacing: '0.15em', textTransform: 'uppercase',
             margin: '0 0 16px',
           }}>
@@ -186,7 +186,7 @@ export default function VerdictFeed() {
                 width: i === activeIdx ? 20 : 6,
                 height: 6,
                 borderRadius: 3,
-                background: i === activeIdx ? '#e5b83c' : '#1e293b',
+                background: i === activeIdx ? '#38BDF8' : '#26313F',
                 border: 'none',
                 cursor: 'pointer',
                 padding: 0,

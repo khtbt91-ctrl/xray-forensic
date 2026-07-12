@@ -12,7 +12,7 @@ export default function HeroSection() {
     <section
       className="circuit-overlay"
       style={{
-        background: "#050811",
+        background: "#0A0E14",
         paddingTop: "calc(64px + 80px)",
         paddingBottom: "80px",
         paddingLeft: "24px",
@@ -32,8 +32,8 @@ export default function HeroSection() {
             display: "inline-flex",
             alignItems: "center",
             gap: "8px",
-            background: "rgba(229,184,60,0.08)",
-            border: "1px solid rgba(229,184,60,0.2)",
+            background: "rgba(56, 189, 248,0.08)",
+            border: "1px solid rgba(56, 189, 248,0.2)",
             borderRadius: "100px",
             padding: "6px 14px",
             marginBottom: "28px",
@@ -45,7 +45,7 @@ export default function HeroSection() {
               width: "7px",
               height: "7px",
               borderRadius: "50%",
-              background: "#e5b83c",
+              background: "#38BDF8",
               flexShrink: 0,
               display: "inline-block",
             }}
@@ -54,7 +54,7 @@ export default function HeroSection() {
             style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: "11px",
-              color: "#e5b83c",
+              color: "#38BDF8",
               letterSpacing: "0.1em",
               textTransform: "uppercase",
             }}
@@ -67,20 +67,20 @@ export default function HeroSection() {
         <h1
           className="hero-headline"
           style={{
-            fontFamily: "'Space Grotesk', sans-serif",
+            fontFamily: "'Inter', sans-serif",
             fontSize: "clamp(2.8rem, 5.5vw, 4rem)",
             fontWeight: 900,
             letterSpacing: "-0.03em",
             lineHeight: 1.05,
             margin: "0 0 20px",
-            color: "#f8fafc",
+            color: "#E6EDF3",
           }}
         >
           YOUR TRADES
           <br />
           <span
             style={{
-              background: "linear-gradient(135deg, #e5b83c 0%, #b88d1d 100%)",
+              background: "linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
@@ -95,7 +95,7 @@ export default function HeroSection() {
           className="hero-subheadline"
           style={{
             fontSize: "16px",
-            color: "#94a3b8",
+            color: "#8B98A9",
             lineHeight: 1.7,
             maxWidth: "560px",
             margin: "0 auto 10px",
@@ -108,7 +108,7 @@ export default function HeroSection() {
           style={{
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: "10px",
-            color: "#e5b83c",
+            color: "#38BDF8",
             letterSpacing: "0.1em",
             marginBottom: "36px",
           }}
@@ -137,22 +137,22 @@ export default function HeroSection() {
               alignItems: "center",
               gap: "8px",
               padding: "14px 32px",
-              background: loading ? "rgba(229,184,60,0.5)" : "#e5b83c",
+              background: loading ? "rgba(56, 189, 248,0.5)" : "#38BDF8",
               color: "#000",
               border: "none",
               borderRadius: "8px",
-              fontFamily: "'Space Grotesk', sans-serif",
+              fontFamily: "'Inter', sans-serif",
               fontWeight: 700,
               fontSize: "15px",
               cursor: loading ? "not-allowed" : "pointer",
-              boxShadow: "0 4px 20px rgba(229,184,60,0.25)",
+              boxShadow: "0 4px 20px rgba(56, 189, 248,0.25)",
               transition: "background 0.15s, box-shadow 0.15s",
             }}
             onMouseEnter={(e) => {
-              if (!loading) e.currentTarget.style.background = "#b88d1d";
+              if (!loading) e.currentTarget.style.background = "#0EA5E9";
             }}
             onMouseLeave={(e) => {
-              if (!loading) e.currentTarget.style.background = "#e5b83c";
+              if (!loading) e.currentTarget.style.background = "#38BDF8";
             }}
           >
             {loading ? "Processing..." : "Get Diagnosed"}
@@ -164,11 +164,11 @@ export default function HeroSection() {
               display: "inline-flex",
               alignItems: "center",
               padding: "14px 32px",
-              background: "#0e1626",
-              color: "#94a3b8",
-              border: "1px solid #1e293b",
+              background: "#131A24",
+              color: "#8B98A9",
+              border: "1px solid #26313F",
               borderRadius: "8px",
-              fontFamily: "'Space Grotesk', sans-serif",
+              fontFamily: "'Inter', sans-serif",
               fontWeight: 600,
               fontSize: "15px",
               textDecoration: "none",
@@ -176,11 +176,11 @@ export default function HeroSection() {
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = "var(--border-active)";
-              e.currentTarget.style.color = "#f8fafc";
+              e.currentTarget.style.color = "#E6EDF3";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "#1e293b";
-              e.currentTarget.style.color = "#94a3b8";
+              e.currentTarget.style.borderColor = "#26313F";
+              e.currentTarget.style.color = "#8B98A9";
             }}
           >
             See Sample Verdict

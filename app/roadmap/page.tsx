@@ -6,11 +6,11 @@ import Link from "next/link";
 import NavBar from "../components/NavBar";
 
 const MONO  = "'JetBrains Mono', monospace";
-const SPACE = "'Space Grotesk', sans-serif";
-const GOLD  = "#e5b83c";
-const BG    = "#050811";
-const CARD  = "#0e1626";
-const BORDER = "#1e293b";
+const SPACE = "'Inter', sans-serif";
+const GOLD  = "#38BDF8";
+const BG    = "#0A0E14";
+const CARD  = "#131A24";
+const BORDER = "#26313F";
 
 /* ─── FadeIn ───────────────────────────────────────────────────────────────── */
 
@@ -65,13 +65,13 @@ const STATUS_LABEL: Record<Status, string>  = {
 };
 const STATUS_BADGE_BG: Record<Status, string> = {
   live:       "rgba(16,185,129,0.12)",
-  building:   "rgba(229,184,60,0.12)",
+  building:   "rgba(56, 189, 248,0.12)",
   classified: "rgba(71,85,105,0.12)",
   redacted:   "rgba(30,41,59,0.4)",
 };
 const STATUS_CARD_BORDER: Record<Status, string> = {
   live:       "rgba(16,185,129,0.25)",
-  building:   `rgba(229,184,60,0.25)`,
+  building:   `rgba(56, 189, 248,0.25)`,
   classified: BORDER,
   redacted:   "#1a2030",
 };
@@ -299,7 +299,7 @@ function PhaseCard({ phase, isLast }: { phase: Phase; isLast: boolean }) {
             fontFamily:    SPACE,
             fontSize:      18,
             fontWeight:    700,
-            color:         isRedacted ? "#334155" : "#f8fafc",
+            color:         isRedacted ? "#334155" : "#E6EDF3",
             margin:        "0 0 10px",
             letterSpacing: "-0.01em",
           }}>
@@ -311,7 +311,7 @@ function PhaseCard({ phase, isLast }: { phase: Phase; isLast: boolean }) {
             fontFamily: MONO,
             fontSize:   12,
             lineHeight: 1.7,
-            color:      phase.status === "live" ? "#94a3b8" : "#64748b",
+            color:      phase.status === "live" ? "#8B98A9" : "#64748b",
             margin:     0,
             maxWidth:   520,
           }}>
@@ -409,7 +409,7 @@ function PageHeader() {
           fontFamily:    SPACE,
           fontSize:      "clamp(2rem, 5vw, 2.5rem)",
           fontWeight:    700,
-          color:         "#f8fafc",
+          color:         "#E6EDF3",
           margin:        "0 0 16px",
           lineHeight:    1.1,
           letterSpacing: "-0.02em",
@@ -419,7 +419,7 @@ function PageHeader() {
 
         <p style={{
           fontSize:   16,
-          color:      "#94a3b8",
+          color:      "#8B98A9",
           lineHeight: 1.65,
           maxWidth:   600,
           margin:     "0 0 28px",
@@ -454,7 +454,7 @@ function PageHeader() {
               SYSTEM STATUS: OPERATIONAL
             </span>
           </div>
-          <span style={{ color: "#1e293b", fontFamily: MONO, fontSize: 11 }}>·</span>
+          <span style={{ color: "#26313F", fontFamily: MONO, fontSize: 11 }}>·</span>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <span
               className="timeline-dot-active"
@@ -521,7 +521,7 @@ function Timeline() {
 function BottomCta() {
   return (
     <section style={{
-      background: "#0b1220",
+      background: "#0F141D",
       borderTop:  `1px solid ${BORDER}`,
       padding:    "80px 24px",
     }}>
@@ -535,7 +535,7 @@ function BottomCta() {
             fontFamily:    SPACE,
             fontSize:      "clamp(1.5rem, 4vw, 2rem)",
             fontWeight:    700,
-            color:         "#f8fafc",
+            color:         "#E6EDF3",
             margin:        "0 0 16px",
             letterSpacing: "-0.02em",
             lineHeight:    1.2,
@@ -582,7 +582,7 @@ function BottomCta() {
                 letterSpacing: "0.02em",
                 transition:    "background 0.15s",
               }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "#b88d1d" }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "#0EA5E9" }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = GOLD }}
             >
               Join the Community →
@@ -609,7 +609,7 @@ function BottomCta() {
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = GOLD
-                e.currentTarget.style.color = "#f8fafc"
+                e.currentTarget.style.color = "#E6EDF3"
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = `${GOLD}55`
@@ -639,7 +639,7 @@ function BottomCta() {
 
 export default function RoadmapPage() {
   return (
-    <main style={{ minHeight: "100vh", background: BG, color: "#f8fafc" }}>
+    <main style={{ minHeight: "100vh", background: BG, color: "#E6EDF3" }}>
       <NavBar />
       <PageHeader />
       <Timeline />

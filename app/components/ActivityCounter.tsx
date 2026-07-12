@@ -32,8 +32,8 @@ export default function ActivityCounter() {
 
   return (
     <div style={{
-      background: '#0e1626',
-      borderBottom: '1px solid #1e293b',
+      background: '#131A24',
+      borderBottom: '1px solid #26313F',
       padding: '10px 24px',
       display: 'flex',
       alignItems: 'center',
@@ -60,18 +60,18 @@ export default function ActivityCounter() {
       <span style={{
         fontFamily: MONO,
         fontSize: 11,
-        color: '#94a3b8',
+        color: '#8B98A9',
         letterSpacing: '0.05em',
       }}>
-        <span style={{ color: '#e5b83c', fontWeight: 700 }}>
+        <span style={{ color: '#38BDF8', fontWeight: 700 }}>
           {stats.total_traders_analyzed.toLocaleString()}
         </span>{' '}accounts diagnosed
         &nbsp;·&nbsp;
-        <span style={{ color: '#e5b83c', fontWeight: 700 }}>
+        <span style={{ color: '#38BDF8', fontWeight: 700 }}>
           {stats.total_leaks_identified.toLocaleString()}
         </span>{' '}behavioral leaks identified
         &nbsp;·&nbsp;
-        <span style={{ color: '#e5b83c', fontWeight: 700 }}>
+        <span style={{ color: '#38BDF8', fontWeight: 700 }}>
           ${stats.total_leaks_quantified.toLocaleString()}
         </span>{' '}in leaks quantified
       </span>

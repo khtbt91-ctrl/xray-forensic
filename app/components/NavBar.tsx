@@ -50,9 +50,9 @@ export default function NavBar() {
           position: "sticky",
           top: 0,
           zIndex: 50,
-          borderBottom: scrolled ? "1px solid #1e293b" : "1px solid transparent",
+          borderBottom: scrolled ? "1px solid #26313F" : "1px solid transparent",
           padding: "14px 32px",
-          background: "rgba(5,8,17,0.90)",
+          background: "rgba(10, 14, 20,0.90)",
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
           transition: "border-color 0.2s",
@@ -75,12 +75,12 @@ export default function NavBar() {
             <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <span
                 style={{
-                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                   fontWeight: 900,
                   fontStyle: "italic",
                   fontSize: "1.35rem",
-                  color: "#e5b83c",
-                  filter: "drop-shadow(0 0 8px rgba(229,184,60,0.4))",
+                  color: "#38BDF8",
+                  filter: "drop-shadow(0 0 8px rgba(56, 189, 248,0.4))",
                   letterSpacing: "0.04em",
                 }}
               >
@@ -88,7 +88,7 @@ export default function NavBar() {
               </span>
               <span
                 style={{
-                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                   fontWeight: 300,
                   fontSize: "1.1rem",
                   letterSpacing: "0.18em",
@@ -118,16 +118,16 @@ export default function NavBar() {
                 href={item.href}
                 onClick={item.href.startsWith("/#") ? (e) => handleNavClick(e, item.id) : undefined}
                 style={{
-                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                   fontSize: "0.8rem",
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
-                  color: "#94a3b8",
+                  color: "#8B98A9",
                   textDecoration: "none",
                   transition: "color 0.2s",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = "#f8fafc"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = "#94a3b8"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "#E6EDF3"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "#8B98A9"; }}
               >
                 {item.label}
               </Link>
@@ -151,9 +151,9 @@ export default function NavBar() {
                     padding: "4px 12px",
                     fontSize: "0.7rem",
                     fontFamily: "'JetBrains Mono', monospace",
-                    background: "rgba(229,184,60,0.08)",
-                    border: "1px solid rgba(229,184,60,0.35)",
-                    color: "#e5b83c",
+                    background: "rgba(56, 189, 248,0.08)",
+                    border: "1px solid rgba(56, 189, 248,0.35)",
+                    color: "#38BDF8",
                     textDecoration: "none",
                     whiteSpace: "nowrap",
                   }}
@@ -162,10 +162,10 @@ export default function NavBar() {
                   <span style={{ position: "relative", display: "inline-flex", width: "8px", height: "8px", flexShrink: 0 }}>
                     <span style={{
                       position: "absolute", inset: 0, borderRadius: "50%",
-                      background: "#e5b83c", opacity: 0.75,
+                      background: "#38BDF8", opacity: 0.75,
                       animation: "nav-ping 1s cubic-bezier(0,0,0.2,1) infinite",
                     }} />
-                    <span style={{ position: "relative", borderRadius: "50%", background: "#e5b83c", width: "8px", height: "8px" }} />
+                    <span style={{ position: "relative", borderRadius: "50%", background: "#38BDF8", width: "8px", height: "8px" }} />
                   </span>
                   <span>OPERATOR STATUS ACTIVE</span>
                 </Link>
@@ -181,12 +181,12 @@ export default function NavBar() {
                     fontSize: "0.7rem",
                     fontFamily: "'JetBrains Mono', monospace",
                     background: "#0a1120",
-                    border: "1px solid #1e293b",
-                    color: "#94a3b8",
+                    border: "1px solid #26313F",
+                    color: "#8B98A9",
                     whiteSpace: "nowrap",
                   }}
                 >
-                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#e5b83c", flexShrink: 0, display: "inline-block" }} />
+                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#38BDF8", flexShrink: 0, display: "inline-block" }} />
                   <span>GUEST LICENSE</span>
                 </div>
               )
@@ -200,28 +200,28 @@ export default function NavBar() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "6px",
-                fontFamily: "'Space Grotesk', sans-serif",
+                fontFamily: "'Inter', sans-serif",
                 fontWeight: 600,
                 fontSize: "0.8rem",
                 letterSpacing: "0.08em",
                 background: "transparent",
-                color: "#e5b83c",
-                border: "1px solid #e5b83c",
+                color: "#38BDF8",
+                border: "1px solid #38BDF8",
                 borderRadius: "4px",
                 padding: "7px 14px",
                 textDecoration: "none",
                 transition: "background 0.3s, color 0.3s, box-shadow 0.3s",
-                boxShadow: "0 0 15px rgba(229,184,60,0.05)",
+                boxShadow: "0 0 15px rgba(56, 189, 248,0.05)",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#e5b83c";
+                e.currentTarget.style.background = "#38BDF8";
                 e.currentTarget.style.color = "#000";
-                e.currentTarget.style.boxShadow = "0 0 20px rgba(229,184,60,0.3)";
+                e.currentTarget.style.boxShadow = "0 0 20px rgba(56, 189, 248,0.3)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = "#e5b83c";
-                e.currentTarget.style.boxShadow = "0 0 15px rgba(229,184,60,0.05)";
+                e.currentTarget.style.color = "#38BDF8";
+                e.currentTarget.style.boxShadow = "0 0 15px rgba(56, 189, 248,0.05)";
               }}
             >
               <span>Get Diagnosed</span>
