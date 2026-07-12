@@ -385,7 +385,7 @@ function PricingPageInner() {
                     background: tier.popular ? GOLD : "#0F141D",
                     border: `1px solid ${tier.popular ? GOLD : "#26313F"}`,
                     borderRadius: 6,
-                    color: tier.popular ? "#000000" : "#8B98A9",
+                    color: tier.popular ? "var(--bg)" : "#8B98A9",
                     fontFamily: SPACE,
                     fontSize: 13,
                     fontWeight: tier.popular ? 700 : 600,

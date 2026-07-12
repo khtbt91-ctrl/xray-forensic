@@ -570,7 +570,7 @@ function BottomCta() {
                 alignItems:    "center",
                 gap:           6,
                 background:    GOLD,
-                color:         "#000",
+                color:         "var(--bg)",
                 border:        "none",
                 borderRadius:  6,
                 padding:       "12px 24px",

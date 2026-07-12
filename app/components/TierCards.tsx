@@ -291,7 +291,7 @@ export default function TierCards() {
                       fontWeight: 700,
                       textDecoration: "none",
                       background: tier.highlight ? "var(--accent-primary)" : "transparent",
-                      color: tier.highlight ? "#000" : "var(--text-primary)",
+                      color: tier.highlight ? "var(--bg)" : "var(--text-primary)",
                       border: tier.highlight ? "none" : "1px solid var(--border-subtle)",
                       transition: "opacity 150ms ease",
                     }}
