@@ -327,7 +327,7 @@ decay = E_b − E_d`}
               This is one behavior estimated from your inputs. X-Ray finds all 7 leaks in your actual trade history — with exact dollar amounts from real data.
             </div>
             <a href={user ? "/new" : "/signup"} style={{
-              display: "inline-block", marginTop: 16, background: GOLD, color: "#000",
+              display: "inline-block", marginTop: 16, background: GOLD, color: "var(--bg)",
               fontWeight: 700, padding: "12px 20px", borderRadius: 6,
               textDecoration: "none", fontSize: 14, fontFamily: SPACE,
             }}>

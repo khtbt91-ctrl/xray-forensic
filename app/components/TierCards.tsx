@@ -100,7 +100,7 @@ const TIERS: Tier[] = [
     href: "/payment?tier=elite",
     highlight: false,
     popular: false,
-    accent: "var(--warning)",
+    accent: "var(--text-secondary)",
   },
 ];
 
@@ -209,7 +209,7 @@ export default function TierCards() {
                       left: "50%",
                       transform: "translateX(-50%)",
                       background: "var(--accent-primary)",
-                      color: "#000",
+                      color: "var(--bg)",
                       padding: "4px 16px",
                       borderRadius: 4,
                       fontSize: "0.65rem",

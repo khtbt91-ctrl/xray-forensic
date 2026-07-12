@@ -138,7 +138,7 @@ export default function HeroSection() {
               gap: "8px",
               padding: "14px 32px",
               background: loading ? "rgba(56, 189, 248,0.5)" : "#38BDF8",
-              color: "#000",
+              color: "var(--bg)",
               border: "none",
               borderRadius: "8px",
               fontFamily: "'Inter', sans-serif",

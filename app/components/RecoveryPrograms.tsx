@@ -84,7 +84,7 @@ export default function RecoveryPrograms() {
       </div>
 
       <div style={{ textAlign: "center", marginTop: 40 }}>
-        <a href="/new" style={{ display: "inline-block", background: GOLD, color: "#000", fontWeight: 700, padding: "14px 28px", borderRadius: 6, textDecoration: "none", fontSize: 15, fontFamily: SPACE }}>
+        <a href="/new" style={{ display: "inline-block", background: GOLD, color: "var(--bg)", fontWeight: 700, padding: "14px 28px", borderRadius: 6, textDecoration: "none", fontSize: 15, fontFamily: SPACE }}>
           Get diagnosed first. The program follows the evidence. →
         </a>
       </div>

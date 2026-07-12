@@ -69,7 +69,7 @@ export default function OneTimeProducts() {
               }}
             >
               {product.badge && (
-                <p style={{ fontFamily: MONO, fontSize: "0.65rem", color: "var(--warning)", letterSpacing: "0.08em", textTransform: "uppercase", margin: "0 0 6px" }}>
+                <p style={{ fontFamily: MONO, fontSize: "0.65rem", color: "var(--text-secondary)", letterSpacing: "0.08em", textTransform: "uppercase", margin: "0 0 6px" }}>
                   {product.badge}
                 </p>
               )}

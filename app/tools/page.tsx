@@ -116,7 +116,7 @@ export default function ToolsPage() {
               width: '100%',
               padding: '14px',
               background: 'var(--accent-primary)',
-              color: '#000000',
+              color: 'var(--bg)',
               borderRadius: '8px',
               textDecoration: 'none',
               fontWeight: 700,
