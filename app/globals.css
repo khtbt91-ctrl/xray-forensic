@@ -1,12 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import "@fontsource/ibm-plex-serif/400-italic.css";
-/* Cabinet Grotesk — Fontshare, free/open license — display face only (H1/H2), per
-   Art Director ruling A (2026-07-12, addendum to art-direction-rulings-v1.md).
-   Waiver on Inter-as-display OVERTURNED — see homepage-design-spec-FINAL.md. */
-@import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Cabinet Grotesk — Fontshare, free/open license — display face only (H1/H2), per
+   Art Director ruling A (2026-07-12, addendum to art-direction-rulings-v1.md).
+   Waiver on Inter-as-display OVERTURNED — see homepage-design-spec-FINAL.md.
+   SELF-HOSTED 2026-07-12 (QA fix — the Fontshare CDN @import was pushing LCP to
+   1.8s, over the <1.5s target). woff2 files pulled once from Fontshare's own CDN
+   into /public/fonts/, served from this origin from here on. font-display: swap
+   prevents invisible-text flash while these load. */
+@font-face {
+  font-family: 'Cabinet Grotesk';
+  src: url('/fonts/CabinetGrotesk-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cabinet Grotesk';
+  src: url('/fonts/CabinetGrotesk-Extrabold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* ─── Design tokens (mirrors Gemini @theme block) ──────────────────────────── */
 :root {

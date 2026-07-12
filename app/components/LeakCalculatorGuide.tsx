@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/lib/auth-context";
 
 /**
  * X-Ray Forensic — Leak Calculator + "How to use it" guide.
@@ -79,8 +78,6 @@ function Step({ n, title, children }: { n: number; title: string; children: Reac
 }
 
 export default function LeakCalculatorGuide() {
-  const { user } = useAuth();
-
   // ── Inputs ─────────────────────────────────────────────────────────────────
   const [account, setAccount] = useState(10000);
   const [riskPct, setRiskPct] = useState(2);
@@ -216,20 +213,20 @@ decay = E_b − E_d`}
           {/* Account / risk / trades / frequency */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
             <div>
-              <label style={labelS}>Account ($) <Tooltip text="Your average trading account size in USD. Use your current balance." /></label>
-              <input style={field} type="number" value={account} onChange={(e) => setAccount(+e.target.value)} />
+              <label htmlFor="calc-account" style={labelS}>Account ($) <Tooltip text="Your average trading account size in USD. Use your current balance." /></label>
+              <input id="calc-account" style={field} type="number" value={account} onChange={(e) => setAccount(+e.target.value)} />
             </div>
             <div>
-              <label style={labelS}>Risk / trade (%) <Tooltip text="The percentage of your account you risk on each trade. Most retail traders use 1-3%. The failing trader average is 2%." /></label>
-              <input style={field} type="number" value={riskPct} onChange={(e) => setRiskPct(+e.target.value)} />
+              <label htmlFor="calc-risk-pct" style={labelS}>Risk / trade (%) <Tooltip text="The percentage of your account you risk on each trade. Most retail traders use 1-3%. The failing trader average is 2%." /></label>
+              <input id="calc-risk-pct" style={field} type="number" value={riskPct} onChange={(e) => setRiskPct(+e.target.value)} />
             </div>
             <div>
-              <label style={labelS}>Trades / week <Tooltip text="How many trades you typically open per week across all sessions." /></label>
-              <input style={field} type="number" value={perWeek} onChange={(e) => setPerWeek(+e.target.value)} />
+              <label htmlFor="calc-per-week" style={labelS}>Trades / week <Tooltip text="How many trades you typically open per week across all sessions." /></label>
+              <input id="calc-per-week" style={field} type="number" value={perWeek} onChange={(e) => setPerWeek(+e.target.value)} />
             </div>
             <div>
-              <label style={labelS}>Leak frequency <Tooltip text="How often this behavior happens. '3 in 10' means it occurs in 30% of your trades — 3 out of every 10 positions." /></label>
-              <select style={field} value={freq} onChange={(e) => setFreq(+e.target.value)}>
+              <label htmlFor="calc-freq" style={labelS}>Leak frequency <Tooltip text="How often this behavior happens. '3 in 10' means it occurs in 30% of your trades — 3 out of every 10 positions." /></label>
+              <select id="calc-freq" style={field} value={freq} onChange={(e) => setFreq(+e.target.value)}>
                 <option value={0.1}>1 in 10</option>
                 <option value={0.2}>2 in 10</option>
                 <option value={0.3}>3 in 10</option>
@@ -239,8 +236,8 @@ decay = E_b − E_d`}
           </div>
 
           {/* Leak type */}
-          <label style={labelS}>The leak <Tooltip text="The specific behavioral pattern you want to measure. Each has a different loss multiplier and behavioral penalty coefficient." /></label>
-          <select style={{ ...field, marginBottom: 6 }} value={leak} onChange={(e) => setLeak(e.target.value)}>
+          <label htmlFor="calc-leak" style={labelS}>The leak <Tooltip text="The specific behavioral pattern you want to measure. Each has a different loss multiplier and behavioral penalty coefficient." /></label>
+          <select id="calc-leak" style={{ ...field, marginBottom: 6 }} value={leak} onChange={(e) => setLeak(e.target.value)}>
             {Object.entries(LEAKS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
           </select>
           <div style={{ color: MUTED, fontSize: 12, marginBottom: 20 }}>{LEAKS[leak].hint}</div>
@@ -248,14 +245,16 @@ decay = E_b − E_d`}
           {/* Win Rate slider */}
           <div style={{ marginBottom: 16 }}>
             <div style={labelRow}>
-              <span>Win Rate (%) <Tooltip text="Your baseline win rate when trading without behavioral leaks." /></span>
+              <label htmlFor="calc-win-rate">Win Rate (%) <Tooltip text="Your baseline win rate when trading without behavioral leaks." /></label>
               <span style={{ color: TEXT, fontWeight: 700 }}>{winRate}%</span>
             </div>
             <input
+              id="calc-win-rate"
               type="range" min={30} max={70} step={1}
               value={winRate} onChange={(e) => setWinRate(+e.target.value)}
               className="calc-slider"
               style={{ width: "100%" }}
+              aria-valuetext={`${winRate}%`}
             />
             <div style={{ display: "flex", justifyContent: "space-between", color: "var(--text-muted)", fontSize: 10, fontFamily: MONO, marginTop: 3 }}>
               <span>30%</span>
@@ -267,14 +266,16 @@ decay = E_b − E_d`}
           {/* R:R slider */}
           <div style={{ marginBottom: 20 }}>
             <div style={labelRow}>
-              <span>Target R:R <Tooltip text="Your intended reward-to-risk ratio when the trade goes to plan." /></span>
+              <label htmlFor="calc-rr">Target R:R <Tooltip text="Your intended reward-to-risk ratio when the trade goes to plan." /></label>
               <span style={{ color: TEXT, fontWeight: 700 }}>{rr.toFixed(1)}</span>
             </div>
             <input
+              id="calc-rr"
               type="range" min={0.5} max={3.0} step={0.1}
               value={rr} onChange={(e) => setRr(+e.target.value)}
               className="calc-slider"
               style={{ width: "100%" }}
+              aria-valuetext={rr.toFixed(1)}
             />
             <div style={{ display: "flex", justifyContent: "space-between", color: "var(--text-muted)", fontSize: 10, fontFamily: MONO, marginTop: 3 }}>
               <span>0.5</span>
@@ -367,7 +368,7 @@ decay = E_b − E_d`}
             <div style={{ color: "var(--text-muted)", fontSize: 12, fontFamily: MONO, marginTop: 14, lineHeight: 1.6 }}>
               This is one behavior estimated from your inputs. X-Ray finds all 7 leaks in your actual trade history — with exact dollar amounts from real data.
             </div>
-            <a href={user ? "/new" : "/signup"} style={{
+            <a href="/new" style={{
               display: "inline-block", marginTop: 16, background: GOLD, color: "var(--bg)",
               fontWeight: 700, padding: "12px 20px", borderRadius: 6,
               textDecoration: "none", fontSize: 14, fontFamily: SPACE,
