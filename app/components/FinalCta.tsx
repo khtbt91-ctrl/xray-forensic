@@ -54,6 +54,46 @@ export default function FinalCta() {
           </p>
         </div>
       </FadeInUp>
+
+      {/* Section 11: on-page disclaimer plate — structural, not a footnote (Art Director ruling).
+          Verbatim long-form text from landing-hero-waitlist-v2.md, never previously placed
+          on-page (only in /privacy, /terms). Never shrinks below 13px, never truncates. */}
+      <div style={{ borderTop: "1px solid var(--border-subtle)", padding: "48px 40px" }}>
+        <div
+          className="disclaimer-plate"
+          style={{
+            maxWidth: 640,
+            margin: "0 auto",
+            border: "1px solid var(--border-subtle)",
+            borderRadius: 8,
+            padding: "28px 32px",
+            textAlign: "left",
+          }}
+        >
+          <p style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 10,
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            color: "var(--text-muted)",
+            margin: "0 0 12px",
+          }}>
+            X-RAY FORENSIC
+          </p>
+          <p style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: "13px",
+            color: "var(--text-muted)",
+            lineHeight: 1.7,
+            margin: 0,
+          }}>
+            This content is for education and information only. It is not investment advice,
+            not a recommendation to buy or sell any asset, and not a substitute for advice from
+            a licensed financial advisor in your jurisdiction. Trading involves substantial risk
+            of loss.
+          </p>
+        </div>
+      </div>
     </section>
   );
 }

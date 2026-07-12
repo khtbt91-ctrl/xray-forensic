@@ -5,8 +5,13 @@ import { useAuth } from "@/lib/auth-context";
 
 /**
  * X-Ray Forensic — Leak Calculator + "How to use it" guide.
- * Standalone, interactive, transparent math. Recolored to live tokens.
- * Wire into app/page.tsx (e.g. after PreChallengeSection or before TierCards).
+ * Section 5 of the structural redesign (2026-07-12): consolidates the old
+ * standalone PainWall section into this one as the worked "here's what this
+ * looks like on a real demo account" anchor, plus 3 mono taxonomy chips
+ * (Revenge Trading / Size Creep / Cutting Winners Early) lifted verbatim from
+ * campaign carousel slide 04 — continues the ad's conversation instead of
+ * re-explaining the concept from scratch (Art Director REVISE ruling).
+ * Background shade: BASE (first of the 5/6/7 alternation).
  */
 
 const MONO  = "'JetBrains Mono', monospace";
@@ -119,17 +124,53 @@ export default function LeakCalculatorGuide() {
   };
 
   return (
-    <section style={{ maxWidth: 980, margin: "96px auto", padding: "0 20px" }}>
+    <section style={{ maxWidth: 980, margin: "96px auto", padding: "0 20px", background: BG }}>
       <div style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.15em", color: GOLD, textTransform: "uppercase", marginBottom: 12 }}>
         The Leak Calculator
       </div>
-      <h2 style={{ color: TEXT, fontSize: 32, fontWeight: 700, margin: "0 0 10px", fontFamily: SPACE }}>
+      <h2 style={{ color: TEXT, fontSize: 32, fontWeight: 700, margin: "0 0 10px", fontFamily: "var(--font-display)" }}>
         See what one bad habit costs you per year — before you upload anything.
       </h2>
-      <p style={{ color: MUTED, fontSize: 16, maxWidth: 720, lineHeight: 1.6, marginBottom: 36 }}>
+      <p style={{ color: MUTED, fontSize: 16, maxWidth: 720, lineHeight: 1.6, marginBottom: 20 }}>
         The Leak Calculator estimates the annual dollar cost of a single recurring behavior using your own
         numbers. It is the free preview of what a full diagnosis quantifies across all seven dimensions.
       </p>
+
+      {/* Worked demo-account anchor — consolidated from the old standalone PainWall section */}
+      <div style={{
+        background: CARD, border: `1px solid ${BORDER}`, borderLeft: `3px solid ${LOSS}`,
+        borderRadius: 8, padding: "20px 24px", marginBottom: 32,
+      }}>
+        <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: MUTED, margin: "0 0 12px" }}>
+          FROM A DEMO ACCOUNT EXPORT
+        </p>
+        <div style={{ display: "flex", gap: 32, flexWrap: "wrap" }}>
+          <div>
+            <div style={{ fontFamily: MONO, fontSize: 32, fontWeight: 800, color: LOSS }}>-$4,753</div>
+            <div style={{ fontSize: 12, color: MUTED, marginTop: 4 }}>Lost to trades with no stop loss</div>
+          </div>
+          <div>
+            <div style={{ fontFamily: MONO, fontSize: 32, fontWeight: 800, color: "#f59e0b" }}>276</div>
+            <div style={{ fontSize: 12, color: MUTED, marginTop: 4 }}>Revenge trades. Same mistake, 276 times.</div>
+          </div>
+          <div>
+            <div style={{ fontFamily: MONO, fontSize: 32, fontWeight: 800, color: GOLD }}>29</div>
+            <div style={{ fontSize: 12, color: MUTED, marginTop: 4 }}>Longest losing streak. Exposed.</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Taxonomy chips — verbatim from campaign carousel slide 04, continuing the same conversation */}
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 28 }}>
+        {["REVENGE TRADING", "SIZE CREEP", "CUTTING WINNERS EARLY"].map((chip) => (
+          <span key={chip} style={{
+            fontFamily: MONO, fontSize: 11, letterSpacing: "0.06em", color: GOLD,
+            border: `1px solid ${GOLD}`, borderRadius: 100, padding: "5px 12px",
+          }}>
+            {chip}
+          </span>
+        ))}
+      </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 40 }} className="leak-grid">
 
@@ -338,7 +379,11 @@ decay = E_b − E_d`}
       </div>
 
       <style>{`
-        @media (max-width: 768px) { .leak-grid { grid-template-columns: 1fr !important; } }
+        @media (max-width: 768px) {
+          .leak-grid { grid-template-columns: 1fr !important; display: flex !important; flex-direction: column !important; }
+          .leak-grid > div:first-child { order: 2; }
+          .leak-grid > div:last-child { order: 1; }
+        }
         .calc-slider {
           -webkit-appearance: none; appearance: none;
           height: 4px; background: #26313F; border-radius: 2px;

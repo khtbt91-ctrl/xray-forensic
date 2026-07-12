@@ -85,6 +85,9 @@ export default function RadarSection() {
 
   const activeDim = activeInsight ? DIMENSIONS.find((d) => d.key === activeInsight) : null;
 
+  // D-8: mobile replaces the radar with a worst-to-best ranked bar list, not a shrunk chart.
+  const rankedWorstFirst = [...DIMENSIONS].sort((a, b) => a.score - b.score);
+
   return (
     <section ref={ref} style={{ maxWidth: 1100, margin: "0 auto", padding: "0 40px 100px" }}>
       <FadeInUp>
@@ -120,7 +123,58 @@ export default function RadarSection() {
         </p>
       </FadeInUp>
 
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 28 }}>
+      {/* Mobile (<640px) — ranked bar list, worst-to-best, replaces the radar entirely (D-8).
+          Display is controlled entirely by the .radar-mobile-only / .radar-desktop-only CSS
+          classes in globals.css — no inline `display` here, since an inline style would win
+          over the media query and defeat the breakpoint swap (bug found + fixed in screenshot
+          QA, 2026-07-12: mobile was rendering the desktop chart because of exactly this). */}
+      <div className="radar-mobile-only">
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {rankedWorstFirst.map((d) => {
+            const isActive = activeInsight === d.key;
+            return (
+              <button
+                key={d.key}
+                onClick={() => setActiveInsight(isActive ? null : d.key)}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  textAlign: "left",
+                  background: "var(--bg-card)",
+                  border: `1px solid ${isActive ? "var(--accent-primary)" : "var(--border-subtle)"}`,
+                  borderRadius: 8,
+                  padding: "12px 14px",
+                  cursor: "pointer",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                  <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", color: "#E6EDF3" }}>
+                    {d.key}
+                  </span>
+                  <span style={{ fontFamily: MONO, fontSize: 11, color: "var(--accent-primary)" }}>{d.score}</span>
+                </div>
+                <div style={{ height: 6, borderRadius: 3, background: "#0A0E14", overflow: "hidden" }}>
+                  <div
+                    style={{
+                      width: `${d.score}%`,
+                      height: "100%",
+                      background: "var(--accent-primary)",
+                      borderRadius: 3,
+                    }}
+                  />
+                </div>
+                {isActive && (
+                  <p style={{ marginTop: 10, marginBottom: 0, fontSize: 13, lineHeight: 1.6, color: "var(--text-primary)" }}>
+                    {d.finding}
+                  </p>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="radar-desktop-only radar-desktop-inner">
         <div style={{ width: "100%", overflowX: "auto" }}>
         <div className="radar-chart-frame" style={{ width: "100%", height: 500, position: "relative" }}>
           <span

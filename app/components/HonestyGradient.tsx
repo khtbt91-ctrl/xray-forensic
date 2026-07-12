@@ -30,7 +30,9 @@ const rows = [
   },
   {
     left: "I just need a better prop firm.",
-    right: "Your pass probability is 23% with every firm. The problem is not the firm.",
+    // Fixed 2026-07-12 alongside the same-day Monte Carlo compliance sweep — this row
+    // independently repeated the not-live pass-probability claim the a66ae04 fix missed.
+    right: "You've failed 4 of 4 daily-loss checks — with every firm. The problem is not the firm.",
   },
 ];
 
@@ -50,7 +52,8 @@ export default function HonestyGradient() {
   };
 
   return (
-    <section style={{ maxWidth: 1100, margin: "0 auto", padding: "56px 40px 100px" }}>
+    <section style={{ background: "var(--bg-base)", maxWidth: "100%", margin: 0, padding: "96px 0" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 40px" }}>
       <FadeInUp>
         <p
           style={{
@@ -73,7 +76,7 @@ export default function HonestyGradient() {
       <FadeInUp delay={0.05}>
         <h2
           style={{
-            fontFamily: "Inter, sans-serif",
+            fontFamily: "var(--font-display)",
             fontSize: "clamp(24px, 3.5vw, 40px)",
             fontWeight: 700,
             color: "var(--text-primary)",
@@ -108,14 +111,15 @@ export default function HonestyGradient() {
                     : undefined,
               }}
             >
-              {/* LEFT — always visible, serif italic */}
+              {/* LEFT — always visible, serif italic. Scale-contrast fix: bumped 0.95rem->21px
+                  so the self-deception reads bigger, softer, more indulgent (Art Director REVISE). */}
               <div
                 style={{
                   padding: "20px 28px",
                   borderRight: "1px solid var(--border-subtle)",
                   fontFamily: SERIF_ITALIC,
                   fontStyle: "italic",
-                  fontSize: "0.95rem",
+                  fontSize: "21px",
                   color: "var(--text-muted)",
                   display: "flex",
                   alignItems: "center",
@@ -125,7 +129,8 @@ export default function HonestyGradient() {
                 {row.left}
               </div>
 
-              {/* RIGHT — blurred until hover or click */}
+              {/* RIGHT — blurred until hover or click. Scale-contrast fix: held at 15px so the
+                  fact reads smaller, colder, more clipped — the size gap does the emotional work. */}
               <div
                 onMouseEnter={() => setHovered(i)}
                 onMouseLeave={() => setHovered(null)}
@@ -137,7 +142,7 @@ export default function HonestyGradient() {
                   cursor: "pointer",
                   userSelect: "none",
                   fontFamily: MONO,
-                  fontSize: "0.9rem",
+                  fontSize: "15px",
                   color: "var(--text-primary)",
                   lineHeight: 1.5,
                   filter: isVisible(i) ? "blur(0px)" : "blur(8px)",
@@ -155,6 +160,7 @@ export default function HonestyGradient() {
         </div>
 
         <p
+          className="honesty-tap-label"
           style={{
             fontFamily: "Inter, sans-serif",
             fontStyle: "italic",
@@ -171,6 +177,12 @@ export default function HonestyGradient() {
           Tap any row to reveal what X-Ray actually finds.
         </p>
       </FadeInUp>
+      </div>
+      <style>{`
+        /* Desktop hover cue (cursor change) has no mobile analog — keep the label
+           persistently visible below 768px instead of relying on discovery. */
+        @media (min-width: 769px) { .honesty-tap-label { opacity: 0.7; } }
+      `}</style>
     </section>
   );
 }

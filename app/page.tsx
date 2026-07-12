@@ -1,22 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import NavBar from "./components/NavBar";
+import StatusStrip from "./components/StatusStrip";
 import HeroSection from "./components/HeroSection";
-import ActivityCounter from "./components/ActivityCounter";
 import HowItWorks from "./components/HowItWorks";
-import VerdictFeed from "./components/VerdictFeed";
-import PainWall from "./components/PainWall";
 import RadarSection from "./components/RadarSection";
-import FrameworkSection from "./components/FrameworkSection";
-import HonestyGradient from "./components/HonestyGradient";
-import CaseStudies from "./components/CaseStudies";
-import AudienceSection from "./components/AudienceSection";
 import LeakCalculatorGuide from "./components/LeakCalculatorGuide";
+import AudienceSection from "./components/AudienceSection";
+import HonestyGradient from "./components/HonestyGradient";
+import SampleReportTeaser from "./components/SampleReportTeaser";
+import WhatsLiveWhatsNext from "./components/WhatsLiveWhatsNext";
 import TierCards from "./components/TierCards";
-import OneTimeProducts from "./components/OneTimeProducts";
-import RecoveryPrograms from "./components/RecoveryPrograms";
-import FaqSection from "./components/FaqSection";
 import FinalCta from "./components/FinalCta";
+
+/**
+ * HOMEPAGE — STRUCTURAL REDESIGN (2026-07-12)
+ * Rebuilt per structural-delta-spec-v1.md (11 sections, down from 20) and
+ * homepage-design-spec-FINAL.md. See build notes to QA Engineer for the
+ * full section-by-section rationale and deviation log.
+ *
+ * KILLED from this page entirely: VerdictFeed, FrameworkSection,
+ * PreChallengeSection (already removed same-day for compliance, a66ae04),
+ * RecoveryPrograms, OneTimeProducts, CaseStudies, FaqSection, PainWall and
+ * ActivityCounter as standalone sections (merged into LeakCalculatorGuide
+ * and StatusStrip respectively).
+ */
 
 export const metadata: Metadata = {
   title: "Forensic Trade Diagnostic — Know Why You're Losing",
@@ -42,56 +50,40 @@ const SPACE = "'Inter', sans-serif";
 export default function LandingPage() {
   return (
     <main style={{ minHeight: "100vh", background: "#0A0E14", color: "#E6EDF3" }}>
+      {/* 1. Nav + Status Strip */}
       <NavBar />
+      <StatusStrip />
+
+      {/* 2. Hero */}
       <HeroSection />
-      <div style={{
-        borderTop: '1px solid #26313F',
-        borderBottom: '1px solid #26313F',
-        background: '#0a1020',
-        padding: '12px 40px',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 32,
-        flexWrap: 'wrap',
-      }}>
-        {[
-          'No card required',
-          'Trade data never stored',
-          'Cancel anytime',
-          'Built by a 15-year institutional trader',
-          'First analysis free',
-        ].map((item) => (
-          <span key={item} style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 11,
-            color: 'var(--text-muted)',
-            letterSpacing: '0.05em',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            whiteSpace: 'nowrap',
-          }}>
-            <span style={{ color: '#10b981' }}>✓</span>
-            {item}
-          </span>
-        ))}
-      </div>
-      <ActivityCounter />
-      <PainWall />
-      <LeakCalculatorGuide />
+
+      {/* 3. Mechanism — 3-step */}
       <HowItWorks />
-      <VerdictFeed />
-      <FrameworkSection />
+
+      {/* 4. The 7 Dimensions */}
       <RadarSection />
+
+      {/* 5. The Leak Calculator (consolidated with PainWall) */}
+      <LeakCalculatorGuide />
+
+      {/* 6. Who This Is For */}
       <AudienceSection />
+
+      {/* 7. Honesty Gradient */}
       <HonestyGradient />
-      <CaseStudies />
+
+      {/* 8. Sample Report Teaser (NEW) */}
+      <SampleReportTeaser />
+
+      {/* 9. What's Live / What's Next (NEW) */}
+      <WhatsLiveWhatsNext />
+
+      {/* 10. Pricing */}
       <TierCards />
-      <OneTimeProducts />
-      <RecoveryPrograms />
-      <FaqSection />
+
+      {/* 11. Final CTA + on-page disclaimer */}
       <FinalCta />
+
       <footer style={{ borderTop: "1px solid #26313F", background: "#0A0E14" }}>
         <div style={{ width: "100%", maxWidth: 1400, margin: "0 auto", padding: "0 32px" }}>
           <div className="footer-grid">
@@ -118,7 +110,7 @@ export default function LandingPage() {
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 <Link href="/#how-it-works" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>How It Works</Link>
                 <Link href="/#pricing" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>Pricing</Link>
-                <Link href="/#faq" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>FAQ</Link>
+                <Link href="/roadmap" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>Roadmap</Link>
                 <Link href="/sample" style={{ fontFamily: MONO, fontSize: 11, color: "var(--text-muted)", textDecoration: "none" }}>Sample Report</Link>
               </div>
             </div>

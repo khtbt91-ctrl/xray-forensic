@@ -107,6 +107,17 @@ export default function TierCards() {
   const [hoveredTier, setHoveredTier] = useState<string | null>(null);
 
   return (
+    <>
+    <style>{`
+      .tier-swipe-fade { display: none; }
+      @media (max-width: 768px) {
+        .tier-swipe-fade {
+          display: block; position: absolute; right: 0; top: 0; bottom: 16px; width: 40px;
+          background: linear-gradient(to right, transparent, #0A0E14); pointer-events: none;
+        }
+        .tier-swipe-hint { display: block !important; }
+      }
+    `}</style>
     <section id="pricing" style={{ padding: "0 0 100px" }}>
       <FadeInUp style={{ textAlign: "center", width: "100%", display: "block", marginLeft: "auto", marginRight: "auto" }}>
         <p
@@ -148,6 +159,7 @@ export default function TierCards() {
 
       <FadeInUp delay={0.1}>
         {/* Outer: horizontal scroll container */}
+        <div className="tier-scroll-wrap" style={{ position: "relative" }}>
         <div style={{ overflowX: "auto", overflowY: "visible", paddingBottom: 16, scrollbarWidth: "thin", scrollbarColor: "var(--border-subtle) transparent" }}>
           {/* Inner: centers cards on wide screens, allows scroll on narrow */}
           <div
@@ -250,7 +262,7 @@ export default function TierCards() {
 <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.16em", color: tier.accent, margin: `${(tier.popular || tier.badge) ? 12 : 0}px 0 8px` }}>
                   {tier.name}
                 </p>
-                <p style={{ fontFamily: MONO, fontSize: 28, fontWeight: 500, margin: "0 0 8px", color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}>
+                <p style={{ fontFamily: MONO, fontSize: 34, fontWeight: 500, margin: "0 0 8px", color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}>
                   {tier.price}
                 </p>
                 <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", margin: "0 0 8px", lineHeight: 1.3 }}>
@@ -303,6 +315,11 @@ export default function TierCards() {
           })}
           </div> {/* inner: flex centering */}
         </div> {/* outer: horizontal scroll */}
+        <div className="tier-swipe-fade" aria-hidden />
+        </div> {/* tier-scroll-wrap */}
+        <p className="tier-swipe-hint" style={{ display: "none", textAlign: "center", fontFamily: MONO, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.1em", marginTop: 8 }}>
+          SWIPE FOR MORE →
+        </p>
 
         {/* Partnership line */}
         <p style={{
@@ -323,5 +340,6 @@ export default function TierCards() {
         </p>
       </FadeInUp>
     </section>
+    </>
   );
 }

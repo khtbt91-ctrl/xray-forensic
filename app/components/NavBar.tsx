@@ -38,9 +38,13 @@ export default function NavBar() {
     { id: "pricing",       label: "Pricing",        href: "/#pricing" },
     { id: "tools",         label: "Tools",          href: "/tools" },
     { id: "foundations",   label: "Foundations",    href: "/foundations" },
-    { id: "faq",           label: "FAQ",            href: "/#faq" },
+    { id: "roadmap",       label: "Roadmap",        href: "/roadmap" },
     { id: "about",         label: "About",          href: "/about" },
   ];
+  // FAQ nav item removed 2026-07-12 — FaqSection killed from homepage per
+  // structural-delta-spec-v1.md (not in the new 11-section map); no anchor to
+  // point to. Replaced with /roadmap, which now carries the homepage's
+  // "What's Live/What's Next" honesty-strip destination.
 
   return (
     <>
