@@ -160,7 +160,7 @@ html, body {
 }
 .btn-primary {
   background: #38BDF8;
-  color: #000;
+  color: var(--bg);
   border-color: #38BDF8;
   font-family: "Inter", sans-serif;
   font-weight: 700;
