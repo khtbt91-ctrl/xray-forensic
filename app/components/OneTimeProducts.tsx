@@ -24,14 +24,6 @@ const products: Product[] = [
     href: "/new?tier=spot-forensic",
   },
   {
-    name: "Pre-Challenge Clearance",
-    price: "$79",
-    tagline: "Monte Carlo simulation before you fund. Know your pass probability.",
-    reportLevel: "FORENSIC-level report + Monte Carlo simulation.",
-    cta: "Get Clearance",
-    href: "/new?tier=pre-challenge",
-  },
-  {
     name: "Failure Autopsy",
     price: "$99",
     tagline: "Complete forensic reconstruction of a blown account or failed challenge. Pinpoints the exact trade where recovery became impossible.",

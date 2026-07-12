@@ -66,7 +66,6 @@ const TIERS = [
     tagline: "Built for funded traders who can't afford mistakes.",
     features: [
       { text: "Everything in Operator", included: true },
-      { text: "Pre-Challenge Clearance — know your pass probability before you fund", included: true },
       { text: "Priority support", included: true },
       { text: "Early access to new features", included: true },
     ],

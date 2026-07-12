@@ -32,11 +32,11 @@ const cards = [
     title: "The Prop Firm Repeater",
     before: [
       "3 challenges funded. 0 payouts.",
-      "Monte Carlo pass probability: 23%",
+      "Max daily loss breached: 4 of 4 attempts",
       "Predicted DD breach: day 7",
     ],
     verdict:
-      "Pre-Challenge Clearance required. Current behavior fails before the profit target is reachable.",
+      "Risk-sizing overhaul required. Current behavior fails before the profit target is reachable.",
     after: "Behavioral score improved. 4th challenge: in progress.",
   },
 ];

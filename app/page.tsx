@@ -6,7 +6,6 @@ import ActivityCounter from "./components/ActivityCounter";
 import HowItWorks from "./components/HowItWorks";
 import VerdictFeed from "./components/VerdictFeed";
 import PainWall from "./components/PainWall";
-import PreChallengeSection from "./components/PreChallengeSection";
 import RadarSection from "./components/RadarSection";
 import FrameworkSection from "./components/FrameworkSection";
 import HonestyGradient from "./components/HonestyGradient";
@@ -85,7 +84,6 @@ export default function LandingPage() {
       <VerdictFeed />
       <FrameworkSection />
       <RadarSection />
-      <PreChallengeSection />
       <AudienceSection />
       <HonestyGradient />
       <CaseStudies />

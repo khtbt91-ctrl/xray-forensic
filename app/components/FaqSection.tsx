@@ -37,8 +37,8 @@ const FAQ = [
     a: "Your CSV file is processed and immediately discarded. The diagnostic output (scores, metrics) is stored linked to your account so you can access past reports. Your raw trade data is never retained.",
   },
   {
-    q: "How accurate is the prop firm pass probability?",
-    a: "The Monte Carlo simulation runs 1,000 scenarios using your actual win rate, average loss, and behavioral patterns. It predicts drawdown breach probability based on your real data — not industry averages. The prediction is only as accurate as your historical consistency.",
+    q: "Do you predict my odds of passing a prop firm challenge?",
+    a: "Not yet. Monte Carlo pass-probability simulation is on our roadmap, not live today — we will not sell or claim a prediction feature before it ships. What is live now: the Challenge Readiness Score (Elite tier), which scores your behavioral risk against challenge rules using your actual trade history.",
   },
   {
     q: "What file formats do you accept?",

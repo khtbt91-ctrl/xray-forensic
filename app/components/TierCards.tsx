@@ -86,12 +86,11 @@ const TIERS: Tier[] = [
     name: "ELITE",
     price: "$149/mo",
     tagline: "The complete system.",
-    hook: "Everything in Operator plus prop firm tools, Monte Carlo pass probability, and early access to every new feature.",
+    hook: "Everything in Operator plus prop firm tools, challenge readiness scoring, and early access to every new feature.",
     monthlyValue: "Good for: prop firm challengers and funded traders who need to protect their account.",
     features: [
       { text: "Everything in Operator", included: true },
       { text: "Prop firm challenge simulation", included: true },
-      { text: "Monte Carlo pass probability", included: true },
       { text: "Challenge readiness score", included: true },
       { text: "Early access to new features", included: true },
       { text: "Priority support (same-day response)", included: true },
