@@ -40,3 +40,5 @@ next-env.d.ts
 *.zip
 *Copy*
 XRAY_MASTER_BRIEF.md
+
+.vercel
