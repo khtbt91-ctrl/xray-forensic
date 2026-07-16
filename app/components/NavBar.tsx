@@ -233,10 +233,17 @@ export default function NavBar() {
             </Link>
 
             {/* Hamburger */}
+            {/* Opens the menu only — the overlay's own ✕ button handles closing
+                (two dedicated buttons, not one toggle). Hidden from the
+                accessibility tree while open so it can't be tabbed to behind
+                the overlay. */}
             <button
               className="nav-hamburger"
               onClick={() => setMenuOpen(true)}
               aria-label="Open menu"
+              aria-expanded={menuOpen}
+              aria-hidden={menuOpen}
+              tabIndex={menuOpen ? -1 : 0}
             >
               <span /><span /><span />
             </button>

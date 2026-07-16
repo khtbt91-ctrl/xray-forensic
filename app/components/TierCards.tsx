@@ -110,12 +110,25 @@ export default function TierCards() {
     <>
     <style>{`
       .tier-swipe-fade { display: none; }
-      @media (max-width: 768px) {
-        .tier-swipe-fade {
-          display: block; position: absolute; right: 0; top: 0; bottom: 16px; width: 40px;
-          background: linear-gradient(to right, transparent, #0A0E14); pointer-events: none;
+      /* Below ~968px, 4 fixed-220px cards no longer fit one row (4*220 + 3*16 +
+         padding). Reflow to a 2x2 grid instead of forcing horizontal scroll —
+         a scrolled-off "ELITE" tier is a real conversion loss, not just a
+         cosmetic nit. True single-row horizontal scroll is kept only above
+         this breakpoint as the deliberate wide-screen presentation. */
+      @media (max-width: 968px) {
+        .tier-scroll-inner {
+          display: grid !important;
+          grid-template-columns: 1fr 1fr !important;
+          justify-content: initial !important;
+          min-width: 0 !important;
+          padding: 20px 8px 4px !important;
         }
-        .tier-swipe-hint { display: block !important; }
+        .tier-scroll-outer { overflow-x: visible !important; }
+        .tier-card { width: 100% !important; }
+        .tier-swipe-fade, .tier-swipe-hint { display: none !important; }
+      }
+      @media (max-width: 560px) {
+        .tier-scroll-inner { grid-template-columns: 1fr !important; }
       }
     `}</style>
     <section id="pricing" style={{ padding: "0 0 100px" }}>
@@ -160,9 +173,10 @@ export default function TierCards() {
       <FadeInUp delay={0.1}>
         {/* Outer: horizontal scroll container */}
         <div className="tier-scroll-wrap" style={{ position: "relative" }}>
-        <div style={{ overflowX: "auto", overflowY: "visible", paddingBottom: 16, scrollbarWidth: "thin", scrollbarColor: "var(--border-subtle) transparent" }}>
+        <div className="tier-scroll-outer" style={{ overflowX: "auto", overflowY: "visible", paddingBottom: 16, scrollbarWidth: "thin", scrollbarColor: "var(--border-subtle) transparent" }}>
           {/* Inner: centers cards on wide screens, allows scroll on narrow */}
           <div
+            className="tier-scroll-inner"
             style={{
               display: "flex",
               gap: 16,
@@ -191,6 +205,7 @@ export default function TierCards() {
               <div
                 key={tier.name}
                 id={`tier-${tier.name.toLowerCase()}`}
+                className="tier-card"
                 onMouseEnter={() => !tier.disabled && setHoveredTier(tier.name)}
                 onMouseLeave={() => setHoveredTier(null)}
                 style={{

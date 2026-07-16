@@ -20,23 +20,25 @@ interface BenchmarkStats {
 }
 
 export default function StatusStrip() {
-  const [stats, setStats] = useState<BenchmarkStats>({
-    total_traders_analyzed: 0,
-    total_leaks_identified: 0,
-    total_leaks_quantified: 0,
-  });
+  const [stats, setStats] = useState<BenchmarkStats | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/benchmarks`)
-      .then((r) => r.json())
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`benchmarks ${r.status}`))))
       .then((data: any) => {
+        if (cancelled) return;
         setStats({
           total_traders_analyzed: data.total_traders_analyzed || 0,
           total_leaks_identified: data.total_leaks_identified || 0,
           total_leaks_quantified: data.total_leaks_quantified || 0,
         });
       })
-      .catch(() => {});
+      .catch(() => {
+        // Backend unreachable — leave stats null. A fabricated "0" reads as
+        // "no customers" and is worse for trust than omitting the stat.
+      });
+    return () => { cancelled = true; };
   }, []);
 
   return (
@@ -70,13 +72,18 @@ export default function StatusStrip() {
           NOW LIVE
         </span>
 
-        {/* Live stat — the focal point of this section */}
-        <span style={{ fontFamily: MONO, fontSize: 22, fontWeight: 700, color: "#38BDF8", flexShrink: 0, fontVariantNumeric: "tabular-nums" }}>
-          {stats.total_traders_analyzed.toLocaleString()}
-        </span>
-        <span style={{ fontFamily: MONO, fontSize: 11, color: "#8B98A9", flexShrink: 0 }}>accounts diagnosed</span>
-
-        <span style={{ color: "#26313F", flexShrink: 0 }}>·</span>
+        {/* Live stat — the focal point of this section. Omitted entirely (not "0")
+            while the benchmarks endpoint is unreachable — see errors.md
+            FABRICATED_ZERO_STAT_ON_BACKEND_DOWN. */}
+        {stats && (
+          <>
+            <span style={{ fontFamily: MONO, fontSize: 22, fontWeight: 700, color: "#38BDF8", flexShrink: 0, fontVariantNumeric: "tabular-nums" }}>
+              {stats.total_traders_analyzed.toLocaleString()}
+            </span>
+            <span style={{ fontFamily: MONO, fontSize: 11, color: "#8B98A9", flexShrink: 0 }}>accounts diagnosed</span>
+            <span style={{ color: "#26313F", flexShrink: 0 }}>·</span>
+          </>
+        )}
 
         {/* Trust claims — trimmed to 3, per spec */}
         {["No card required", "Trade data never stored", "MT5 export, not password"].map((item) => (
