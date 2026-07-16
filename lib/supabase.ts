@@ -2,13 +2,21 @@ import { createClient } from "@supabase/supabase-js";
 
 // Smart storage — routes writes to localStorage (remember=true) or sessionStorage (remember=false).
 // getItem checks sessionStorage first so session-only logins are found on refresh.
+// The chosen mode is persisted under MODE_KEY: without it, a page refresh reset the
+// write target to localStorage, so autoRefreshToken silently promoted session-only
+// logins into localStorage and they survived browser restarts.
+const MODE_KEY = 'xray-auth-mode'
 const _smartStorage = typeof window === 'undefined' ? undefined : (() => {
-  let _writeTarget: Storage = localStorage
+  let _writeTarget: Storage = localStorage.getItem(MODE_KEY) === 'session' ? sessionStorage : localStorage
   return {
     getItem:    (key: string) => sessionStorage.getItem(key) ?? localStorage.getItem(key),
     setItem:    (key: string, value: string) => _writeTarget.setItem(key, value),
     removeItem: (key: string) => { localStorage.removeItem(key); sessionStorage.removeItem(key) },
-    setMode:    (remember: boolean) => { _writeTarget = remember ? localStorage : sessionStorage },
+    setMode:    (remember: boolean) => {
+      _writeTarget = remember ? localStorage : sessionStorage
+      if (remember) localStorage.removeItem(MODE_KEY)
+      else localStorage.setItem(MODE_KEY, 'session')
+    },
   }
 })()
 

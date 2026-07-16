@@ -655,11 +655,21 @@ function ClosingSection() {
 function WaitlistSection() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email.trim()) return;
-    await supabase.from("waitlist").upsert({ email: email.trim() }, { onConflict: "email" });
+    setError(null);
+    // Plain insert: the anon role is INSERT-only on waitlist (RLS), so upsert's
+    // ON CONFLICT DO UPDATE path is not permitted. 23505 = already on the list.
+    const { error: insertError } = await supabase
+      .from("waitlist")
+      .insert({ email: email.trim().toLowerCase() });
+    if (insertError && insertError.code !== "23505") {
+      setError("Something went wrong — please try again.");
+      return;
+    }
     setSubmitted(true);
   };
 
@@ -741,6 +751,20 @@ function WaitlistSection() {
                 Join the List
               </button>
             </form>
+          )}
+
+          {error && (
+            <p
+              role="alert"
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.8rem",
+                color: "var(--loss)",
+                margin: "12px 0 0",
+              }}
+            >
+              {error}
+            </p>
           )}
 
           <p
