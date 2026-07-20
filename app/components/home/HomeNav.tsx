@@ -7,10 +7,10 @@ import Link from "next/link";
  */
 
 const LINKS = [
-  { href: "#evidence", label: "How it works" },
-  { href: "#dimensions", label: "Dimensions" },
-  { href: "/sample", label: "Sample report" },
+  { href: "#evidence", label: "Method" },
   { href: "#pricing", label: "Pricing" },
+  { href: "/sample", label: "Sample Report" },
+  { href: "/foundations", label: "Foundations" },
 ];
 
 function Wordmark() {

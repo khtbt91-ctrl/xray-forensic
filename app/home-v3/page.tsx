@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
 import HomeNav from "../components/home/HomeNav";
+import Hero from "../components/home/Hero";
+import EvidenceTrail from "../components/home/EvidenceTrail";
+import SevenDimensions from "../components/home/SevenDimensions";
+import ArchetypeExhibit from "../components/home/ArchetypeExhibit";
+import ReportTeaser from "../components/home/ReportTeaser";
+import HonestyLedger from "../components/home/HonestyLedger";
+import PricingTable from "../components/home/PricingTable";
+import FinalCta from "../components/home/FinalCta";
 import SiteFooter from "../components/home/SiteFooter";
 
 /**
@@ -23,14 +31,14 @@ export default function HomeV3() {
   return (
     <main className="min-h-screen bg-brand-bg text-[color:var(--text-primary)]">
       <HomeNav />
-      {/* 02 Hero */}
-      {/* 03 Evidence Trail */}
-      {/* 04 Seven Dimensions */}
-      {/* 05 Archetype Exhibit */}
-      {/* 06 Inside the Report */}
-      {/* 07 Honesty Ledger */}
-      {/* 08 Pricing */}
-      {/* 09 Final CTA */}
+      <Hero />
+      <EvidenceTrail />
+      <SevenDimensions />
+      <ArchetypeExhibit />
+      <ReportTeaser />
+      <HonestyLedger />
+      <PricingTable />
+      <FinalCta />
       <SiteFooter />
     </main>
   );

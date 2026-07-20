@@ -85,6 +85,19 @@ export function CtaPrimary({ href, children }: { href: string; children: ReactNo
   );
 }
 
+/** Light-filled CTA — for the hero, where the accent budget is spent on the
+ *  headline word (AD ruling §2: nothing else in the hero is accent-colored). */
+export function CtaLight({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a
+      href={href}
+      className="inline-flex items-center justify-center rounded-[3px] bg-[color:var(--text-primary)] px-7 py-3.5 font-sans text-[15px] font-semibold text-brand-bg transition-opacity hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent"
+    >
+      {children}
+    </a>
+  );
+}
+
 /** Secondary CTA — quiet text link with arrow, hairline underline on hover. */
 export function CtaSecondary({ href, children }: { href: string; children: ReactNode }) {
   return (
