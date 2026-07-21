@@ -1,25 +1,24 @@
 import Link from "next/link";
 import { MonoLabel } from "./primitives";
 
-/** Extracted from the previous inline page.tsx footer; content carried over,
- *  restyled to design_rules tokens. Carries the /roadmap transparency link. */
+/** copy-home-v3.md §8 FOOTER-LINKS/FOOTER-LEGAL, verbatim. Carries the
+ *  /roadmap transparency link (structural-delta-spec-v2 §B row 6). */
 
 const COLS: { label: string; links: { href: string; label: string }[] }[] = [
   {
     label: "Platform",
     links: [
-      { href: "/#evidence", label: "How it works" },
       { href: "/#pricing", label: "Pricing" },
+      { href: "/sample", label: "Sample Report" },
+      { href: "/foundations", label: "Foundations" },
       { href: "/roadmap", label: "Roadmap" },
-      { href: "/sample", label: "Sample report" },
     ],
   },
   {
     label: "Legal",
     links: [
-      { href: "/about", label: "About" },
-      { href: "/privacy", label: "Privacy Policy" },
-      { href: "/terms", label: "Terms of Service" },
+      { href: "/privacy", label: "Privacy" },
+      { href: "/terms", label: "Terms" },
     ],
   },
 ];
@@ -37,9 +36,8 @@ export default function SiteFooter() {
               Forensic trade diagnostic
             </MonoLabel>
             <p className="mt-4 max-w-[40ch] font-sans text-[13px] leading-relaxed text-[color:var(--text-muted)]">
-              Built on 15 years of institutional trading.
-              <br />
-              Not financial advice. Diagnostic analysis only.
+              Analytics and education only — not a broker, not a signal
+              service, not financial advice.
             </p>
           </div>
           {COLS.map((col) => (
@@ -63,13 +61,16 @@ export default function SiteFooter() {
         <div className="border-t border-brand-border py-6">
           <p className="font-sans text-[12px] text-[color:var(--text-muted)]">
             For prop firms and institutional desks:{" "}
-            <a href="mailto:admin@xrayforensic.com" className="text-brand-accent">
+            <a
+              href="mailto:admin@xrayforensic.com"
+              className="text-[color:var(--text-secondary)] underline decoration-brand-border underline-offset-2 transition-colors hover:text-[color:var(--text-primary)]"
+            >
               admin@xrayforensic.com
             </a>
           </p>
           <p className="mt-2 font-sans text-[12px] text-[color:var(--text-muted)]">
-            &copy; 2026 X-Ray Forensic &middot; Not financial advice &middot; All
-            trading involves risk
+            &copy; 2026 X-Ray Forensic. Analytics and education only &mdash;
+            not a broker, not a signal service, not financial advice.
           </p>
         </div>
       </div>

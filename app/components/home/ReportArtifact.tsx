@@ -15,8 +15,9 @@ const ROWS: { label: string; value: string; tone?: "loss" }[] = [
 ];
 
 export default function ReportArtifact() {
+  // pr compensates the hero's bleed margin: the frame bleeds off-page, the data never does
   return (
-    <figure className="relative overflow-hidden rounded-[4px] border border-brand-border bg-brand-card">
+    <figure className="relative overflow-hidden rounded-[4px] border border-brand-border bg-brand-card md:pr-14 lg:pr-20">
       {/* scanline — motion-safe only; static pane under reduced motion */}
       <div
         aria-hidden="true"

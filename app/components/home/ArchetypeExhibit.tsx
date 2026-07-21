@@ -86,9 +86,9 @@ export default function ArchetypeExhibit() {
         actually looks like on an equity curve.
       </p>
 
-      <div className="mt-12 grid grid-cols-1 items-center gap-10 md:grid-cols-12 md:gap-x-8">
-        {/* left margin annotations */}
-        <div className="hidden flex-col gap-14 md:col-span-2 md:flex">
+      <div className="mt-12 grid grid-cols-1 items-stretch gap-10 md:grid-cols-12 md:gap-x-8">
+        {/* left margin annotations — (1) tracks the peak, (3) the slide */}
+        <div className="hidden flex-col justify-between py-6 md:col-span-2 md:flex">
           {left.map((a) => <Annotation key={a.n} n={a.n} text={a.text} align="left" />)}
         </div>
 
@@ -108,8 +108,8 @@ export default function ArchetypeExhibit() {
           </figcaption>
         </figure>
 
-        {/* right margin annotations */}
-        <div className="hidden flex-col gap-14 md:col-span-2 md:flex">
+        {/* right margin annotations — (2) tracks the break, (4) the close */}
+        <div className="hidden flex-col justify-between py-6 md:col-span-2 md:flex">
           {right.map((a) => <Annotation key={a.n} n={a.n} text={a.text} align="right" />)}
         </div>
 

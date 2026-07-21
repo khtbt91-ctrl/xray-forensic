@@ -81,7 +81,11 @@ export default function ReportTeaser() {
         </div>
 
         <div className="md:col-span-7">
-          <div className="relative mx-auto h-[420px] max-w-[520px] sm:h-[440px]">
+          {/* fanned document spread — each layer sits in normal flow and is
+              pulled up over the one before it, so every pane keeps a visible
+              title strip (AD ruling §6) and the section reserves zero dead
+              space (no fixed-height container, no position:absolute stack) */}
+          <div className="relative mx-auto max-w-[560px]">
             <PagePane
               title="PG 4 — DOLLAR-LEAK BREAKDOWN"
               rows={[
@@ -89,7 +93,7 @@ export default function ReportTeaser() {
                 ["SIZE-UP AFTER LOSS", "–$761.00"],
                 ["OUT-OF-SESSION", "–$312.00"],
               ]}
-              className="absolute inset-x-10 top-14 sm:inset-x-16"
+              className="ml-auto w-[78%]"
             />
             <PagePane
               title="PG 2 — SEVEN-DIMENSION SCORECARD"
@@ -99,7 +103,7 @@ export default function ReportTeaser() {
                 ["LIQUIDITY AWARENESS", "54 / 100"],
                 ["SESSION DISCIPLINE", "71 / 100"],
               ]}
-              className="absolute inset-x-5 top-7 sm:inset-x-8"
+              className="mr-auto -mt-[100px] w-[82%]"
             />
             <PagePane
               title="PG 1 — VERDICT SUMMARY"
@@ -111,9 +115,9 @@ export default function ReportTeaser() {
                 ["NET (WINDOW)", "–$2,140.18"],
                 ["PRESCRIPTIONS", "5 RANKED"],
               ]}
-              className="absolute inset-x-0 top-0 -rotate-1"
+              className="ml-auto -mt-[112px] w-[88%] -rotate-1"
             />
-            <p className="absolute bottom-0 left-0">
+            <p className="mt-5">
               <DemoTag />
             </p>
           </div>

@@ -30,7 +30,7 @@ function GhostCta({ className = "" }: { className?: string }) {
       href="/new"
       className={`inline-flex items-center justify-center rounded-[3px] border border-brand-accent px-5 py-2 font-sans text-[14px] font-semibold text-brand-accent transition-colors hover:bg-brand-accent hover:text-brand-bg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent ${className}`}
     >
-      Get diagnosed
+      Get Diagnosed
     </a>
   );
 }
