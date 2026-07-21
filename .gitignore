@@ -42,3 +42,8 @@ next-env.d.ts
 XRAY_MASTER_BRIEF.md
 
 .vercel
+
+# Playwright — visual regression run artifacts (baselines ARE committed,
+# see tests/baselines/ + web-engineering-standard EG-4)
+/tests/report/
+/test-results/
