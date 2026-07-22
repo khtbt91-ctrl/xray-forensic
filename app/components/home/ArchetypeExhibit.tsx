@@ -47,7 +47,7 @@ function Curve() {
             x={m.x}
             y={m.y + 3.5}
             textAnchor="middle"
-            className="font-mono [fill:theme(colors.brand-accent-dim)]"
+            className="font-mono [fill:var(--text-secondary)]"
             fontSize="10"
             fontWeight="700"
           >
@@ -68,10 +68,6 @@ function Annotation({ n, text, align }: { n: string; text: string; align: "left"
       <p className="mt-1.5 font-['IBM_Plex_Serif',serif] text-[15px] italic leading-relaxed text-[color:var(--text-secondary)]">
         {text}
       </p>
-      <div
-        aria-hidden="true"
-        className={`mt-3 hidden h-px w-10 bg-brand-border md:block ${align === "right" ? "ml-auto" : ""}`}
-      />
     </div>
   );
 }
