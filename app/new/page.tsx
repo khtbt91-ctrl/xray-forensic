@@ -8,7 +8,7 @@ import NavBar from "../components/NavBar";
 import Disclaimer from "../../components/Disclaimer";
 import { tierData } from "@/lib/tiers";
 import { useAuth } from "@/lib/auth-context";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseClient } from "@/lib/supabase";
 import { QRCodeSVG } from "qrcode.react";
 
 const MONO = "var(--font-mono)";
@@ -708,6 +708,7 @@ function Step3({
     if (!user) return;
     const stats = data?.summary_stats || {};
     try {
+      const supabase = await getSupabaseClient();
       // Mark previous snapshot as not latest
       await supabase
         .from("prescriptions")

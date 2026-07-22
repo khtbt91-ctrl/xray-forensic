@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import HomeNav from "../components/home/HomeNav";
 import Hero from "../components/home/Hero";
-import EvidenceTrail from "../components/home/EvidenceTrail";
-import SevenDimensions from "../components/home/SevenDimensions";
-import ArchetypeExhibit from "../components/home/ArchetypeExhibit";
-import ReportTeaser from "../components/home/ReportTeaser";
-import HonestyLedger from "../components/home/HonestyLedger";
-import PricingTable from "../components/home/PricingTable";
-import FinalCta from "../components/home/FinalCta";
 import SiteFooter from "../components/home/SiteFooter";
+import {
+  DeferredEvidenceTrail,
+  DeferredSevenDimensions,
+  DeferredArchetypeExhibit,
+  DeferredReportTeaser,
+  DeferredHonestyLedger,
+  DeferredPricingTable,
+  DeferredFinalCta,
+} from "../components/home/DeferredSections";
 
 /**
  * HOMEPAGE V3 — TEMP BUILD ROUTE (redesign/home-v3 branch)
@@ -32,13 +34,13 @@ export default function HomeV3() {
     <main className="min-h-screen bg-brand-bg text-[color:var(--text-primary)]">
       <HomeNav />
       <Hero />
-      <EvidenceTrail />
-      <SevenDimensions />
-      <ArchetypeExhibit />
-      <ReportTeaser />
-      <HonestyLedger />
-      <PricingTable />
-      <FinalCta />
+      <DeferredEvidenceTrail />
+      <DeferredSevenDimensions />
+      <DeferredArchetypeExhibit />
+      <DeferredReportTeaser />
+      <DeferredHonestyLedger />
+      <DeferredPricingTable />
+      <DeferredFinalCta />
       <SiteFooter />
     </main>
   );

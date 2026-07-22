@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
 
 // ── Design tokens ──────────────────────────────────────────────────────────────
@@ -310,6 +310,7 @@ export default function ActiveProtocols({ analyses }: ActiveProtocolsProps) {
 
     const load = async () => {
       try {
+        const supabase = await getSupabaseClient()
         const { data } = await supabase
           .from('foundations_protocols')
           .select('protocol_id')

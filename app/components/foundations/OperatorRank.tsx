@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
 
 // ── Design tokens ──────────────────────────────────────────────────────────────
@@ -86,6 +86,7 @@ export default function OperatorRank({ rankData: externalData }: OperatorRankPro
 
     const load = async () => {
       try {
+        const supabase = await getSupabaseClient()
         const { data: row } = await supabase
           .from('user_profiles')
           .select('xp, operator_rank, discipline_streak')

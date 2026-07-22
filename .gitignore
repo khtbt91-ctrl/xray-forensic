@@ -47,3 +47,6 @@ XRAY_MASTER_BRIEF.md
 # see tests/baselines/ + web-engineering-standard EG-4)
 /tests/report/
 /test-results/
+
+# Scratch working files (temp measurement/verification scripts, never shipped)
+/.scratch/

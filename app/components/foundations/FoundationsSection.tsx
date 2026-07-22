@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
 import type { UserProfile } from '@/lib/supabase'
 import DailyBriefing      from './DailyBriefing'
@@ -116,6 +116,7 @@ export default function FoundationsSection({
     if (!user) return
     const load = async () => {
       try {
+        const supabase = await getSupabaseClient()
         const { data } = await supabase
           .from('foundations_protocols')
           .select('protocol_id')

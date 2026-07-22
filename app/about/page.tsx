@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import type { CSSProperties, ReactNode, FormEvent } from "react";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseClient } from "@/lib/supabase";
 import Link from "next/link";
 import NavBar from "../components/NavBar";
 
@@ -663,6 +663,7 @@ function WaitlistSection() {
     setError(null);
     // Plain insert: the anon role is INSERT-only on waitlist (RLS), so upsert's
     // ON CONFLICT DO UPDATE path is not permitted. 23505 = already on the list.
+    const supabase = await getSupabaseClient();
     const { error: insertError } = await supabase
       .from("waitlist")
       .insert({ email: email.trim().toLowerCase() });

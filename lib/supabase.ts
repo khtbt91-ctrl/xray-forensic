@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 // Smart storage — routes writes to localStorage (remember=true) or sessionStorage (remember=false).
 // getItem checks sessionStorage first so session-only logins are found on refresh.
@@ -24,19 +24,42 @@ export function setAuthStorageMode(remember: boolean) {
   _smartStorage?.setMode(remember)
 }
 
-export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      storageKey: 'xray-auth',
-      storage: _smartStorage,
-      detectSessionInUrl: true,
-    },
-  }
-)
+// ── Lazy Supabase client ────────────────────────────────────────────────────
+// @supabase/supabase-js (GoTrueClient + friends, ~59KB gzipped) used to be a
+// static top-level import here, which meant it was bundled into the same
+// chunk as the root AuthProvider and downloaded/parsed on EVERY route —
+// including static marketing pages with zero auth-gated content — competing
+// for bandwidth in the same critical-path burst as render-blocking CSS/fonts.
+// Perf fix (home-v3 branch, mobile LCP): the SDK is now dynamically
+// import()'d and the client cached as a singleton, so it code-splits into
+// its own chunk fetched only when something actually needs it (AuthProvider's
+// mount effect, a sign-in, a Supabase-backed fetch) instead of gating first
+// paint on every route. Every call site now does
+// `const supabase = await getSupabaseClient()` instead of a static import.
+let _client: SupabaseClient | null = null;
+let _clientPromise: Promise<SupabaseClient> | null = null;
+
+export function getSupabaseClient(): Promise<SupabaseClient> {
+  if (_client) return Promise.resolve(_client);
+  if (_clientPromise) return _clientPromise;
+  _clientPromise = import("@supabase/supabase-js").then(({ createClient }) => {
+    _client = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          storageKey: 'xray-auth',
+          storage: _smartStorage,
+          detectSessionInUrl: true,
+        },
+      }
+    );
+    return _client;
+  });
+  return _clientPromise;
+}
 
 // Shape returned by GET /user/profile on the Railway backend.
 export type UserProfile = {

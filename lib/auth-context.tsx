@@ -1,6 +1,6 @@
 'use client'
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { supabase, setAuthStorageMode, UserProfile } from './supabase'
+import { getSupabaseClient, setAuthStorageMode, UserProfile } from './supabase'
 import type { User, Session } from '@supabase/supabase-js'
 
 interface AuthContextType {
@@ -59,9 +59,18 @@ export function AuthProvider({
 
   useEffect(() => {
     let mounted = true
+    // Subscription is created asynchronously now (after the lazily-loaded
+    // client resolves), so the cleanup closure below can't reference it
+    // directly the way the old synchronous version could — this holds
+    // whatever unsubscribe fn ends up created, if any, for both the normal
+    // unmount path and the race where unmount happens mid-flight.
+    let unsubscribe: (() => void) | null = null
 
     const initAuth = async () => {
       try {
+        const supabase = await getSupabaseClient()
+        if (!mounted) return
+
         const { data: { session } } = await supabase.auth.getSession()
         if (mounted) {
           setSession(session)
@@ -69,6 +78,34 @@ export function AuthProvider({
           if (session?.access_token) {
             await fetchProfile(session.access_token)
           }
+        }
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+          async (event, session) => {
+            if (!mounted) return
+            try {
+              setSession(session)
+              setUser(session?.user ?? null)
+              if (session?.access_token) {
+                await fetchProfile(session.access_token)
+              } else {
+                // Explicit sign-out or expired session — clear profile
+                setProfile(null)
+              }
+            } catch (e) {
+              console.error('[Auth] onAuthStateChange error:', e)
+            } finally {
+              if (mounted) setLoading(false)
+            }
+          }
+        )
+
+        if (mounted) {
+          unsubscribe = () => subscription.unsubscribe()
+        } else {
+          // Unmounted while the client/session promise was in flight —
+          // nothing left to hold the subscription open for.
+          subscription.unsubscribe()
         }
       } catch (e) {
         console.error('[Auth] initAuth error:', e)
@@ -81,29 +118,9 @@ export function AuthProvider({
 
     initAuth()
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (!mounted) return
-        try {
-          setSession(session)
-          setUser(session?.user ?? null)
-          if (session?.access_token) {
-            await fetchProfile(session.access_token)
-          } else {
-            // Explicit sign-out or expired session — clear profile
-            setProfile(null)
-          }
-        } catch (e) {
-          console.error('[Auth] onAuthStateChange error:', e)
-        } finally {
-          if (mounted) setLoading(false)
-        }
-      }
-    )
-
     return () => {
       mounted = false
-      subscription.unsubscribe()
+      unsubscribe?.()
     }
   }, [fetchProfile])
 
@@ -111,11 +128,13 @@ export function AuthProvider({
   // so Supabase writes the token to the correct storage (localStorage vs sessionStorage).
   const signIn = async (email: string, password: string, rememberMe = true) => {
     setAuthStorageMode(rememberMe)
+    const supabase = await getSupabaseClient()
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
   }
 
   const signInWithGoogle = async () => {
+    const supabase = await getSupabaseClient()
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -126,6 +145,7 @@ export function AuthProvider({
   }
 
   const signOut = async () => {
+    const supabase = await getSupabaseClient()
     await supabase.auth.signOut()
     setUser(null)
     setSession(null)

@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
 
 const GOLD = '#e5b83c'
@@ -57,6 +57,7 @@ export default function LoginPage() {
     if (password.length < 8) { setError('Password must be at least 8 characters.'); return }
     if (password !== confirmPassword) { setError("Passwords don't match."); return }
     setLoading(true)
+    const supabase = await getSupabaseClient()
     const { error } = await supabase.auth.signUp({ email, password })
     setLoading(false)
     if (error) { setError(error.message); return }
@@ -67,6 +68,7 @@ export default function LoginPage() {
     if (!email) { setError('Enter your email address first.'); return }
     clearMessages()
     setLoading(true)
+    const supabase = await getSupabaseClient()
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth/callback`,
     })
